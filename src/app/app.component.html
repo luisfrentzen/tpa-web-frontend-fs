@@ -7,16 +7,9 @@
   </head>
   <body>
     <app-navbar></app-navbar>
+
     <div class="content">
-      <app-home [name]="'home'">ini home</app-home>
-      <app-home [name]="'trending'">ini trending</app-home>
-      <app-home [name]="'subscription'">ini subscription</app-home>
-      <app-home [name]="'category'">ini category</app-home>
-      <app-home [name]="'membership'">ini membership</app-home>
-      <app-home [name]="'about'">ini about</app-home>
-      <app-home [name]="'terms'">ini terms</app-home>
-      <app-home [name]="'copyright'">ini copyright</app-home>
-      <app-home [name]="'advertise'">ini advertise</app-home>
+      <router-outlet></router-outlet>
     </div>
   </body>
 </html>

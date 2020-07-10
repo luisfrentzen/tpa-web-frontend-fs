@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from "../data.service";
+import { Router } from '@angular/router';
+import { SocialAuthService } from "angularx-social-login";
+import { GoogleLoginProvider } from "angularx-social-login";
+import { SocialUser } from "angularx-social-login";
 
 @Component({
   selector: 'app-navbar',
@@ -8,7 +12,10 @@ import { DataService } from "../data.service";
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private data : DataService) { }
+  constructor(private data : DataService, private router : Router, private authService: SocialAuthService) { }
+
+  user: SocialUser;
+  loggedIn: boolean;
 
   settingsVisible = false;
   menuVisible = false;
@@ -22,7 +29,24 @@ export class NavbarComponent implements OnInit {
 
   currentPage = 'home';
 
-  ngOnInit(): void {
+  signOut() {
+    this.authService.signOut();
+    sessionStorage.clear();
+    gapi.auth2.getAuthInstance().disconnect()
+    this.token = null;
+    window.location.reload();
+  }
+
+  signInWithGoogle(){
+    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
+
+  ngOnInit(){
+    this.authService.authState.subscribe(user => {
+      this.user = user;
+      this.loggedIn = (user != null);
+    });
+
     this.settingsVisible = false;
     this.menuVisible = false;
     this.reg = false;
@@ -39,8 +63,8 @@ export class NavbarComponent implements OnInit {
   }
 
   changePage(nextPage:string) {
-    this.data.changePage(nextPage)
-    console.log(this.currentPage);
+    this.router.navigateByUrl('/' + nextPage);
+    this.menuVisible = false;
   }
 
   showMenu() {

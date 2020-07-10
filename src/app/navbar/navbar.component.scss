@@ -1,5 +1,4 @@
-$buttonhovercolor: #e6e6e6;
-$fesblue : #5fccf5;
+@import "../variables";
 
 * {
   display: flex;
@@ -9,6 +8,11 @@ $fesblue : #5fccf5;
   z-index: 999;
   align-items: center;
 
+}
+
+.userProfile {
+  width: 40px;
+  border-radius: 50px;
 }
 
 title {

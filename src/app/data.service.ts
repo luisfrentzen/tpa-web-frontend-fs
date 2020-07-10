@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class DataService {
 
-  private page = new BehaviorSubject('home');
+  private page = new BehaviorSubject('about');
   currentPage = this.page.asObservable();
 
   private messageSource = new BehaviorSubject(false);

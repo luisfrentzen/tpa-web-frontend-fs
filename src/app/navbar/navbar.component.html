@@ -22,12 +22,14 @@
       </ul>
     </div>
     <button (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-cog"></i></button>
-    <button (click)="toggleModal()" type="button" name="button" class="loginButton"><p><i class="fa fa-user-circle"></i>Login</p></button>
+    <button (click)="signInWithGoogle()" type="button" name="button" class="loginButton"  *ngIf="!user"><p><i class="fa fa-user-circle"></i>Login</p></button>
+    <button (click)="signOut()" type="button" *ngIf="user" name="button">Logout</button>
+    <img *ngIf="user" class="userProfile" src="{{ user.photoUrl }}" alt="nul">
   </div>
 </div>
 <div class="sideBar" [style.left]="menuVisible ? '0px' : '-250px'">
     <div class="sideBarItems"> </div>
-    <div class="sideBarItems" (click)="changePage('home')"><i class="fa fa-home"></i>Home</div>
+    <div class="sideBarItems" (click)="changePage('')"><i class="fa fa-home"></i>Home</div>
     <div class="sideBarItems" (click)="changePage('trending')"><i class="fa fa-fire"></i>Trending</div>
     <div class="sideBarItems" (click)="changePage('subscription')"><i class="fa fa-play-circle"></i>Subscription</div>
     <div class="sideBarItems" (click)="changePage('category')"><i class="fa fa-th-large"></i>Category</div>

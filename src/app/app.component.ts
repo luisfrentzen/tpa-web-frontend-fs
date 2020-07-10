@@ -9,7 +9,7 @@ import { DataService } from './data.service'
 export class AppComponent {
   title = 'FesTube';
 
-  currentPage = 'home';
+  currentPage = '';
 
   constructor(private data:DataService) {}
 

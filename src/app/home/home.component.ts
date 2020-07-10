@@ -8,7 +8,7 @@ import { DataService } from '../data.service';
 })
 export class HomeComponent implements OnInit {
   @Input() name = '';
-  currentPage = 'home';
+  currentPage = '';
 
   constructor(private data:DataService) { }
 
