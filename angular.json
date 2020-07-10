@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "FesTube"
+    }
+  },
+  "defaultProject": "FesTube",
+  "cli": {
+    "analytics": false
+  }
 }

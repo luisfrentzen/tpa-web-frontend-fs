@@ -1,0 +1,98 @@
+<div class="outerContent" (click)="toggleDropDown()"></div>
+
+<div class="mainBar">
+  <div class="">
+    <button (click)="showMenu()" type="button" name="button" class="iconButton"><i class="fa fa-bars"></i></button>
+    <img src="../assets/Logo.png" class="imLogo">
+  </div>
+  <div class="searchBar">
+    <input type="text" name="" placeholder="Search" class="searchInput">
+    <button type="button" name="button" class="searchButton"><i class="fa fa-search"></i></button>
+  </div>
+
+  <div>
+    <div class="dropDownSettings" [style.display]="settingsVisible ? 'block' : 'none'">
+      <ul>
+        <div class="titleSettings">
+          Settings
+        </div>
+        <div (click)="toggleRestrictionButton()"><i class="fa fa-lock fa-3x"></i>Restricted Mode : {{onRestriction ? 'ON' : 'OFF'}}</div>
+        <div (click)="toggleLocationButton()"><i class="fa fa-map-marker-alt fa-3x"></i>Enable Location : {{onLocation ? 'ON' : 'OFF'}}</div>
+        <div (click)="toggleKeyboardModal()"><i class="fa fa-keyboard fa-3x"></i>Keyboard Shortcuts</div>
+      </ul>
+    </div>
+    <button (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-cog"></i></button>
+    <button (click)="toggleModal()" type="button" name="button" class="loginButton"><p><i class="fa fa-user-circle"></i>Login</p></button>
+  </div>
+</div>
+<div class="sideBar" [style.left]="menuVisible ? '0px' : '-250px'">
+    <div class="sideBarItems"> </div>
+    <div class="sideBarItems" (click)="changePage('home')"><i class="fa fa-home"></i>Home</div>
+    <div class="sideBarItems" (click)="changePage('trending')"><i class="fa fa-fire"></i>Trending</div>
+    <div class="sideBarItems" (click)="changePage('subscription')"><i class="fa fa-play-circle"></i>Subscription</div>
+    <div class="sideBarItems" (click)="changePage('category')"><i class="fa fa-th-large"></i>Category</div>
+    <div class="sideBarItems" (click)="changePage('membership')"><i class="fa fa-star"></i>Membership</div>
+    <div class="sideBarItems" (click)="changePage('about')"><i class="fa fa-info-circle"></i>About Us</div>
+    <div class="sideBarItems" (click)="changePage('terms')"><i class="fa fa-asterisk"></i>Terms</div>
+    <div class="sideBarItems" (click)="changePage('copyright')"><i class="fa fa-copyright"></i>Copyright</div>
+    <div class="sideBarItems" (click)="changePage('advertise')"><i class="fa fa-ad"></i>Advertise</div>
+
+</div>
+
+<app-modal
+    [show]="showLogin"
+    [closeCallback]="toggleModal"
+  >
+  <div class="contentWrapper" [style.max-height]="reg ? '750px' : '260px'">
+    <h3>Login</h3>
+    <div class="loginForms">
+      <input type="text" placeholder="Username" name="" value="">
+      <input type="password" placeholder="Password" name="" value="">
+    </div>
+
+    <button class="loginBut" type="button" name="button">Sign In</button>
+    <div class="">
+      or <a (click)="toggleReg()">Sign up</a> now.
+    </div>
+
+    <br>
+
+    <div class="accordionReg">
+      <h3>Register</h3>
+      <div class="registerForms">
+        <input type="text" placeholder="Name" name="" value="">
+        <input type="text" placeholder="Username" name="" value="">
+        <input type="password" placeholder="Password" name="" value="">
+      </div>
+      <button class="loginBut" type="button" name="button">Sign Up</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal
+  [show]="showKeyboard"
+  [closeCallback]="toggleKeyboardModal"
+  [modalWidth]=700
+  >
+  <div class="keyboardComponentWrapper">
+    <h3>Keyboard Shortcuts</h3>
+    <div class="shortcutsWrapper">
+      <div style="color: #7d7d7d;">
+        <div>Rewind 10 seconds</div>
+        <div>Play or pause video</div>
+        <div>Fast forward 10 seconds</div>
+        <div>Toggle fullscreen mode</div>
+        <div>Higher the video volume</div>
+        <div>Lower the video volume</div>
+      </div>
+      <div>
+        <div>J</div>
+        <div>K</div>
+        <div>L</div>
+        <div>F</div>
+        <div>↑ ( UP ARROW KEY )</div>
+        <div>↓  ( BOTTOM ARROW KEY )</div>
+      </div>
+    </div>
+  </div>
+</app-modal>
