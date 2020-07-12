@@ -1,3 +1,4 @@
+
 <div class="outerContent" (click)="toggleDropDown()"></div>
 
 <div class="mainBar">
@@ -11,20 +12,26 @@
   </div>
 
   <div>
-    <div class="dropDownSettings" [style.display]="settingsVisible ? 'block' : 'none'">
+    <div class="dropDownSettings" [style.display]="settingsVisible ? 'block' : 'none'" [style.right]="user ? '80px' : '205px'">
       <ul>
         <div class="titleSettings">
           Settings
         </div>
+        <div *ngIf="user" class="profileInfo">
+          <img class="profilePic" src="{{user.photoUrl}}" alt="">
+          <p>{{user.name}}</p>
+        </div>
+        <div (click)="signOut()" *ngIf="user" class=""><i class="fa fa-user fa3x"></i>Switch Account</div>
+        <div *ngIf="user" class=""><i class="fa fa-star fa3x"></i>Membership</div>
+        <div *ngIf="user" class=""><i class="fa fa-caret-square-right fa3x"></i>Your Channel</div>
         <div (click)="toggleRestrictionButton()"><i class="fa fa-lock fa-3x"></i>Restricted Mode : {{onRestriction ? 'ON' : 'OFF'}}</div>
         <div (click)="toggleLocationButton()"><i class="fa fa-map-marker-alt fa-3x"></i>Enable Location : {{onLocation ? 'ON' : 'OFF'}}</div>
         <div (click)="toggleKeyboardModal()"><i class="fa fa-keyboard fa-3x"></i>Keyboard Shortcuts</div>
       </ul>
     </div>
-    <button (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-cog"></i></button>
+    <button *ngIf="!user" (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-cog"></i></button>
     <button (click)="signInWithGoogle()" type="button" name="button" class="loginButton"  *ngIf="!user"><p><i class="fa fa-user-circle"></i>Login</p></button>
-    <button (click)="signOut()" type="button" *ngIf="user" name="button">Logout</button>
-    <img *ngIf="user" class="userProfile" src="{{ user.photoUrl }}" alt="nul">
+    <img *ngIf="user" (click)="showSettings()" class="userProfile" src="{{ user.photoUrl }}" alt="nul">
   </div>
 </div>
 <div class="sideBar" [style.left]="menuVisible ? '0px' : '-250px'">

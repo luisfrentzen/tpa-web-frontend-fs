@@ -32,7 +32,7 @@ title {
   margin: 0;
   padding: 0;
   top: -20px;
-  right: 190px;
+  // right: 205px;
   position: fixed;
   background-color: white;
   border: 1px solid #d7d7d7;
@@ -57,7 +57,7 @@ title {
       margin: 0;
       background-color: white;
       display: flex;
-      padding: 25px 30px;
+      padding: 18px 30px;
       &:hover {
         background-color: $buttonhovercolor;
       }
@@ -70,8 +70,29 @@ title {
         color: gray;
       }
     }
+
+    .profileInfo{
+      display: flex;
+      flex-direction: column;
+      background-color: white;
+
+      img {
+        border-radius: 50px;
+      }
+
+      p {
+        font-weight: bold;
+        margin: 0 10px;
+      }
+
+      &:hover {
+        background-color: white;
+      }
+    }
   }
 }
+
+
 
 .mainBar {
   position: fixed;
