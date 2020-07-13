@@ -21,6 +21,8 @@ import { AdvertiseComponent } from './advertise/advertise.component';
 import { CopyrightComponent } from './copyright/copyright.component';
 
 import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
+import { GraphQLModule } from './graphql.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,9 @@ import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from 
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SocialLoginModule
+    SocialLoginModule,
+    GraphQLModule,
+    HttpClientModule
   ],
   providers: [
     DataService,
