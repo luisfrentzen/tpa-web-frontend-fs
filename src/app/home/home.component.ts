@@ -17,23 +17,23 @@ export class HomeComponent implements OnInit {
   constructor(private data:DataService, private apollo:Apollo) { }
 
   ngOnInit(): void {
-    this.apollo
-      .watchQuery({
-        query: gql`
-          {
-            users{
-              id,
-              name
-            }
-          }
-        `,
-      })
-      .valueChanges.subscribe(result => {
-        this.users = result.data.users
-      });
+    // this.apollo
+    //   .watchQuery({
+    //     query: gql`
+    //       {
+    //         users{
+    //           id,
+    //           name
+    //         }
+    //       }
+    //     `,
+    //   })
+    //   .valueChanges.subscribe(result => {
+    //     this.users = result.data.users
+    //   });
 
     this.data.currentPage.subscribe(currentPage => this.currentPage = currentPage)
-    console.log(this.users)
+    // console.log(this.users)
   }
 
 }
