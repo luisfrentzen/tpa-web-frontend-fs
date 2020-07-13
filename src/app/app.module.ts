@@ -19,10 +19,21 @@ import { AboutComponent } from './about/about.component';
 import { TermsComponent } from './terms/terms.component';
 import { AdvertiseComponent } from './advertise/advertise.component';
 import { CopyrightComponent } from './copyright/copyright.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
 
 import { SocialLoginModule, SocialAuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
 import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
+
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireStorageModule } from 'angularfire2/storage';
+
+import { environment } from '../environments/environment';
+import { DropzoneDirective } from './dropzone.directive';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { MatVideoModule } from 'mat-video';
 
 @NgModule({
   declarations: [
@@ -37,14 +48,22 @@ import { HttpClientModule } from '@angular/common/http';
     AboutComponent,
     TermsComponent,
     AdvertiseComponent,
-    CopyrightComponent
+    CopyrightComponent,
+    DropzoneDirective,
+    FileUploadComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SocialLoginModule,
     GraphQLModule,
-    HttpClientModule
+    HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+    BrowserAnimationsModule,
+    BrowserAnimationsModule,
+    MatVideoModule
   ],
   providers: [
     DataService,

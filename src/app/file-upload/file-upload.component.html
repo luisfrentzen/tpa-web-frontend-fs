@@ -1,0 +1,69 @@
+<div class="">
+  <div *ngIf="file == null" class="dropzone" droppingkimak (hovered)="toggleHover($event)" (dropped)="onDrop($event)" [class.hovering]="isHovering">
+
+       <h3>Drop File</h3>
+       <p>{{ dropmsg }}</p>
+
+  </div>
+
+  <div *ngIf="file != null" class="editzone">
+    <div class="con">
+      <div class="">
+        <h3>Details</h3>
+        <input placeholder="Title" type="text" name="" value="">
+        <!-- <h3>Description</h3> -->
+        <textarea placeholder="Description" name="name"></textarea>
+        <h3>Thumbnail</h3>
+        <input (change)="uploadThumbnail($event.target.files)" type="file" name="" value="">
+        <h3>Audience</h3>
+        <div class="ageRadioBtn">
+          <input type="radio" id="allage" name="restriction" value="">
+          <label for="allage">All age</label>
+        </div>
+        <div class="ageRadioBtn">
+          <input type="radio" id="adult" name="restriction" value="">
+          <label for="adult">Adult</label>
+        </div>
+      </div>
+      <div class="">
+        <div class="vidInfo">
+          <img class="thumbnail" src="{{thmsrc}}" alt="">
+          <p> <b> {{ file.name }} </b> </p>
+          <p> Duration : {{ file.duration }}</p>
+        </div>
+        <button (click)="startUpload(file)" class="uploadBtn" type="button" name="button">UPLOAD</button>
+      </div>
+    </div>
+
+
+    <div *ngIf="percentage | async as pct">
+
+      <progress [value]="pct" max="100" >0%</progress>
+
+    </div>
+  </div>
+
+  <!-- <div *ngIf="!percentage" class="">
+    <progress value="0" max="100">0%</progress>
+  </div> -->
+
+
+
+  <!-- <div *ngIf="(snapshot | async) as snap">
+    {{ snap.bytesTransferred | fileSize }} of {{ snap.totalBytes | fileSize}}
+
+  </div> -->
+</div>
+
+
+<!-- <h3>Uploads</h3>
+
+<div *ngFor="let file of files">
+  <img [src]="url" alt="">
+</div> -->
+
+<!-- <button type="button" (click)="task.pause()" [disabled]="!isActive(snap)" name="button">Pause</button>
+
+<button type="button" (click)="task.cancel()" [disabled]="!isActive(snap)" name="button">Pause</button>
+
+<button type="button" (click)="task.resume()" [disabled]="!snap?.state === 'paused'">Resume</button> -->

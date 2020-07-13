@@ -94,7 +94,7 @@ export class NavbarComponent implements OnInit {
   }
 
   showSettings() {
-    console.log(this.authService.authState);
+    // console.log(this.users[0].photoUrl);
     this.settingsVisible = !this.settingsVisible
   }
 

@@ -10,6 +10,7 @@ import { TrendingComponent } from './trending/trending.component'
 import { CategoryComponent } from './category/category.component'
 import { SubscriptionComponent } from './subscription/subscription.component'
 import { AboutComponent } from './about/about.component'
+import { FileUploadComponent } from './file-upload/file-upload.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,7 +21,8 @@ const routes: Routes = [
   { path: 'trending', component: TrendingComponent },
   { path: 'categories', component: CategoryComponent },
   { path: 'subscription', component: SubscriptionComponent },
-  { path: 'about', component: AboutComponent }
+  { path: 'about', component: AboutComponent },
+  { path: 'tes', component: FileUploadComponent }
 ];
 
 @NgModule({

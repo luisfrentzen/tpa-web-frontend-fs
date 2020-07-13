@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase: {
+    apiKey: "AIzaSyARbvYwfSQ1MEJjM02lqyhgnnJZjDZGdas",
+    authDomain: "festube-storage.firebaseapp.com",
+    databaseURL: "https://festube-storage.firebaseio.com",
+    projectId: "festube-storage",
+    storageBucket: "festube-storage.appspot.com",
+    messagingSenderId: "757385096778",
+    appId: "1:757385096778:web:87999e7b96cc1f0fc240b3",
+    measurementId: "G-B54EJF49KW"
+  }
 };
 
 /*

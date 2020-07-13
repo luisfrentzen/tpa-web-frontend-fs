@@ -1,5 +1,5 @@
-
-<div class="outerContent" (click)="toggleDropDown()"></div>
+<!-- 
+<div class="outerContent" (click)="toggleDropDown()"></div> -->
 
 <div class="mainBar">
   <div class="">
@@ -32,6 +32,7 @@
     <button *ngIf="!user" (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-cog"></i></button>
     <button (click)="signInWithGoogle()" type="button" name="button" class="loginButton"  *ngIf="!user"><p><i class="fa fa-user-circle"></i>Login</p></button>
     <img *ngIf="user" (click)="showSettings()" class="userProfile" src="{{ user.photoUrl }}" alt="nul">
+    <!-- <img src="https://lh3.googleusercontent.com/a-/AOh14GgOTm0GoQxXZMPyA4lNtPYH-TBdkMh5ML8d1u94lg=s96-c" alt=""> -->
   </div>
 </div>
 <div class="sideBar" [style.left]="menuVisible ? '0px' : '-250px'">

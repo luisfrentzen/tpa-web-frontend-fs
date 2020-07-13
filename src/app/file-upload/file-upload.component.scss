@@ -1,0 +1,140 @@
+@import '../variables';
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-width: 80vw;
+  font-weight: 200;
+  height: 300px;
+  border: 2px dashed #f16624;
+  border-radius: 5px;
+  background: white;
+  margin: 10px 0;
+
+  &.hovering {
+      border: 2px solid #f16624;
+      color: #dadada !important;
+  }
+
+  .file-label {
+      font-size: 1.2em;
+  }
+}
+
+.editzone {
+
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  min-width: 80vw;
+  font-weight: 200;
+  // height: 300px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  background: white;
+  margin: 10px 0;
+
+  * {
+    font-size: 14pt;
+    margin: 5px 0;
+  }
+
+  .con {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      // flex-direction: row-reverse;
+      justify-content: space-between;
+
+      div {
+        margin: 0 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        div {
+          margin: 0;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+        }
+
+        .vidInfo {
+          flex-direction: column;
+          align-items: flex-start;
+
+        }
+      }
+  }
+
+  .thumbnail {
+    width: 400px;
+    height: 240px;
+    border-radius: 7px;
+  }
+  input {
+    padding: 10px;
+    width: 400px;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+
+    &::placeholder {
+      font-size: 10pt;
+    }
+  }
+
+  .ageRadioBtn {
+    * {
+      padding-left: 20px;
+    }
+
+    input {
+      width: auto;
+    }
+    padding: 0;
+  }
+
+  textarea {
+    padding: 10px;
+    resize: none;
+    width: 400px;
+    height: 200px;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+
+    &::placeholder {
+      font-size: 10pt;
+    }
+  }
+
+  div {
+    flex-direction: column;
+  }
+}
+
+.uploadBtn {
+  border: 3px solid $fesblue;
+  background-color: white;
+  color: $fesblue;
+  font-weight: bold;
+  height: 40px;
+  border-radius: 15px;
+
+  &:active {
+    background-color: $buttonhovercolor;
+  }
+}
+
+progress::-webkit-progress-value {
+  transition: width 0.1s ease;
+}
+
+progress {
+  width: 90vw;
+  height: 20px;
+}
