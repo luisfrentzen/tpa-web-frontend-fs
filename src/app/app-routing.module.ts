@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'categories', component: CategoryComponent },
   { path: 'subscription', component: SubscriptionComponent },
   { path: 'about', component: AboutComponent },
-  { path: 'tes', component: FileUploadComponent }
+  { path: 'upload', component: FileUploadComponent }
 ];
 
 @NgModule({

@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
   @Input() user;
   currentPage = '';
 
-  users:any;
+  videos:any;
 
   constructor(private data:DataService, private apollo:Apollo) { }
 
@@ -21,15 +21,16 @@ export class HomeComponent implements OnInit {
       .watchQuery({
         query: gql`
           {
-            users{
-              id,
-              name
+            videos{
+              title,
+              url,
+              thumbnail,
             }
           }
         `,
       })
       .valueChanges.subscribe(result => {
-        this.users = result.data.users
+        this.videos = result.data.videos
       });
 
     this.data.currentPage.subscribe(currentPage => this.currentPage = currentPage)

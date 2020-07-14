@@ -135,6 +135,6 @@ progress::-webkit-progress-value {
 }
 
 progress {
-  width: 90vw;
+  min-width: 90vw;
   height: 20px;
 }

@@ -1,4 +1,4 @@
-<!-- 
+<!--
 <div class="outerContent" (click)="toggleDropDown()"></div> -->
 
 <div class="mainBar">
@@ -29,7 +29,9 @@
         <div (click)="toggleKeyboardModal()"><i class="fa fa-keyboard fa-3x"></i>Keyboard Shortcuts</div>
       </ul>
     </div>
+    <button *ngIf="user" (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-bell"></i></button>
     <button *ngIf="!user" (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-cog"></i></button>
+    <button *ngIf="user" (click)="changePage('upload')" type="button" name="button" class="iconButton"><i class="fa fa-caret-square-up"></i></button>
     <button (click)="signInWithGoogle()" type="button" name="button" class="loginButton"  *ngIf="!user"><p><i class="fa fa-user-circle"></i>Login</p></button>
     <img *ngIf="user" (click)="showSettings()" class="userProfile" src="{{ user.photoUrl }}" alt="nul">
     <!-- <img src="https://lh3.googleusercontent.com/a-/AOh14GgOTm0GoQxXZMPyA4lNtPYH-TBdkMh5ML8d1u94lg=s96-c" alt=""> -->
@@ -39,7 +41,7 @@
     <div class="sideBarItems"> </div>
     <div class="sideBarItems" (click)="changePage('')"><i class="fa fa-home"></i>Home</div>
     <div class="sideBarItems" (click)="changePage('trending')"><i class="fa fa-fire"></i>Trending</div>
-    <div class="sideBarItems" (click)="changePage('subscription')"><i class="fa fa-play-circle"></i>Subscription</div>
+    <div class="sideBarItems" (click)="changePage('categories')"><i class="fa fa-play-circle"></i>Subscription</div>
     <div class="sideBarItems" (click)="changePage('category')"><i class="fa fa-th-large"></i>Category</div>
     <div class="sideBarItems" (click)="changePage('membership')"><i class="fa fa-star"></i>Membership</div>
     <div class="sideBarItems" (click)="changePage('about')"><i class="fa fa-info-circle"></i>About Us</div>

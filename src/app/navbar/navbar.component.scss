@@ -33,11 +33,11 @@ title {
   padding: 0;
   top: -20px;
   // right: 205px;
-  position: fixed;
+  position: absolute;
   background-color: white;
   border: 1px solid #d7d7d7;
   width: 270px;
-  z-index: 999;
+  z-index: 9999;
   ul {
     display: block;
     margin: 0;
@@ -108,6 +108,26 @@ title {
     margin: 15px;
   }
 
+  .iconButton {
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    width: 60px;
+    height: 60px;
+    border: none;
+    background-color: transparent;
+
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    &:active {
+      background-color: $buttonhovercolor;
+    }
+  }
+
 }
 
 .loginButton {
@@ -163,26 +183,6 @@ title {
   }
 }
 
-.iconButton {
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  margin: 0;
-  width: 60px;
-  height: 60px;
-  border: none;
-  background-color: transparent;
-
-  * {
-    margin: 0;
-    padding: 0;
-  }
-
-  &:active {
-    background-color: $buttonhovercolor;
-  }
-}
-
 .iconButton:focus {
   outline: 0;
 }
@@ -198,6 +198,16 @@ i {
 }
 
 .fa-cog {
+  color: gray;
+  font-size: 13pt;
+}
+
+.fa-caret-square-up {
+  color: gray;
+  font-size: 13pt;
+}
+
+.fa-bell {
   color: gray;
   font-size: 13pt;
 }

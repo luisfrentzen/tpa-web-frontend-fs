@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { SocialAuthService } from "angularx-social-login";
 import { GoogleLoginProvider } from "angularx-social-login";
 import { SocialUser } from "angularx-social-login";
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
 
 @Component({
   selector: 'app-navbar',
@@ -12,7 +14,7 @@ import { SocialUser } from "angularx-social-login";
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private data : DataService, private router : Router, private authService: SocialAuthService) { }
+  constructor(private data : DataService, private router : Router, private authService: SocialAuthService, private apollo : Apollo) { }
 
   user: SocialUser;
   loggedIn: boolean;
@@ -38,10 +40,14 @@ export class NavbarComponent implements OnInit {
 
     this.removeUser();
     this.authService.signOut();
+    this.changePage('');
+    this.menuVisible = false
+    this.settingsVisible = false
     window.location.reload();
   }
 
   signInWithGoogle(){
+
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
 
     this.authService.authState.subscribe(user => {
@@ -49,7 +55,105 @@ export class NavbarComponent implements OnInit {
       this.loggedIn = (user != null);
 
       this.addToLocalStorage(user);
+
+
+
+      // console.log(idnew)
+      // console.log(namenew)
+      // console.log(profilepicnew)
+      // console.log(premiumnew)
+
+      // this.apollo
+      //   .watchQuery({
+      //     query: gql`
+      //       {
+      //         userById(userid: $id){
+      //           id,
+      //           name
+      //         }
+      //       }
+      //     `,
+      //     variables: {
+      //       id: this.idnew
+      //     }
+      //   })
+      //   .valueChanges.subscribe(result => {
+      //     this.currentUser = result.data.userById
+      //   });
+      //
+      //   const query = gql`
+      //     query User($userid: String){
+      //       userById(userid: $id){
+      //         id,
+      //         name
+      //       }
+      //     }
+      //   `;
+      //
+      //   this.apollo.watchQuery({
+      //     query: query,
+      //     variables: {
+      //       userid: idnew,
+      //     }
+      //   })
+      //   .valueChanges.subscribe(result => {
+      //     this.currentUser = result.data.userById
+      //   });
+
+      const idnew = user.id;
+      const namenew = user.name;
+      const profilepicnew = user.photoUrl;
+      // const premiumnew = 'no';
+
+        this.apollo
+          .watchQuery({
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name
+                }
+              }
+            `,
+            variables: {
+              userid: idnew,
+            }
+          })
+          .valueChanges.subscribe(result => {
+            const res = result.data.userById
+            if(res.length == 0)
+            {
+              console.log('test')
+              this.apollo
+                  .mutate({
+                    mutation : gql`
+                    mutation createUser($id: String!, $name: String!, $profilepic: String!) {
+                      createUser(input: {
+                        id: $id
+                        name: $name
+                        premium: "no"
+                        profilepic: $profilepic
+                      }){
+                        id
+                      }
+                    }
+                    `,
+                    variables : {
+                      id: idnew,
+                      name: namenew,
+                      profilepic: profilepicnew,
+                    }
+                  }).subscribe(({ data }) => {
+                console.log('got data', data);
+              },(error) => {
+                console.log('there was an error sending the query', error);
+              });
+            }
+          });
+
+      // console.log('asd')
     });
+
 
   }
 

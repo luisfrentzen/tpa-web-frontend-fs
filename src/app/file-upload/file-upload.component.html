@@ -1,4 +1,5 @@
 <div class="">
+  <h1>Upload Video</h1>
   <div *ngIf="file == null" class="dropzone" droppingkimak (hovered)="toggleHover($event)" (dropped)="onDrop($event)" [class.hovering]="isHovering">
 
        <h3>Drop File</h3>
@@ -10,9 +11,9 @@
     <div class="con">
       <div class="">
         <h3>Details</h3>
-        <input placeholder="Title" type="text" name="" value="">
+        <input placeholder="Title" type="text" name="" (input)="vidTitle = $event.target.value">
         <!-- <h3>Description</h3> -->
-        <textarea placeholder="Description" name="name"></textarea>
+        <textarea placeholder="Description" name="name" (input)="vidDesc = $event.target.value"></textarea>
         <h3>Thumbnail</h3>
         <input (change)="uploadThumbnail($event.target.files)" type="file" name="" value="">
         <h3>Audience</h3>
@@ -24,6 +25,8 @@
           <input type="radio" id="adult" name="restriction" value="">
           <label for="adult">Adult</label>
         </div>
+        <h3>Playlist</h3>
+        <h3>Visibility</h3>
       </div>
       <div class="">
         <div class="vidInfo">
@@ -32,15 +35,18 @@
           <p> Duration : {{ file.duration }}</p>
         </div>
         <button (click)="startUpload(file)" class="uploadBtn" type="button" name="button">UPLOAD</button>
-      </div>
-    </div>
+        <!-- <p>{{ downloadURL }}</p> -->
 
+      </div>
+
+    </div>
 
     <div *ngIf="percentage | async as pct">
 
       <progress [value]="pct" max="100" >0%</progress>
 
     </div>
+
   </div>
 
   <!-- <div *ngIf="!percentage" class="">
