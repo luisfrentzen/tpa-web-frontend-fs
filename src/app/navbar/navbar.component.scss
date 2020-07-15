@@ -28,6 +28,20 @@ title {
   z-index: 100;
 }
 
+.subtitle {
+  color: gray;
+  letter-spacing: 1px;
+  margin-left: 22px;
+  margin-top: 15px;
+}
+
+.lineBreak {
+  display: flex;
+  width: 100%;
+  min-height: 1px;
+  background-color: lightgray;
+}
+
 .dropDownSettings {
   margin: 0;
   padding: 0;

@@ -1,22 +1,25 @@
+<h1>Recommended</h1>
 <div class="homeComponentWrapper" class="auto-grid">
-  <div *ngFor="let video of videos">
 
+  <!-- <button type="button" (click)="getDiff(1, 7, 2020)" name="button"></button> -->
+  <div *ngFor="let video of videos" class="vidComp">
     <!-- <div class="" style="width: 300px; margin: 30px; background-color:black;"> -->
-      <div class="">
-        <mat-video style="height: 20%" quality="false" title="My Tutorial Title" loop="false" [autoplay]="false" [preload]="false" [fullscreen]="true" [download]="false" color="accent" spinner="spin" [poster]="video.thumbnail" [src]="video.url" >
-        </mat-video>
-
+      <div class="thumbnailView">
+        <img [src]="video.thumbnail" alt="">
       </div>
       <div class="thumbnailInfo">
         <div class="">
-
+          <img [src]="video.channelpic" alt="">
         </div>
         <div class="">
-          <p>{{ video.title }}</p>
-          <p>channel</p>
+          <p><b>{{ video.title }}</b></p>
+          <p style="color:gray;">{{ video.channelname }}</p>
+          <p style="color:gray;">{{ getViewCount(video.view) }} views - {{ getDiff(video.day, video.month, video.year) }}</p>
+          <!-- <p style="color:gray;">}</p> -->
+
         </div>
+        <!-- <button type="button" (click)="getChannelProfile(video.userid)" name="button"></button> -->
       </div>
     <!-- </div> -->
   </div>
-
 </div>

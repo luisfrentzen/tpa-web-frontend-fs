@@ -57,11 +57,14 @@ export class FileUploadComponent implements OnInit {
     }
   }
 
+  isScheduled : Boolean;
+  isPremium : Boolean;
+
   ngOnInit() {
     // console.log(thmsrc)
   }
 
-  thumbnailFile;
+  thumbnailFile = null;
 
   uploadThumbnail(files: FileList) {
     const file = files.item(0)
@@ -80,12 +83,55 @@ export class FileUploadComponent implements OnInit {
   vidurl;
   thmurl;
 
+  playlist = 'none';
+
+  premiumMember() {
+    const checkBox  = document.getElementById('premium');
+    this.isPremium = checkBox.checked
+    // console.log(this.isScheduled)
+  }
+
+  scheduled() {
+    const checkBox  = document.getElementById('schedule');
+    this.isScheduled = checkBox.checked
+    // console.log(this.isScheduled)
+  }
+
+  getCurDate() {
+
+  }
+
+  isPrivate = 'public';
+  ageRestriction = 'all'
+
+  vidCategory = 'Gaming';
+
+  getCategory() {
+    const selectOpt  = document.getElementById('categorySelect');
+    this.vidCategory = selectOpt.value
+    console.log(this.vidCategory)
+  }
+
+  date;
+  day;
+  month;
+  year;
+
   startUpload(file: File) {
+    if( this.vidDesc == '' || this.vidTitle == '' || this.thumbnailFile == null )
+    {
+      console.log(this.isPrivate)
+      console.log(this.ageRestriction)
+      return;
+    }
+
     this.users = JSON.parse(localStorage.getItem('users'));
     this.user = this.users[0];
     // The storage path
     const thmPath = `thm/${Date.now()}_${this.thumbnailFile}`
     const path = `vid/${Date.now()}_${file.name}`;
+    const prem = this.isPremium ? 'premium' : 'no'
+
     // console.log(path)
     // Reference to storage bucket
     const ref = this.storage.ref(path);
@@ -109,6 +155,11 @@ export class FileUploadComponent implements OnInit {
 
     // const vidurl
     // const thmurl
+    this.date = new Date()
+
+    this.day = this.date.getDate()
+    this.month = this.date.getMonth()
+    this.year = this.date.getFullYear()
 
     this.thmTask.then(async res => await thmref.getDownloadURL().subscribe(url => {this.thmurl = url} ))
     this.task.then(async res => await ref.getDownloadURL().subscribe(url => {
@@ -116,7 +167,7 @@ export class FileUploadComponent implements OnInit {
       this.apollo
           .mutate({
             mutation : gql`
-            mutation createVideo($url: String!, $restriction: String!, $location: String!, $visibility: String!, $desc: String!, $category: String!, $thumbnail: String!, $userid: String!, $playlist: String!, $title: String!) {
+            mutation createVideo($url: String!, $restriction: String!, $location: String!, $visibility: String!, $desc: String!, $category: String!, $thumbnail: String!, $userid: String!, $playlist: String!, $title: String!, $channelpic: String!, $channelname: String!, $day: Int!, $month: Int!, $year: Int!) {
               createVideo(input: {
                 url: $url
                 restriction: $restriction
@@ -131,20 +182,30 @@ export class FileUploadComponent implements OnInit {
                 userid: $userid
                 playlist: $playlist
                 title: $title
+                channelpic: $channelpic
+                channelname: $channelname
+                day: $day
+                month: $month
+                year: $year
               }){ title }
             }
             `,
             variables : {
               url: this.vidurl,
-              restriction: "no",
+              restriction: this.ageRestriction,
               location: "Indonesia",
-              visibility: "public",
+              visibility: this.isPrivate,
               desc: this.vidDesc,
-              category: "no",
+              category: this.vidCategory,
               thumbnail: this.thmurl,
               userid: this.user.id,
-              playlist: "none",
+              playlist: this.playlist,
               title: this.vidTitle,
+              channelname: this.user.name,
+              channelpic: this.user.photoUrl,
+              day: this.day,
+              month: this.month,
+              year: this.year,
             }
           }).subscribe(({ data }) => {
         console.log('got data', data);

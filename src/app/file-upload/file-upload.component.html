@@ -16,17 +16,50 @@
         <textarea placeholder="Description" name="name" (input)="vidDesc = $event.target.value"></textarea>
         <h3>Thumbnail</h3>
         <input (change)="uploadThumbnail($event.target.files)" type="file" name="" value="">
+        <h3>Category</h3>
+        <select id="categorySelect" name="" (change)="getCategory()">
+          <option value="Gaming">Gaming</option>
+          <option value="Music">Music</option>
+          <option value="Sport">Sport</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="News">News</option>
+          <option value="Travel">Travel</option>
+        </select>
         <h3>Audience</h3>
-        <div class="ageRadioBtn">
-          <input type="radio" id="allage" name="restriction" value="">
+        <div class="ageRadioBtn" >
+          <input type="radio" checked="true" id="allage" name="restriction" value="" (change)="ageRestriction = 'all'">
           <label for="allage">All age</label>
         </div>
         <div class="ageRadioBtn">
-          <input type="radio" id="adult" name="restriction" value="">
+          <input type="radio" id="adult" name="restriction" value="" (change)="ageRestriction = 'adult'">
           <label for="adult">Adult</label>
         </div>
         <h3>Playlist</h3>
-        <h3>Visibility</h3>
+        <select class="playlistSelect" name="">
+          <option value="No playlist" ></option>
+        </select>
+        <h3>Privacy</h3>
+        <div class="ageRadioBtn">
+          <input type="radio" id="privacy" name="visibility" value="private" (change)="isPrivate = 'private'">
+          <label for="private">Private</label>
+        </div>
+        <div class="ageRadioBtn">
+          <input type="radio" checked="true" id="privacy" name="visibility" value="public" (change)="isPrivate = 'public'">
+          <label for="public">Public</label>
+        </div>
+        <h3>Membership</h3>
+        <div class="ageRadioBtn">
+          <input type="checkbox" id="premium" name="premium" value="">
+          <label for="premium">Premium Only</label>
+        </div>
+        <h3>Scheduled Upload</h3>
+        <div class="ageRadioBtn">
+          <input type="checkbox" id="schedule" name="schedule" value="schedule" (change)="scheduled()" >
+          <label for="schedule">Enable scheduled upload</label>
+        </div>
+        <div class="uploadSchedule" *ngIf="isScheduled">
+          Test
+        </div>
       </div>
       <div class="">
         <div class="vidInfo">

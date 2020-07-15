@@ -4,7 +4,7 @@
 <div class="mainBar">
   <div class="">
     <button (click)="showMenu()" type="button" name="button" class="iconButton"><i class="fa fa-bars"></i></button>
-    <img src="../assets/Logo.png" class="imLogo">
+    <img src="../assets/Logo.png" (click)="changePage('')" class="imLogo">
   </div>
   <div class="searchBar">
     <input type="text" name="" placeholder="Search" class="searchInput">
@@ -42,7 +42,19 @@
     <div class="sideBarItems" (click)="changePage('')"><i class="fa fa-home"></i>Home</div>
     <div class="sideBarItems" (click)="changePage('trending')"><i class="fa fa-fire"></i>Trending</div>
     <div class="sideBarItems" (click)="changePage('categories')"><i class="fa fa-play-circle"></i>Subscription</div>
-    <div class="sideBarItems" (click)="changePage('category')"><i class="fa fa-th-large"></i>Category</div>
+    <div class="lineBreak">
+      <!-- &nbsp; -->
+    </div>
+    <p class="subtitle"><b>CATEGORIES</b></p>
+    <div class="sideBarItems" (click)="changePage('categories')"><i class="fa fa-music"></i>Music</div>
+    <div class="sideBarItems" (click)="changePage('categories')"><i class="fa fa-gamepad"></i>Gaming</div>
+    <div class="sideBarItems" (click)="changePage('categories')"><i class="fa fa-dumbbell"></i>Sport</div>
+    <div class="sideBarItems" (click)="changePage('categories')"><i class="fa fa-magic"></i>Entertainment</div>
+    <div class="sideBarItems" (click)="changePage('categories')"><i class="fa fa-newspaper"></i>News</div>
+    <div class="sideBarItems" (click)="changePage('categories')"><i class="fa fa-map-marked-alt"></i>Travel</div>
+    <div class="lineBreak">
+      <!-- &nbsp; -->
+    </div>
     <div class="sideBarItems" (click)="changePage('membership')"><i class="fa fa-star"></i>Membership</div>
     <div class="sideBarItems" (click)="changePage('about')"><i class="fa fa-info-circle"></i>About Us</div>
     <div class="sideBarItems" (click)="changePage('terms')"><i class="fa fa-asterisk"></i>Terms</div>
