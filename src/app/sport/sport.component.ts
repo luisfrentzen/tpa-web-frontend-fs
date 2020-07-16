@@ -1,24 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { DataService } from '../data.service';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { Apollo } from 'apollo-angular';
+import { Router } from '@angular/router';
 import gql from 'graphql-tag';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  selector: 'app-sport',
+  templateUrl: './sport.component.html',
+  styleUrls: ['./sport.component.scss']
 })
-export class HomeComponent implements OnInit {
-  @Input() user;
-  currentPage = '';
-
-  videos:any;
-
-  constructor(private data:DataService, private apollo:Apollo, private router:Router) { }
-  // getChannelName(userid: String) {
-  //
-  // }
+export class SportComponent implements OnInit {
+  constructor(private apollo: Apollo, private router : Router) { }
 
   toWatchView(nextPage){
     this.router.navigateByUrl('watch/' + nextPage)
@@ -74,12 +65,14 @@ export class HomeComponent implements OnInit {
     return res
   }
 
+  videos;
+
   ngOnInit(): void {
     this.apollo
       .watchQuery({
         query: gql`
-          {
-            videos{
+          query videosByCategory($category: String!){
+            videosByCategory(category: $category){
               id,
               title,
               url,
@@ -91,15 +84,16 @@ export class HomeComponent implements OnInit {
               day,
               month,
               year,
+              desc,
             }
           }
         `,
+        variables: {
+          category: "Sport",
+        }
       })
       .valueChanges.subscribe(result => {
-        this.videos = result.data.videos
+        this.videos = result.data.videosByCategory
       });
-
-    this.data.currentPage.subscribe(currentPage => this.currentPage = currentPage)
   }
-
 }

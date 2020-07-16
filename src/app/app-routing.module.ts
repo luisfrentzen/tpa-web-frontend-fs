@@ -12,6 +12,14 @@ import { SubscriptionComponent } from './subscription/subscription.component'
 import { AboutComponent } from './about/about.component'
 import { FileUploadComponent } from './file-upload/file-upload.component'
 
+import { GamingComponent } from './gaming/gaming.component'
+import { MusicComponent } from './music/music.component'
+import { SportComponent } from './sport/sport.component'
+import { EntertainmentComponent } from './entertainment/entertainment.component'
+import { TravelComponent } from './travel/travel.component'
+import { NewsComponent } from './news/news.component'
+import { WatchComponent } from './watch/watch.component'
+
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'advertise', component: AdvertiseComponent },
@@ -22,7 +30,14 @@ const routes: Routes = [
   { path: 'categories', component: CategoryComponent },
   { path: 'subscription', component: SubscriptionComponent },
   { path: 'about', component: AboutComponent },
-  { path: 'upload', component: FileUploadComponent }
+  { path: 'upload', component: FileUploadComponent },
+  { path: 'gaming', component: GamingComponent },
+  { path: 'music', component: MusicComponent },
+  { path: 'sport', component: SportComponent },
+  { path: 'entertainment', component: EntertainmentComponent },
+  { path: 'news', component: NewsComponent },
+  { path: 'travel', component: TravelComponent },
+  { path: 'watch/:id', component: WatchComponent }
 ];
 
 @NgModule({

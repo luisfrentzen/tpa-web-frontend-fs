@@ -2,7 +2,7 @@
 <div class="homeComponentWrapper" class="auto-grid">
 
   <!-- <button type="button" (click)="getDiff(1, 7, 2020)" name="button"></button> -->
-  <div *ngFor="let video of videos" class="vidComp">
+  <div *ngFor="let video of videos" class="vidComp" (click)="toWatchView(video.id)">
     <!-- <div class="" style="width: 300px; margin: 30px; background-color:black;"> -->
       <div class="thumbnailView">
         <img [src]="video.thumbnail" alt="">

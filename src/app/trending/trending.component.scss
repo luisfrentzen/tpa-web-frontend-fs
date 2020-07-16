@@ -8,12 +8,20 @@
   align-items: center;
 }
 
+h1 {
+
+    margin-left: 30px;
+
+}
+
 .vidContainer{
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   margin: 10px;
   margin-bottom: 20px;
+
+  margin-left: 30px;
 
   .vidThumbnail{
     margin-right: 10px;

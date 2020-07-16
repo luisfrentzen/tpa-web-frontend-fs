@@ -1,0 +1,80 @@
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.container {
+  * {
+    margin: 5px;
+  }
+
+  .channelInfo {
+    img {
+      border-radius: 50px;
+      width: 50px;
+      height: 50px;
+    }
+
+    div{
+      width: 100%;
+      flex-direction: column;
+      margin: 0;
+
+      .channelDetail {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        // align-items: flex-end;
+
+        .subButton {
+          justify-content: center;
+          align-items: center;
+          width: 130px;
+          height: 35px;
+          background-color: #d00000;
+          // font-weight: bold;
+          color: white;
+        }
+      }
+    }
+  }
+
+  hr {
+    border: 0.25px solid transparent;
+    background-color: lightgray;
+    height: 0.5px;
+  }
+
+  margin: 0 40px;
+
+  .videoContainer {
+    flex-direction: column;
+    .vid{
+      height: 33vw;
+      width: 60vw;
+    }
+  }
+
+  .recContainer {
+    display: flex;
+    flex-direction: column;
+
+    width: 700px;
+
+    img {
+      width: 200px;
+      height: 120px;
+    }
+
+    .vidInfo {
+      flex-direction: column;
+
+      *{
+        margin: 0;
+      }
+    }
+  }
+}

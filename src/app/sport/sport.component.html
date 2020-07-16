@@ -1,4 +1,13 @@
-<h1>Trending</h1>
+<div class="header">
+  <div class="iconCat">
+    <i class="fa fa-dumbbell"></i>
+  </div>
+  <div class="catTitle">
+    <h1>Sport</h1>
+    <p><b>Category</b></p>
+  </div>
+</div>
+<hr>
 <div class="vidContainer" *ngFor="let video of videos" (click)="toWatchView(video.id)">
   <div class="vidThumbnail">
     <img [src]="video.thumbnail" alt="">

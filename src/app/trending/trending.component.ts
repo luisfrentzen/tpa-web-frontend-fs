@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Apollo } from 'apollo-angular';
+import { Router } from '@angular/router';
 import gql from 'graphql-tag';
 
 @Component({
@@ -9,7 +10,11 @@ import gql from 'graphql-tag';
 })
 export class TrendingComponent implements OnInit {
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo, private router : Router) { }
+
+  toWatchView(nextPage){
+    this.router.navigateByUrl('watch/' + nextPage)
+  }
 
   getViewCount(view){
     var res;
@@ -67,6 +72,7 @@ export class TrendingComponent implements OnInit {
         query: gql`
           {
             videos{
+              id,
               title,
               url,
               thumbnail,

@@ -34,6 +34,13 @@ import { DropzoneDirective } from './dropzone.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatVideoModule } from 'mat-video';
+import { MusicComponent } from './music/music.component';
+import { GamingComponent } from './gaming/gaming.component';
+import { SportComponent } from './sport/sport.component';
+import { EntertainmentComponent } from './entertainment/entertainment.component';
+import { NewsComponent } from './news/news.component';
+import { TravelComponent } from './travel/travel.component';
+import { WatchComponent } from './watch/watch.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +57,14 @@ import { MatVideoModule } from 'mat-video';
     AdvertiseComponent,
     CopyrightComponent,
     DropzoneDirective,
-    FileUploadComponent
+    FileUploadComponent,
+    MusicComponent,
+    GamingComponent,
+    SportComponent,
+    EntertainmentComponent,
+    NewsComponent,
+    TravelComponent,
+    WatchComponent
   ],
   imports: [
     BrowserModule,

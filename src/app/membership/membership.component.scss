@@ -1,1 +1,110 @@
-@import '../app.component.scss'
+@import '../app.component.scss';
+@import '../variables';
+
+*{
+  display: flex;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  // overflow: hidden;
+}
+
+.container {
+  // width: 100%;
+  // height: 100%;
+  flex-direction: column;
+  font-size: 20pt;
+  margin: 0;
+  // margin-top: -10px;
+
+
+  *{
+    margin: 20px 0;
+  }
+
+  img {
+    margin-top: 0;
+    width: 300px;
+    margin-bottom: 0;
+  }
+
+  p {
+    margin-top: 10px;
+    overflow: hidden;
+    text-align: center;
+    height: auto;
+    line-height: 40px;
+  }
+
+  @keyframes move_wave {
+    0% {
+        transform: translateX(0) translateZ(0) scaleY(1)
+    }
+    50% {
+        transform: translateX(-25%) translateZ(0) scaleY(0.55)
+    }
+    100% {
+        transform: translateX(-50%) translateZ(0) scaleY(1)
+    }
+  }
+
+  .plan {
+    margin-top: 0;
+    flex-direction: row;
+
+    .planMember {
+      // position: fixed;
+      // z-index: 999;
+      overflow: hidden;
+      text-align: center;
+      flex-direction: column;
+      justify-content: flex-start;
+      margin: 0 5px;
+      width: 200px;
+      height: 320px;
+      background-color: gray;
+
+      *{
+          height: auto;
+          line-height: 40px;
+          // transition: all 1s ease;
+      }
+
+      .wave{
+        // z-index: 1;
+        background-image: url('../../assets/wave.png');
+        // position: absolute;
+        // left: 50%;
+        margin-bottom: -5px;
+        margin-left: 400px;
+        min-height: 100px;
+        width: 2200px;
+        height: 100%;
+        background-repeat: repeat no-repeat;
+        background-position: 0 bottom;
+        transform-origin: center bottom;
+        background-size: 50% 150px;
+        animation: move_wave 14s linear infinite;
+      }
+
+      p {
+        margin: 0;
+        height: 60px;
+      }
+
+      color: white;
+    }
+  }
+
+  .getButton {
+    font-weight: bold;
+    font-size: 11pt;
+    width: 220px;
+    height: 40px;
+    // border-radius: 3px;
+    color: white;
+    // border: 2px solid $fesblue;
+    background-color: $fesblue;
+  }
+}

@@ -9,6 +9,8 @@ export class MembershipComponent implements OnInit {
 
   constructor() { }
 
+  plan = "monthly"
+
   ngOnInit(): void {
   }
 
