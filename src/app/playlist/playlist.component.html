@@ -1,0 +1,24 @@
+<div class="playlistContainer" *ngIf="currentPlaylist && playlistOwner && videos">
+  <div class="playlistOverview" *ngIf="currentPlaylist">
+    <img [src]="videos[0].thumbnail" alt="">
+    <h1>{{currentPlaylist.title}}</h1>
+    <p>{{getLen(videos)}} videos - {{getViewCount(currentPlaylist.view)}} views - last updated on {{currentPlaylist.day}} {{getMonthName(currentPlaylist.month)}} {{currentPlaylist.year}}</p>
+    <p>{{currentPlaylist.visibility}}</p>
+    <p>{{currentPlaylist.desc}}</p>
+    <div class="channelInfo">
+      <img [src]="playlistOwner.profilepic" class="channelPic" alt="">
+      <p>{{playlistOwner.name}}</p>
+    </div>
+  </div>
+  <div class="playlistVideos">
+    <div class="videoItem" *ngFor="let video of videos">
+      <a href="watch/{{video.id}}" style="margin:0; width:100%; height:100%; text-decoration: none; color: black;">
+        <img [src]="video.thumbnail" alt="">
+        <div class="vidInfo">
+          <p>{{video.title}}</p>
+          <p>{{video.channelname}}</p>
+      </div>
+    </a>
+    </div>
+  </div>
+</div>

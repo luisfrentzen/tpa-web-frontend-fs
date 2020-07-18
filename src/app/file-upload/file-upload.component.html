@@ -34,10 +34,25 @@
           <input type="radio" id="adult" name="restriction" value="" (change)="ageRestriction = 'adult'">
           <label for="adult">Adult</label>
         </div>
-        <h3>Playlist</h3>
-        <select class="playlistSelect" name="">
-          <option value="No playlist" ></option>
+        <h3>Select Playlist</h3>
+        <select class="playlistSelect" name="" (change)="playlist = $event.target.value">
+          <option >None</option>
+          <option *ngFor="let pl of playlists;" [value]="pl.id">{{pl.title}}</option>
         </select>
+        <p style="font-size: 11t; color: gray;">or</p>
+        <h3>Create New Playlist</h3>
+        <input type="text" name="" value="" placeholder="Name" (input)="playlistTitle = $event.target.value">
+        <textarea type="text" name="" value="" placeholder="Description" (input)="playlistDesc = $event.target.value"></textarea>
+        <h3>Privacy</h3>
+        <div class="ageRadioBtn">
+          <input type="radio" id="privacy" name="plvisibility" value="private" (change)="isPlaylistPrivate = 'private'">
+          <label for="private">Private</label>
+        </div>
+        <div class="ageRadioBtn">
+          <input type="radio" checked="true" id="privacy" name="plvisibility" value="public" (change)="isPlaylistPrivate = 'public'">
+          <label for="public">Public</label>
+        </div>
+        <button type="button" class="newBtn" name="button" (click)="createPlaylist()">New Playlist</button>
         <h3>Privacy</h3>
         <div class="ageRadioBtn">
           <input type="radio" id="privacy" name="visibility" value="private" (change)="isPrivate = 'private'">

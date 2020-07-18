@@ -55,6 +55,7 @@ export class NavbarComponent implements OnInit {
       this.loggedIn = (user != null);
 
       this.addToLocalStorage(user);
+      window.location.reload();
 
 
 
@@ -173,6 +174,18 @@ export class NavbarComponent implements OnInit {
     this.loggedIn = false;
   }
 
+  playlists;
+  restPlaylist = [];
+
+  openPlaylist = false;
+
+  togglePlaylist(){
+    this.openPlaylist = !this.openPlaylist
+    console.log(this.openPlaylist)
+    // console.log(this.restPlaylist)
+    // console.log(this.restPlaylist && this.openPlaylist)
+  }
+
   ngOnInit(){
     // this.authService.renewTokens();
     // this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
@@ -182,6 +195,38 @@ export class NavbarComponent implements OnInit {
     }
     else{
       this.getUserFromStorage();
+    }
+
+    if(this.user)
+    {
+      this.apollo
+        .watchQuery({
+          query: gql`
+          query getPlaylistById($userid: String!){
+            playlistsByUser(userid: $userid){
+              title,
+              id,
+            }
+          }
+          `,
+          variables: {
+            userid: this.user.id
+          }
+        })
+        .valueChanges.subscribe(result => {
+          this.playlists = result.data.playlistsByUser
+          console.log(this.playlists)
+          console.log(this.user.id)
+
+          if(this.playlists.length > 5 )
+          {
+            for (let i = 5; i < this.playlists.length; i++) {
+              this.restPlaylist.push(this.playlists[i])
+            }
+
+            this.playlist = this.playlists.splice(5, this.playlists.length - 5)
+          }
+        });
     }
 
 

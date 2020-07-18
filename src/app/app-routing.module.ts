@@ -19,6 +19,7 @@ import { EntertainmentComponent } from './entertainment/entertainment.component'
 import { TravelComponent } from './travel/travel.component'
 import { NewsComponent } from './news/news.component'
 import { WatchComponent } from './watch/watch.component'
+import { PlaylistComponent } from './playlist/playlist.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -37,7 +38,8 @@ const routes: Routes = [
   { path: 'entertainment', component: EntertainmentComponent },
   { path: 'news', component: NewsComponent },
   { path: 'travel', component: TravelComponent },
-  { path: 'watch/:id', component: WatchComponent }
+  { path: 'watch/:id', component: WatchComponent },
+  { path: 'playlist/:id', component: PlaylistComponent }
 ];
 
 @NgModule({

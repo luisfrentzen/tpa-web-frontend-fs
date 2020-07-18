@@ -57,11 +57,55 @@ export class FileUploadComponent implements OnInit {
     }
   }
 
+  users = [];
+  user;
+
+  vidurl;
+  thmurl;
+
+  playlist = 'None';
+
   isScheduled : Boolean;
   isPremium : Boolean;
 
+  date;
+  day;
+  month;
+  year;
+
+  playlists;
+
+  test (a) {
+    console.log('test')
+  }
+
+  getPlaylists(){
+    this.apollo
+      .watchQuery({
+        query: gql`
+        query getPlaylistById($userid: String!){
+          playlistsByUser(userid: $userid){
+            title,
+            id,
+          }
+        }
+        `,
+        variables: {
+          userid: this.user.id
+        }
+      })
+      .valueChanges.subscribe(result => {
+        this.playlists = result.data.playlistsByUser
+        console.log(this.playlists)
+        console.log(this.user.id)
+      });
+  }
+
   ngOnInit() {
     // console.log(thmsrc)
+    this.users = JSON.parse(localStorage.getItem('users'));
+    this.user = this.users[0];
+    this.getPlaylists()
   }
 
   thumbnailFile = null;
@@ -76,14 +120,6 @@ export class FileUploadComponent implements OnInit {
     // this.thmsrc =
     reader.readAsDataURL(file)
   }
-
-  users = [];
-  user;
-
-  vidurl;
-  thmurl;
-
-  playlist = 'none';
 
   premiumMember() {
     const checkBox  = document.getElementById('premium');
@@ -112,10 +148,78 @@ export class FileUploadComponent implements OnInit {
     console.log(this.vidCategory)
   }
 
-  date;
-  day;
-  month;
-  year;
+
+  playlistDesc = '';
+  playlistTitle = '';
+  isPlaylistPrivate = 'public';
+
+  createPlaylist(){
+    if(this.playlistDesc == '' || this.playlistTitle == '')
+    {
+      console.log("test")
+      console.log(this.playlist)
+      return;
+    }
+
+    console.log(this.playlistDesc)
+    console.log(this.playlistTitle)
+
+
+    this.date = new Date()
+
+    this.day = this.date.getDate()
+    this.month = this.date.getMonth()
+    this.year = this.date.getFullYear()
+
+    this.users = JSON.parse(localStorage.getItem('users'));
+    this.user = this.users[0];
+
+    this.apollo
+        .mutate({
+          mutation : gql`
+          mutation createPlaylist($visibility: String!, $desc: String!, $userid: String!, $title: String!, $day: Int!, $month: Int!, $year: Int!) {
+            createPlaylist(input: {
+              visibility: $visibility
+              desc: $desc
+              view: 0
+              userid: $userid
+              title: $title
+              day: $day
+              month: $month
+              year: $year
+              videos: ""
+            }){ title }
+          }
+          `,
+          variables : {
+            visibility: this.isPlaylistPrivate,
+            desc: this.playlistDesc,
+            userid: this.user.id,
+            title: this.playlistTitle,
+            day: this.day,
+            month: this.month,
+            year: this.year,
+          },
+          refetchQueries: [{
+            query: gql`
+            query getPlaylistById($userid: String!){
+              playlistsByUser(userid: $userid){
+                title,
+                id,
+              }
+            }
+            `,
+            variables: {
+              userid: this.user.id
+            }
+          }]
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+      // this.getPlaylists()
+    },(error) => {
+      console.log('there was an error sending the query', error);
+    })
+  }
 
   startUpload(file: File) {
     if( this.vidDesc == '' || this.vidTitle == '' || this.thumbnailFile == null )
@@ -167,7 +271,7 @@ export class FileUploadComponent implements OnInit {
       this.apollo
           .mutate({
             mutation : gql`
-            mutation createVideo($url: String!, $restriction: String!, $location: String!, $visibility: String!, $desc: String!, $category: String!, $thumbnail: String!, $userid: String!, $playlist: String!, $title: String!, $channelpic: String!, $channelname: String!, $day: Int!, $month: Int!, $year: Int!) {
+            mutation createVideo($url: String!, $restriction: String!, $location: String!, $visibility: String!, $desc: String!, $category: String!, $thumbnail: String!, $userid: String!, $title: String!, $channelpic: String!, $channelname: String!, $day: Int!, $month: Int!, $year: Int!) {
               createVideo(input: {
                 url: $url
                 restriction: $restriction
@@ -175,19 +279,18 @@ export class FileUploadComponent implements OnInit {
                 visibility: $visibility
                 desc: $desc
                 category: $category
-                disilike: 1
-                like: 1
-                view: 1
+                disilike: 0
+                like: 0
+                view: 0
                 thumbnail: $thumbnail
                 userid: $userid
-                playlist: $playlist
                 title: $title
                 channelpic: $channelpic
                 channelname: $channelname
                 day: $day
                 month: $month
                 year: $year
-              }){ title }
+              }){ title, id }
             }
             `,
             variables : {
@@ -199,7 +302,6 @@ export class FileUploadComponent implements OnInit {
               category: this.vidCategory,
               thumbnail: this.thmurl,
               userid: this.user.id,
-              playlist: this.playlist,
               title: this.vidTitle,
               channelname: this.user.name,
               channelpic: this.user.photoUrl,
@@ -207,9 +309,49 @@ export class FileUploadComponent implements OnInit {
               month: this.month,
               year: this.year,
             }
-          }).subscribe(({ data }) => {
-        console.log('got data', data);
+          }).subscribe(result => {
+        this.uploadedVideo = result.data.createVideo.id;
+
+        if(this.playlist != "None")
+        {
+          this.apollo
+              .mutate({
+                mutation : gql`
+                mutation addToPlaylist ($id: ID!, $videos: String!){
+                  addToPlaylist(id: $id, input:{
+                    videos: $videos
+                  }){
+                    videos
+                  }
+                }
+                `,
+                variables: {
+                  id: this.playlist,
+                  videos: this.uploadedVideo,
+                }
+              }).subscribe(({ data }) => {
+            console.log('got data', data);
+          },(error) => {
+            console.log(this.playlist)
+            // console.log(typeof this.uploadedVideo)
+            console.log('there was an error sending the query', error);
+          })
+        }
+
       },(error) => {
+        // console.log(this.vidurl)
+        // console.log(this.ageRestriction)
+        // console.log(this.isPrivate)
+        // console.log(this.vidDesc)
+        // console.log(this.vidCategory)
+        // console.log(this.thmurl)
+        // console.log(this.user.id)
+        // console.log(this.vidTitle)
+        // console.log(this.user.name)
+        // console.log(this.user.photoUrl)
+        // console.log(this.day)
+        // console.log(this.month)
+        // console.log(this.year)
         console.log('there was an error sending the query', error);
       })
 

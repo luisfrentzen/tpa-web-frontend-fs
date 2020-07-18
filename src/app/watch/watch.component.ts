@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 
@@ -12,10 +12,18 @@ export class WatchComponent implements OnInit {
 
   url = "";
 
-  constructor(private apollo : Apollo, private route : ActivatedRoute) { }
+  constructor(private apollo : Apollo, private route : ActivatedRoute, private router : Router) { }
 
   videos;
   targetVideo;
+
+  toWatchView(nextPage){
+
+    this.router.navigateByUrl('')
+    this.router.navigateByUrl('watch/' + nextPage)
+    // window.location.reload()
+
+  }
 
   channel;
 
@@ -37,6 +45,9 @@ export class WatchComponent implements OnInit {
     return res;
   }
 
+  getPercentage(a1, a2){
+    return Math.round((a1 / a2) * 100) + "%"
+  }
 
   vidDate;
 
@@ -154,6 +165,8 @@ export class WatchComponent implements OnInit {
               month,
               year,
               desc,
+              like,
+              disilike,
             }
           }
         `,
