@@ -123,4 +123,59 @@
       }
     }
   }
+
+  .newCommentWrapper {
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0;
+
+    .inputNewComment {
+      width: 100%;
+      margin-left: 0;
+      .userPic {
+        border-radius: 50px;
+        width: 45px;
+        height: 45px;
+      }
+
+      .newCommentSection{
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid lightgray;
+
+        padding: 5px;
+
+        &:focus {
+          outline: 0;
+        }
+      }
+    }
+
+    .inputControl {
+      width: 100%;
+      justify-content: flex-end;
+
+      .newCommentBtn {
+        justify-content: center;
+        align-items: center;
+        border: none;
+        font-weight: bold;
+        color: white;
+
+        background-color: #0aaae6;
+        width: 100px;
+        height: 30px;
+
+        &:disabled {
+          background-color: lightgray;
+        }
+
+        &:active {
+          background-color: #1176bf;
+        }
+      }
+
+
+    }
+  }
 }

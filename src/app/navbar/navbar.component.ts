@@ -224,7 +224,7 @@ export class NavbarComponent implements OnInit {
               this.restPlaylist.push(this.playlists[i])
             }
 
-            this.playlist = this.playlists.splice(5, this.playlists.length - 5)
+            this.playlists = this.playlists.splice(5, this.playlists.length - 5)
           }
         });
     }

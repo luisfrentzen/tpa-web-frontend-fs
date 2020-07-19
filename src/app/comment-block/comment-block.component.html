@@ -1,0 +1,37 @@
+<div class="commentBlock" *ngIf="user">
+  <img class="userPic" [style.width]="curComment.replyto != 0 ? '30px' : '45px'" [style.height]="curComment.replyto != 0 ? '30px' : '45px'" [src]="user.profilepic" alt="">
+  <div class="commentDetails">
+    <div class="userDetails">
+      <p>{{user.name}}</p>
+      <p>{{getDiff(curComment.day, curComment.month, curComment.year)}}</p>
+    </div>
+    <div class="content">
+      <p>{{curComment.desc}}</p>
+    </div>
+    <div class="commentStats">
+      <i class="fa fa-thumbs-up" style="margin-bottom: 4px"></i><p>{{getViewCount(curComment.like)}}</p>
+      <i class="fa fa-thumbs-down" style="margin-bottom: 0;"></i><p>{{getViewCount(curComment.disilike)}}</p>
+      <div class="addReply" (click)="toggleAddReply()">
+        Reply
+      </div>
+    </div>
+    <div class="newReplayWrapper" *ngIf="addNewReply && user">
+      <div class="newReply" *ngIf="myUser">
+        <img class="userPic" style="width:30px; height:30px" [src]="myUser.photoUrl" alt="">
+        <input type="text" placeholder="Reply" class="replyBox" name="" value="" (input)="newReplyDesc = $event.target.value">
+      </div>
+      <div class="replyControl">
+        <button class="cancelBtn" type="button" name="button" (click)="addNewReply = false">CANCEL</button>
+        <button class="submitBtn" type="button" name="button" [disabled]="newReplyDesc ? false : true" (click)="addNewReplyBtn(newReplyDesc)">REPLY</button>
+      </div>
+    </div>
+    <div class="shownReplies" *ngIf="curComment.replycount > 0">
+      <div class="showReply" (click)="toggleReply()" style="margin-left: 0">
+        <p>{{showReply ? 'Hide' : 'View'}} {{curComment.replycount}} replies</p>
+      </div>
+      <div class="" *ngIf="showReply" style="flex-direction: column;">
+        <app-comment-block *ngFor="let reply of replies" [comment]="reply.id"></app-comment-block>
+      </div>
+    </div>
+  </div>
+</div>

@@ -42,6 +42,7 @@ import { NewsComponent } from './news/news.component';
 import { TravelComponent } from './travel/travel.component';
 import { WatchComponent } from './watch/watch.component';
 import { PlaylistComponent } from './playlist/playlist.component';
+import { CommentBlockComponent } from './comment-block/comment-block.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { PlaylistComponent } from './playlist/playlist.component';
     NewsComponent,
     TravelComponent,
     WatchComponent,
-    PlaylistComponent
+    PlaylistComponent,
+    CommentBlockComponent
   ],
   imports: [
     BrowserModule,

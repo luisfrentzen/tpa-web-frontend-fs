@@ -28,15 +28,27 @@
             <p style="font-size: 14pt; margin-bottom: 0;">{{channel.name}}</p>
             <p style="font-size: 9pt; color: #626262; margin-top: 0;">x Subscribers</p>
           </div>
-          <div class="subButton">
-            SUBSCRIBE
+          <div class="subButton" (click)="toggleSubs(currentUserInfo.id, targetVideo.userid)" [style.background-color]="isSubscribed ? 'lightgray' : '#d00000'" [style.color]="isSubscribed ? 'gray' : 'white'">
+            {{ isSubscribed ? 'SUBSCRIBED' : 'SUBSCRIBE'}}
           </div>
         </div>
         <p>{{targetVideo.desc}}</p>
       </div>
     </div>
     <hr>
-    <p>x Comments</p>
+    <div *ngIf="comments" style="flex-direction: column;">
+      <p>{{comments.length}} Comments</p>
+      <div class="newCommentWrapper" *ngIf="user">
+        <div class="inputNewComment">
+          <img class="userPic" [src]="user.photoUrl" alt="">
+          <input type="text" class="newCommentSection" placeholder="Comment" name="" value="" (input)="newCommentDesc = $event.target.value">
+        </div>
+        <div class="inputControl">
+          <button type="button" class="newCommentBtn" (click)="addNewCommentBtn(newCommentDesc)" [disabled]="newCommentDesc ? false : true" name="button">COMMENT</button>
+        </div>
+      </div>
+      <app-comment-block [comment]="comment.id" *ngFor="let comment of comments"></app-comment-block>
+    </div>
   </div>
   <div class="recContainer" *ngIf="targetVideo">
         <div class="relatedVids" *ngFor="let video of videos">

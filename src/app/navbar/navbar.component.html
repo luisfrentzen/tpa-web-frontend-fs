@@ -21,7 +21,7 @@
           <img class="profilePic" src="{{user.photoUrl}}" alt="">
           <p>{{user.name}}</p>
         </div>
-        <a href=""><div (click)="signOut()" *ngIf="user" class=""><i class="fa fa-user fa3x"></i>Switch Account</div></a>
+        <a style="padding:0; margin:0" href=""><div (click)="signOut()" *ngIf="user" class=""><i class="fa fa-user fa3x"></i>Switch Account</div></a>
         <div *ngIf="user" class=""><i class="fa fa-star fa3x"></i>Membership</div>
         <div *ngIf="user" class=""><i class="fa fa-caret-square-right fa3x"></i>Your Channel</div>
         <div (click)="toggleRestrictionButton()"><i class="fa fa-lock fa-3x"></i>Restricted Mode : {{onRestriction ? 'ON' : 'OFF'}}</div>
@@ -45,10 +45,14 @@
     <div class="lineBreak">
     </div>
     <div class="userPlaylist" *ngIf="user && playlists">
-      <div class="sideBarItems" *ngFor="let playlist of playlists"><i class="fa fa-list"></i>{{playlist.title}}</div>
+      <div *ngFor="let playlist of playlists"><a href="playlist/{{playlist.id}}"><div class="sideBarItems">
+        <i class="fa fa-list"></i>{{playlist.title}}
+      </div></a></div>
 
       <div class="userPlaylist" *ngIf="restPlaylist.length != 0 && openPlaylist == true">
-        <div class="sideBarItems" *ngFor="let pl of restPlaylist"><i class="fa fa-list"></i>{{pl.title}}</div>
+        <div *ngFor="let pl of restPlaylist"><a href="playlist/{{pl.id}}"><div class="sideBarItems">
+          <i class="fa fa-list"></i>{{pl.title}}
+        </div></a></div>
       </div>
       <div class="sideBarItems" *ngIf="restPlaylist.length != 0 && openPlaylist != true" (click)="togglePlaylist()"><i class="fa fa-chevron-down"></i>Show More</div>
       <div class="sideBarItems" *ngIf="restPlaylist.length != 0 && openPlaylist == true" (click)="togglePlaylist()"><i class="fa fa-chevron-up"></i>Show Less</div>

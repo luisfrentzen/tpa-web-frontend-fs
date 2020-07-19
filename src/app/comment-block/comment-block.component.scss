@@ -1,0 +1,140 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+}
+
+.commentBlock {
+  flex-direction: row;
+  font-size: 10pt;
+  margin-bottom: 10px;
+  width: 100%;
+
+  .userPic{
+    // width: 45px;
+    // height: 45px;
+    border-radius: 50px;
+  }
+
+  .commentDetails {
+    flex-direction: column;
+    width: 100%;
+
+    *{
+      margin: 0 5px;
+    }
+
+    .userDetails {
+      flex-direction: row;
+      font-weight: lighter;
+      color: gray;
+
+      p:first-child {
+        font-weight: bold;
+        margin-right: 10px;
+        color: black;
+      }
+    }
+
+    .content {
+      *{
+        margin: 5px;
+      }
+    }
+
+    .commentStats {
+      flex-direction: row;
+      align-items: center;
+      color: gray;
+      *{
+        margin: 5px;
+      }
+
+      p {
+        margin-right: 10px;
+      }
+
+      svg {
+        color: gray;
+        padding: 0;
+        margin: 0;
+        margin-left: 5px;
+      }
+    }
+
+    .shownReplies {
+      flex-direction: column;
+
+      .showReply{
+          *{
+            margin-left: 0;
+          }
+
+          margin-bottom: 20px;
+      }
+
+    }
+
+    .newReply {
+      flex-direction: row;
+      margin: 7px 0;
+      align-items: center;
+      .replyBox {
+        padding: 5px;
+        border: 0;
+        width: 100%;
+        border-bottom: 1px solid gray;
+
+        &:focus {
+          outline: 0;
+        }
+      }
+    }
+
+    .newReplayWrapper {
+      width: 100%;
+      flex-direction: column;
+
+      .replyControl {
+        width: 100%;
+        justify-content: flex-end;
+        align-items: center;
+
+
+
+        .cancelBtn {
+          border: none;
+          color: lightgray;
+          font-weight: bold;
+          background-color: transparent;
+
+          &:active {
+            color: gray;
+          }
+        }
+
+        .submitBtn {
+          justify-content: center;
+          align-items: center;
+          width: 70px;
+          height: 28px;
+          border: none;
+          font-weight: bold;
+          background-color: #01baf0;
+          color: white;
+
+          &:disabled {
+            background-color: lightgray;
+          }
+
+          &:active {
+            background-color: #0094bf;
+          }
+        }
+    }
+
+
+    }
+  }
+}

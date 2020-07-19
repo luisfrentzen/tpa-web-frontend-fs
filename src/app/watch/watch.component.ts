@@ -49,7 +49,7 @@ export class WatchComponent implements OnInit {
     return Math.round((a1 / a2) * 100) + "%"
   }
 
-  vidDate;
+  curDate = new Date();
 
   getDiff(day, month, year){
     const vidDate = (year * 365) + (month * 30) + day
@@ -137,9 +137,145 @@ export class WatchComponent implements OnInit {
     return ""
   }
 
+  comments;
+
+  users = []
+  user
+
+  newCommentDesc;
+
+  addNewCommentBtn(newdesc){
+    this.apollo
+        .mutate({
+          mutation : gql`
+          mutation newComment($userid: String!, $desc: String!, $day: Int!, $month: Int!, $year: Int!, $videoid: Int!){
+            createComment( input: {
+              userid: $userid
+              videoid: $videoid
+              like: 0
+              disilike: 0
+              desc: $desc
+              day: $day
+              month: $month
+              year: $year
+              replyto: 0
+              replycount: 0
+            }){ replyto }
+          }
+          `,
+          variables : {
+            userid: this.user.id,
+            desc: newdesc,
+            day: this.curDate.getDate(),
+            month: this.curDate.getMonth(),
+            year: this.curDate.getFullYear(),
+            videoid: this.targetVideo.id,
+          },
+          refetchQueries: [{
+            query: gql`
+              query commentByVid($videoid: Int!){
+                commentsByVideo(videoid: $videoid){
+                  id,
+                  day,
+                  month,
+                  year,
+                  userid,
+                  replycount,
+                  desc,
+                  disilike,
+                  like,
+                  replyto,
+                }
+              }
+            `,
+            variables: {
+              videoid: this.targetVideo.id,
+            },
+          }
+        ]
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+    },(error) => {
+      // console.log(this.user.id)
+      // console.log(newdesc)
+      // console.log(this.curDate.getDate())
+      // console.log(this.curDate.getMonth())
+      // console.log(this.curDate.getFullYear())
+      // console.log(this.targetVideo.id)
+
+      console.log('there was an error sending the query', error);
+    });
+  }
+
+  currentUserInfo;
+  isSubscribed = false;
+
+  subs;
+
+  toggleSubs(thisid, targetid){
+    this.apollo
+        .mutate({
+          mutation : gql`
+            mutation subscribe($id: String!, $chnid: String!){
+              subscribe(id: $id, chnid: $chnid){
+                name
+              }
+            }
+          `,
+          variables : {
+            id: thisid,
+            chnid: targetid,
+          },
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+      this.isSubscribed = !this.isSubscribed
+    },(error) => {
+      console.log('there was an error sending the query', error);
+    });
+  }
+
   ngOnInit(): void {
 
     const passedId = +this.route.snapshot.paramMap.get('id');
+
+    if(localStorage.getItem('users') == null){
+      this.users = [];
+    }
+    else{
+      this.users = JSON.parse(localStorage.getItem('users'));
+      this.user = this.users[0];
+
+      this.apollo
+        .watchQuery({
+          query: gql`
+            query userById($userid: String!){
+              userById(userid: $userid){
+                id,
+                name,
+                subscribers,
+                subscribed,
+                likedvideos,
+                likedcomments,
+                disilikedvideos,
+                disilikedcomments,
+              }
+            }
+          `,
+          variables: {
+            userid: this.user.id,
+          }
+        })
+        .valueChanges.subscribe(result => {
+          this.currentUserInfo = result.data.userById
+          this.currentUserInfo = this.currentUserInfo[0]
+
+          if ( this.currentUserInfo.subscribed != "")
+          {
+            this.subs = this.currentUserInfo.subscribed.split(",")
+          }
+        })
+    }
+
 
     // if(id == 2)
     // {
@@ -149,11 +285,14 @@ export class WatchComponent implements OnInit {
     //   this.url = "https://firebasestorage.googleapis.com/v0/b/festube-storage.appspot.com/o/vid%2F1594796961321_dummy.mp4?alt=media&token=530ae21d-6deb-4eef-81c3-b9c336de2c27"
     // }
 
+
+
     this.apollo
       .watchQuery({
         query: gql`
           query videoById($id: Int!){
             videoById(id: $id){
+              id,
               title,
               url,
               thumbnail,
@@ -187,6 +326,12 @@ export class WatchComponent implements OnInit {
                   id,
                   name,
                   profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
                 }
               }
             `,
@@ -197,6 +342,38 @@ export class WatchComponent implements OnInit {
           .valueChanges.subscribe(result => {
             this.channel = result.data.userById
             this.channel = this.channel[0]
+
+            if ( this.subs.includes(this.channel.id) )
+            {
+              this.isSubscribed = true;
+            }
+          });
+
+        this.apollo
+          .watchQuery({
+            query: gql`
+              query commentByVid($videoid: Int!){
+                commentsByVideo(videoid: $videoid){
+                  id,
+                  day,
+                  month,
+                  year,
+                  userid,
+                  replycount,
+                  desc,
+                  disilike,
+                  like,
+                  replyto,
+                }
+              }
+            `,
+            variables: {
+              videoid: passedId
+            }
+          })
+          .valueChanges.subscribe(result => {
+            this.comments = result.data.commentsByVideo
+            console.log(this.comments)
           });
       });
 
