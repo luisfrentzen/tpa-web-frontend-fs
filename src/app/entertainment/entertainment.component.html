@@ -1,20 +1,23 @@
-<div class="header">
-  <div class="iconCat">
-    <i class="fa fa-magic"></i>
+<div class="content">
+  <div class="header">
+    <div class="iconCat">
+      <i class="fa fa-magic"></i>
+    </div>
+    <div class="catTitle">
+      <h1>Entertainment</h1>
+      <p><b>Category</b></p>
+    </div>
   </div>
-  <div class="catTitle">
-    <h1>Entertainment</h1>
-    <p><b>Category</b></p>
+  <hr>
+  <div class="vidContainer" *ngFor="let video of videos" (click)="toWatchView(video.id)">
+    <div class="vidThumbnail">
+      <img [src]="video.thumbnail" alt="">
+    </div>
+    <div class="vidInfo">
+      <p style="margin-bottom: 2px;"><b>{{video.title}}</b></p>
+      <p style="color: gray;">{{video.channelname}} - {{getViewCount(video.view)}} - {{ getDiff(video.day, video.month, video.year) }}</p>
+      <p style="color: gray;">{{video.desc}}</p>
+    </div>
   </div>
-</div>
-<hr>
-<div class="vidContainer" *ngFor="let video of videos" (click)="toWatchView(video.id)">
-  <div class="vidThumbnail">
-    <img [src]="video.thumbnail" alt="">
-  </div>
-  <div class="vidInfo">
-    <p style="margin-bottom: 2px;"><b>{{video.title}}</b></p>
-    <p style="color: gray;">{{video.channelname}} - {{getViewCount(video.view)}} - {{ getDiff(video.day, video.month, video.year) }}</p>
-    <p style="color: gray;">{{video.desc}}</p>
-  </div>
+
 </div>

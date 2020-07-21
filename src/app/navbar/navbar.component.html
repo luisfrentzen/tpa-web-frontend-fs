@@ -23,7 +23,7 @@
         </div>
         <a style="padding:0; margin:0" href=""><div (click)="signOut()" *ngIf="user" class=""><i class="fa fa-user fa3x"></i>Switch Account</div></a>
         <div *ngIf="user" class=""><i class="fa fa-star fa3x"></i>Membership</div>
-        <div *ngIf="user" class=""><i class="fa fa-caret-square-right fa3x"></i>Your Channel</div>
+        <a *ngIf="user" style="padding:0; margin:0" href="channel/{{user.id}}/home"><div  class=""><i class="fa fa-caret-square-right fa3x"></i>Your Channel</div></a>
         <div (click)="toggleRestrictionButton()"><i class="fa fa-lock fa-3x"></i>Restricted Mode : {{onRestriction ? 'ON' : 'OFF'}}</div>
         <div (click)="toggleLocationButton()"><i class="fa fa-map-marker-alt fa-3x"></i>Enable Location : {{onLocation ? 'ON' : 'OFF'}}</div>
         <div (click)="toggleKeyboardModal()"><i class="fa fa-keyboard fa-3x"></i>Keyboard Shortcuts</div>

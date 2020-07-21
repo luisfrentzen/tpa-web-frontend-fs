@@ -6,12 +6,19 @@
   text-decoration: none;
 }
 
+.content {
+  margin: 30px;
+  margin-top: 80px;
+  margin-right: 45px;
+}
+
 .container {
   * {
     margin: 5px;
   }
 
   .channelOverview {
+    flex-direction: column;
     justify-content: space-between;
 
     .channelName {
@@ -20,7 +27,7 @@
     }
 
     .channelStats {
-      color: gray;
+      // color: gray;
       flex-direction: column;
       align-items: center;
 
@@ -46,12 +53,12 @@
 
       .stats {
         align-items: center;
-        flex-direction: row;
+        flex-direction: column;
       }
 
       svg {
         margin: 0 10px;
-        color: gray;
+        // color: gray;
       }
     }
   }
@@ -80,9 +87,9 @@
           align-items: center;
           width: 130px;
           height: 35px;
-          background-color: #d00000;
+          // background-color: #d00000;
           // font-weight: bold;
-          color: white;
+          // color: white;
         }
       }
     }

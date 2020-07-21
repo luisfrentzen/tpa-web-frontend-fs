@@ -1,0 +1,40 @@
+<div class="content" *ngIf="channelUserInfo">
+  <div class="thumbContainer">
+    <img class="thumbnail" [src]="channelUserInfo.channelart" alt="">
+  </div>
+
+  <div class="channelnav">
+    <div class="navcontent">
+      <img class="channelpic" [src]="channelUserInfo.profilepic" alt="">
+      <div class="" style="flex-direction: column;">
+        <p>{{channelUserInfo.name}}</p>
+        <p style="color: gray; font-size: 10pt;">{{getViewCount(channelUserInfo.subscribers)}} subsribers</p>
+      </div>
+    </div>
+    <div class="navcontent">
+      <div class="subButton">
+        SUBSCRIBE
+      </div>
+    </div>
+  </div>
+  <div class="navcontainer">
+    <div class="navitem" (click)="changePage('home')" [style.border-bottom]="onPage == 'home'? '3px solid #2e2e2e' : '3px solid transparent'">
+      <p>HOME</p>
+    </div>
+    <div class="navitem" (click)="changePage('videos')" [style.border-bottom]="onPage == 'videos'? '3px solid #2e2e2e' : '3px solid transparent'">
+      <p>VIDEOS</p>
+    </div>
+    <div class="navitem" (click)="changePage('playlist')" [style.border-bottom]="onPage == 'playlist'? '3px solid #2e2e2e' : '3px solid transparent'">
+      <p>PLAYLIST</p>
+    </div>
+    <div class="navitem" (click)="changePage('community')" [style.border-bottom]="onPage == 'community'? '3px solid #2e2e2e' : '3px solid transparent'">
+      <p>COMMUNITY</p>
+    </div>
+    <div class="navitem" (click)="changePage('about')" [style.border-bottom]="onPage == 'about'? '3px solid #2e2e2e' : '3px solid transparent'">
+      <p>ABOUT</p>
+    </div>
+  </div>
+  <div class="channelContent">
+    <router-outlet></router-outlet>
+  </div>
+</div>

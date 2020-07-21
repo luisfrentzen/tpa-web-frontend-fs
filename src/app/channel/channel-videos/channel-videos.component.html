@@ -1,0 +1,12 @@
+<div class="content">
+  <div class="vidsection">
+    <p>Videos</p>
+    <div class="vidScroll">
+      <div class="auto-grid">
+        <div class="vidItems" *ngFor="let video of videos">
+          <img class="vid" [src]="video.thumbnail" alt="">
+          <p style="font-size: 12pt; margin: 0;">{{video.title}}</p>
+          <p style="font-size: 10pt; color: gray;">{{getViewCount(video.view)}} views - {{getDiff(video.day, video.month, video.year)}}</p>
+        </div>
+      </div>
+  </div>

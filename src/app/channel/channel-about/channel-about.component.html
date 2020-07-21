@@ -1,0 +1,29 @@
+<!-- <p>channel-about works!</p> -->
+
+<div class="content" *ngIf="channelUserInfo">
+  <div class="header">
+    <p>About</p>
+    <button type="button" name="button" *ngIf="self" (click)="toggleEditAbout()"><i class="fa fa-pen" ></i></button>
+  </div>
+  <div class="chnabout">
+    <p class="aboutDesc" *ngIf="!editModeAbout">{{channelUserInfo.about}}</p>
+    <div class="aboutEdit" *ngIf="editModeAbout">
+      <textarea class="editAboutInput" name="name" [value]="channelUserInfo.about" (input)="editedAbout = $event.target.value"></textarea>
+      <button class="editAboutBtn" type="button" name="button" (click)="submitEditAboutBtn(channelUserInfo.id, editedAbout)"><i class="fa fa-check-circle"></i></button>
+    </div>
+  </div>
+  <hr>
+  <p>Stats</p>
+  <div class="chnstats">
+    <p>Joined {{getMonthName(channelUserInfo.month)}} {{channelUserInfo.day}}, {{channelUserInfo.year}}</p>
+    <p>x views</p>
+  </div>
+  <hr>
+  <div class="header">
+    <p>Links</p>
+    <button type="button" name="button"><i class="fa fa-plus" *ngIf="self"></i></button>
+  </div>
+  <div class="">
+
+  </div>
+</div>

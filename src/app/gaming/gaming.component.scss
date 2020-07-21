@@ -5,6 +5,13 @@
   padding: 0;
 }
 
+.content {
+  margin: 30px;
+  margin-top: 80px;
+  margin-right: 45px;
+  flex-direction: column;
+}
+
 .header {
   display: flex;
   align-items: center;

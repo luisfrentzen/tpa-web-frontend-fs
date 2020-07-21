@@ -216,7 +216,7 @@ export class NavbarComponent implements OnInit {
         .valueChanges.subscribe(result => {
           this.playlists = result.data.playlistsByUser
           console.log(this.playlists)
-          console.log(this.user.id)
+          console.log(this.user)
 
           if(this.playlists.length > 5 )
           {

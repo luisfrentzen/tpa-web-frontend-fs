@@ -16,13 +16,17 @@ export class CommentBlockComponent implements OnInit {
   replies;
   showReply = false;
 
-  comment;
   user;
 
   myUser;
 
   newReplyDesc;
 
+  isLiked;
+  isDisiliked;
+
+  likes = []
+  disilikes = []
 
   users = [];
 
@@ -37,6 +41,169 @@ export class CommentBlockComponent implements OnInit {
   // this.day = this.date.getDate()
   // this.month = this.date.getMonth()
   // this.year = this.date.getFullYear()
+
+  toggleLike(ignore){
+    if(localStorage.getItem('users') == null){
+      return
+    }
+
+    this.apollo
+        .mutate({
+          mutation : gql`
+            mutation likecom($id: String!, $comid: String!){
+              likecom(id:$id, chnid:$comid)
+              {
+                name
+              }
+            }
+          `,
+          variables : {
+            id: this.myUser.id,
+            comid: (this.curComment.id).toString(10),
+          },
+          refetchQueries: [{
+            query: gql`
+              query getCommentById($id: Int!){
+                commentById(id: $id){
+                  id,
+                  desc,
+                  day,
+                  month,
+                  year,
+                  like,
+                  disilike,
+                  replycount,
+                  replyto,
+                  videoid,
+                  userid,
+                }
+              }
+            `,
+            variables: {
+              id: this.comment,
+            }
+          },{
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                }
+              }
+            `,
+            variables: {
+              userid: this.myUser.id,
+            }
+          }]
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+      // this.isLiked = !this.isLiked;
+      if ( this.currentUserInfo.likedcomments != "")
+      {
+        this.likes = this.currentUserInfo.likedcomments.split(",")
+        // console.log(this.likes)
+      }
+      else {
+        this.likes = []
+      }
+
+      if(this.isDisiliked == true && !ignore)
+      {
+        this.toggleDisilike(true)
+      }
+      // console.log(this.isLiked);
+    },(error) => {
+      console.log('there was an error sending the query', error);
+    });
+  }
+
+  toggleDisilike(ignore){
+    if(localStorage.getItem('users') == null){
+      return
+    }
+
+    this.apollo
+        .mutate({
+          mutation : gql`
+            mutation disilikelikecom($id: String!, $comid: String!){
+              disilikecom(id:$id, chnid:$comid)
+              {
+                name
+              }
+            }
+          `,
+          variables : {
+            id: this.myUser.id,
+            comid: (this.curComment.id).toString(10),
+          },
+          refetchQueries: [{
+            query: gql`
+              query getCommentById($id: Int!){
+                commentById(id: $id){
+                  id,
+                  desc,
+                  day,
+                  month,
+                  year,
+                  like,
+                  disilike,
+                  replycount,
+                  replyto,
+                  videoid,
+                  userid,
+                }
+              }
+            `,
+            variables: {
+              id: this.comment,
+            }
+          },{
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                }
+              }
+            `,
+            variables: {
+              userid: this.myUser.id,
+            }
+          }]
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+      // this.isLiked = !this.isLiked;
+
+      if ( this.currentUserInfo.disilikedcomments != "")
+      {
+        this.disilikes = this.currentUserInfo.disilikedcomments.split(",")
+        // console.log(this.likes)
+      }
+      else {
+        this.disilikes = []
+      }
+
+      if(this.isLiked == true && !ignore)
+      {
+        this.toggleLike(true)
+      }
+      // console.log(this.isLiked);
+    },(error) => {
+      console.log('there was an error sending the query', error);
+    });
+  }
 
 
   addNewReplyBtn(newdesc){
@@ -270,14 +437,92 @@ export class CommentBlockComponent implements OnInit {
   }
 
   curComment;
+  currentUserInfo;
 
   ngOnInit(): void {
+    console.log("testing")
+
     if(localStorage.getItem('users') == null){
       this.users = [];
     }
     else{
+      console.log("masok")
       this.users = JSON.parse(localStorage.getItem('users'));
       this.myUser = this.users[0];
+
+      this.apollo
+        .watchQuery({
+          query: gql`
+            query userById($userid: String!){
+              userById(userid: $userid){
+                id,
+                name,
+                subscribers,
+                subscribed,
+                likedvideos,
+                likedcomments,
+                disilikedvideos,
+                disilikedcomments,
+              }
+            }
+          `,
+          variables: {
+            userid: this.myUser.id,
+          }
+        })
+        .valueChanges.subscribe(result => {
+          this.currentUserInfo = result.data.userById
+          this.currentUserInfo = this.currentUserInfo[0]
+
+          if ( this.currentUserInfo.likedcomments != "")
+          {
+            this.likes = this.currentUserInfo.likedcomments.split(",")
+          }
+          else
+          {
+            this.likes = []
+          }
+
+          console.log(this.likes)
+
+
+          if ( this.currentUserInfo.disilikedcomments != "")
+          {
+            this.disilikes = this.currentUserInfo.disilikedcomments.split(",")
+            // console.log(this.likes)
+          }
+          else
+          {
+            this.disilikes = []
+          }
+
+
+
+          if (this.likes.includes((this.comment).toString(10)) )
+          {
+            this.isLiked = true;
+            console.log("test")
+          }
+          else {
+            this.isLiked = false;
+          }
+
+          console.log(this.isLiked)
+
+          if (this.disilikes.includes((this.comment).toString(10)) )
+          {
+            this.isDisiliked = true;
+          }
+          else {
+            this.isDisiliked = false;
+          }
+
+          console.log(this.likes)
+          console.log(this.disilikes)
+          console.log(this.isLiked)
+          console.log(this.isDisiliked)
+          console.log(this.isLiked)
+        })
     }
 
     this.apollo
@@ -301,7 +546,8 @@ export class CommentBlockComponent implements OnInit {
         `,
         variables: {
           id: this.comment
-        }
+        },
+
       })
       .valueChanges.subscribe(result => {
         this.curComment = result.data.commentById
@@ -316,6 +562,8 @@ export class CommentBlockComponent implements OnInit {
                   id,
                   name,
                   profilepic,
+                  disilikedcomments,
+                  likedcomments,
                 }
               }
             `,

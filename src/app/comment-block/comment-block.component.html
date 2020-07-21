@@ -9,8 +9,12 @@
       <p>{{curComment.desc}}</p>
     </div>
     <div class="commentStats">
-      <i class="fa fa-thumbs-up" style="margin-bottom: 4px"></i><p>{{getViewCount(curComment.like)}}</p>
-      <i class="fa fa-thumbs-down" style="margin-bottom: 0;"></i><p>{{getViewCount(curComment.disilike)}}</p>
+      <div class="" style="margin: 0; align-items: center;" (click)="toggleLike(false)" [style.color]="isLiked ? '#0070c2' : 'gray'">
+        <i class="fa fa-thumbs-up" style="margin-bottom: 4px"></i><p >{{getViewCount(curComment.like)}}</p>
+      </div>
+      <div class="" style="margin: 0; align-items: center;" (click)="toggleDisilike(false)" [style.color]="isDisiliked ? '#0070c2' : 'gray'">
+        <i class="fa fa-thumbs-down" style="margin-bottom: 0;"></i><p>{{getViewCount(curComment.disilike)}}</p>
+      </div>
       <div class="addReply" (click)="toggleAddReply()">
         Reply
       </div>

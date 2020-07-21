@@ -1,25 +1,28 @@
-<div class="container">
-  <img src="../assets/LogoPremium.png" alt="">
-  <p>Watch premium-exclusive videos, watch scheduled videos,
-  <br>and download access</p>
-  <div class="plan">
-    <div class="planMember" [style.background-color]="plan == 'monthly' ? '#40c3ff' : 'lightgray'" [style.color]="plan == 'monthly' ? 'white' : 'gray'" (click)="this.plan = 'monthly'">
-      <b style="height:80px; margin-bottom:30px; overflow:hidden;">Monthly Plan</b>
-      <p><b>IDR </b> 59.999 <br></p>
-      <p><b style="font-size:13pt;"> monthly</b></p>
-      <div *ngIf="plan == 'monthly'" class="wave">
+<div class="content">
+  <div class="container">
+    <img src="../assets/LogoPremium.png" alt="">
+    <p>Watch premium-exclusive videos, watch scheduled videos,
+    <br>and download access</p>
+    <div class="plan">
+      <div class="planMember" [style.background-color]="plan == 'monthly' ? '#40c3ff' : 'lightgray'" [style.color]="plan == 'monthly' ? 'white' : 'gray'" (click)="this.plan = 'monthly'">
+        <b style="height:80px; margin-bottom:30px; overflow:hidden;">Monthly Plan</b>
+        <p><b>IDR </b> 59.999 <br></p>
+        <p><b style="font-size:13pt;"> monthly</b></p>
+        <div *ngIf="plan == 'monthly'" class="wave">
+        </div>
+      </div>
+      <div class="planMember" [style.background-color]="plan != 'monthly' ? '#40c3ff' : 'lightgray'" [style.color]="plan != 'monthly' ? 'white' : 'gray'" (click)="this.plan = 'yearly'">
+        <b style="height:80px; margin-bottom:30px; overflow:hidden;">Annual Plan</b>
+        <p><b>IDR </b> 599.999 <br></p>
+        <p><b style="font-size:13pt;"> annually</b></p>
+        <div *ngIf="plan != 'monthly'" class="wave">
+        </div>
       </div>
     </div>
-    <div class="planMember" [style.background-color]="plan != 'monthly' ? '#40c3ff' : 'lightgray'" [style.color]="plan != 'monthly' ? 'white' : 'gray'" (click)="this.plan = 'yearly'">
-      <b style="height:80px; margin-bottom:30px; overflow:hidden;">Annual Plan</b>
-      <p><b>IDR </b> 599.999 <br></p>
-      <p><b style="font-size:13pt;"> annually</b></p>
-      <div *ngIf="plan != 'monthly'" class="wave">
-      </div>
+    <div class="getButton">
+      GET FESTUBE PREMIUM
     </div>
+    <p style="color:gray; font-size: 11pt; margin-top:-20px; margin-bottom: 0;">recurring billing - cancel anytime</p>
   </div>
-  <div class="getButton">
-    GET FESTUBE PREMIUM
-  </div>
-  <p style="color:gray; font-size: 11pt; margin-top:-20px; margin-bottom: 0;">recurring billing - cancel anytime</p>
+
 </div>

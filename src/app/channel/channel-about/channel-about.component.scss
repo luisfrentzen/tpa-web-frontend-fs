@@ -1,0 +1,85 @@
+@import '../channel-home/channel-home.component';
+
+*{
+  width: 100%;
+}
+
+.chnstats {
+  flex-direction: column;
+  p {
+    color: gray;
+    font-size: 10pt;
+    margin: 0;
+  }
+}
+
+.header {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  button {
+    border: none;
+    background-color: transparent;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    margin-bottom: 7px;
+
+    svg {
+      margin: 0;
+      color: gray;
+      // margin-bottom: 5px;
+    }
+
+    &:active {
+      background-color: #c8c8c8;
+    }
+  }
+}
+
+.chnabout {
+  width: 100%;
+  .aboutDesc {
+    width: 100%;
+    white-space: pre-line;
+    font-size: 11pt;
+  }
+
+  .aboutEdit {
+    flex-direction: column;
+    height: 100%;
+    .editAboutInput {
+      // resize: horizontal;
+      width: 100%;
+      padding: 10px;
+      font-size: 11pt;
+      height: 200px;
+    }
+
+    .editAboutBtn {
+      border: none;
+      background-color: transparent;
+      justify-content: center;
+      align-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+      margin-bottom: 7px;
+      margin-top: 10px;
+
+      svg {
+        margin: 0;
+        color: gray;
+        // margin-bottom: 5px;
+      }
+
+      &:active {
+        background-color: #c8c8c8;
+      }
+
+    }
+  }
+}

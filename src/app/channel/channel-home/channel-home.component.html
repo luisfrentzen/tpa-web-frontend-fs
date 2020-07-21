@@ -1,0 +1,63 @@
+<div class="content" *ngIf="channelUserInfo">
+  <div class="vidsection">
+    <p>Recent Uploads</p>
+    <div class="vidScroll">
+      <div class="vidContainer">
+        <div class="vidItems" *ngFor="let i of [1,2,3,4,5]">
+          <img class="vid" src="../../assets/no_thumbnail.png" alt="">
+          <p style="font-size: 12pt;">judul</p>
+          <p>view - x ago</p>
+        </div>
+      </div>
+      <div class="viewAll">
+        <a href="channel/{{channelUserInfo.id}}/videos">
+          <div class="viewAllBtn">
+            <i class="fa fa-chevron-right"></i>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="vidsection">
+    <p>Videos</p>
+    <div class="vidScroll">
+      <div class="vidContainer">
+        <div class="vidItems" *ngFor="let i of [1,2,3,4,5]">
+          <img class="vid" src="../../assets/no_thumbnail.png" alt="">
+          <p style="font-size: 12pt;">judul</p>
+          <p>view - x ago</p>
+        </div>
+
+      </div>
+      <div class="viewAll">
+        <a href="channel/{{channelUserInfo.id}}/videos">
+          <div class="viewAllBtn">
+            <i class="fa fa-chevron-right"></i>
+          </div>
+        </a>
+    </div>
+  </div>
+  <hr>
+  <div class="vidsection">
+    <p>Playlist</p>
+    <div class="vidScroll">
+      <div class="vidContainer">
+        <div class="vidItems" *ngFor="let i of [1,2,3]">
+          <img class="vid" src="../../assets/no_thumbnail.png" alt="">
+          <p style="font-size: 12pt;">judul</p>
+          <p>view - x ago</p>
+        </div>
+
+      </div>
+      <div class="viewAll">
+        <a href="channel/{{channelUserInfo.id}}/playlist">
+          <div class="viewAllBtn">
+            <i class="fa fa-chevron-right"></i>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <hr>
+</div>

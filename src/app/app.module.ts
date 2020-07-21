@@ -43,6 +43,15 @@ import { TravelComponent } from './travel/travel.component';
 import { WatchComponent } from './watch/watch.component';
 import { PlaylistComponent } from './playlist/playlist.component';
 import { CommentBlockComponent } from './comment-block/comment-block.component';
+import { ChannelComponent } from './channel/channel.component';
+import { ChannelHomeComponent } from './channel/channel-home/channel-home.component';
+import { ChannelVideosComponent } from './channel/channel-videos/channel-videos.component';
+import { ChannelPlaylistComponent } from './channel/channel-playlist/channel-playlist.component';
+import { ChannelCommunityComponent } from './channel/channel-community/channel-community.component';
+import { ChannelAboutComponent } from './channel/channel-about/channel-about.component';
+import { PlaylistBlockComponent } from './playlist-block/playlist-block.component';
+import { VideoBlockComponent } from './video-block/video-block.component';
+import { PostBlockComponent } from './post-block/post-block.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +77,16 @@ import { CommentBlockComponent } from './comment-block/comment-block.component';
     TravelComponent,
     WatchComponent,
     PlaylistComponent,
-    CommentBlockComponent
+    CommentBlockComponent,
+    ChannelComponent,
+    ChannelHomeComponent,
+    ChannelVideosComponent,
+    ChannelPlaylistComponent,
+    ChannelCommunityComponent,
+    ChannelAboutComponent,
+    PlaylistBlockComponent,
+    VideoBlockComponent,
+    PostBlockComponent
   ],
   imports: [
     BrowserModule,

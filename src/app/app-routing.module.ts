@@ -20,6 +20,12 @@ import { TravelComponent } from './travel/travel.component'
 import { NewsComponent } from './news/news.component'
 import { WatchComponent } from './watch/watch.component'
 import { PlaylistComponent } from './playlist/playlist.component'
+import { ChannelComponent } from './channel/channel.component'
+import { ChannelHomeComponent } from './channel/channel-home/channel-home.component'
+import { ChannelAboutComponent } from './channel/channel-about/channel-about.component'
+import { ChannelCommunityComponent } from './channel/channel-community/channel-community.component'
+import { ChannelPlaylistComponent } from './channel/channel-playlist/channel-playlist.component'
+import { ChannelVideosComponent } from './channel/channel-videos/channel-videos.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -39,7 +45,14 @@ const routes: Routes = [
   { path: 'news', component: NewsComponent },
   { path: 'travel', component: TravelComponent },
   { path: 'watch/:id', component: WatchComponent },
-  { path: 'playlist/:id', component: PlaylistComponent }
+  { path: 'playlist/:id', component: PlaylistComponent },
+  { path: 'channel/:id', component: ChannelComponent, children: [
+    { path: 'home', component: ChannelHomeComponent },
+    { path: 'about', component: ChannelAboutComponent },
+    { path: 'community', component: ChannelCommunityComponent },
+    { path: 'videos', component: ChannelVideosComponent },
+    { path: 'playlist', component: ChannelPlaylistComponent },
+  ] }
 ];
 
 @NgModule({
