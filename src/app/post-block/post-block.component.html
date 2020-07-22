@@ -1,1 +1,19 @@
-<p>post-block works!</p>
+<div class="postitem" *ngIf="post">
+  <img class="userPic" [src]="channelInfo.profilepic" alt="">
+  <div class="postContent">
+    <div class="">
+      <b>{{channelInfo.name}}</b>
+      <p>{{getDiff(post.day, post.month, post.year)}}</p>
+    </div>
+    <p>{{post.desc}}</p>
+    <img class="postattachment" *ngIf="post.attachment != ''" [src]="post.attachment" alt="">
+    <div class="postStats">
+      <div class="" style="align-items:center; justify-content: center" (click)="toggleLike(false)" [style.color]="isLiked ? '#0070c2' : 'gray'">
+        <i class="fa fa-thumbs-up"></i> <p>{{getViewCount(post.like)}}</p>
+      </div>
+      <div class="" style="align-items:center; justify-content: center" (click)="toggleDisilike(false)" [style.color]="isDisiliked ? '#0070c2' : 'gray'">
+        <i class="fa fa-thumbs-down"></i> <p>{{getViewCount(post.disilike)}}</p>
+      </div>
+    </div>
+  </div>
+</div>

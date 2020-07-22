@@ -12,8 +12,11 @@
       </div>
     </div>
     <div class="navcontent">
-      <div class="subButton">
+      <div class="subButton" *ngIf="channelUserInfo.id != curUserId">
         SUBSCRIBE
+      </div>
+      <div class="subButton" (click)="toggleModal()" *ngIf="channelUserInfo.id == curUserId" style="background-color: #0080d9; width: 130px">
+        EDIT PROFILE
       </div>
     </div>
   </div>
@@ -38,3 +41,23 @@
     <router-outlet></router-outlet>
   </div>
 </div>
+
+<app-modal *ngIf="channelUserInfo"
+    [show]="editProfile"
+    [closeCallback]="toggleModal"
+    [modalWidth]=700>
+    <div class="modalContent">
+      <p>Profile Picture</p>
+      <img class="editprofilepic" [src]="channelUserInfo.profilepic" alt="">
+      <div class="" style="flex-direction: row;">
+        <input type="file" name="" value="" (change)="getProfilePic($event.target.files)">
+        <button type="button" name="button" (click)="updatePicture()">Update</button>
+      </div>
+      <p>Channel Art</p>
+      <img class="editchannelart" [src]="channelUserInfo.channelart" alt="">
+      <div class="" style="flex-direction: row;">
+        <input type="file" name="" value="" (change)="getChannelArt($event.target.files)">
+        <button type="button" name="button" (click)="updateArt()">Update</button>
+      </div>
+    </div>
+</app-modal>

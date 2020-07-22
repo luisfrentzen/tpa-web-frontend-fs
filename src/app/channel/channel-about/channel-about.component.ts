@@ -125,16 +125,161 @@ export class ChannelAboutComponent implements OnInit {
   users = [];
   user;
 
+  linkurl = [];
+  linklabel = [];
+
   toggleEditAbout() {
     this.editModeAbout = !this.editModeAbout;
     console.log(this.editModeAbout)
   }
 
   toggleEditLinks() {
-
+    this.editModeLinks = !this.editModeLinks;
   }
 
+  updateLinks() {
+    this.links.forEach((element, index) => {
+      var editedlabel = this.linklabel[index] ? this.linklabel[index] : element.label;
+      var editedurl = this.linkurl[index] ? this.linkurl[index] : element.url;
+      // f = f+1;
+      // console.log(editedlabel)
+      // console.log(editedurl)
+
+      this.apollo
+        .mutate({
+          mutation: gql`
+            mutation updatelink($id: Int!, $label: String!, $url: String!) {
+              updateLink(
+                id: $id,
+                label: $label,
+                url: $url,
+              ){ id }
+            }
+          `,
+          variables: {
+            id: element.id,
+            url: editedurl,
+            label: editedlabel,
+          },
+          refetchQueries: [{
+            query: gql `
+              query links($userid: String!) {
+                linkByUser(userid: $userid) {
+                  id,
+                  url,
+                  label
+                }
+              }
+            `,
+            variables: {
+              userid: this.channelUserInfo.id,
+            }
+          }]
+        })
+        .subscribe(({ data }) => {
+          console.log('got data', data);
+          // this.isLiked = !this.isLiked;
+          // console.log(this.isLiked);
+          this.editModeLinks = false;
+        },(error) => {
+          console.log('there was an error sending the query', error);
+        });
+    });
+  }
+
+  deleteLink(linkid){
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation deleteLink($id: Int!) {
+            deleteLink(id: $id)
+          }
+        `,
+        variables: {
+          id: linkid,
+        },
+        refetchQueries: [{
+          query: gql `
+            query links($userid: String!) {
+              linkByUser(userid: $userid) {
+                id,
+                url,
+                label
+              }
+            }
+          `,
+          variables: {
+            userid: this.channelUserInfo.id,
+          }
+        }]
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        // this.isLiked = !this.isLiked;
+        // console.log(this.isLiked);
+        this.editModeLinks = true;
+      },(error) => {
+        console.log('there was an error sending the query', error);
+      });
+    }
+
   editedAbout;
+  addModeLink = false;
+
+  newlinklabel;
+  newlinkurl;
+
+  totalviews = 0;
+
+  videos;
+
+  addNewLink()
+  {
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation newlink($userid: String!, $url: String!, $label: String!){
+            createLink(input: {
+              userid: $userid,
+              url: $url,
+              label: $label,
+            }){ userid }
+          }
+        `,
+        variables: {
+          userid: this.channelUserInfo.id,
+          url: this.newlinkurl,
+          label: this.newlinklabel,
+        },
+        refetchQueries: [{
+          query: gql `
+            query links($userid: String!) {
+              linkByUser(userid: $userid) {
+                id,
+                url,
+                label
+              }
+            }
+          `,
+          variables: {
+            userid: this.channelUserInfo.id,
+          }
+        }]
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        // this.isLiked = !this.isLiked;
+        // console.log(this.isLiked);
+        this.addModeLink = false;
+      },(error) => {
+        console.log('there was an error sending the query', error);
+      });
+  }
+
+  toggleAddLink() {
+    this.addModeLink = !this.addModeLink;
+    console.log(this.addModeLink)
+  }
 
   submitEditAboutBtn(userid, newabout) {
     console.log(userid)
@@ -192,6 +337,41 @@ export class ChannelAboutComponent implements OnInit {
   curUserId;
   self;
 
+  getTotalViews(){
+    this.apollo
+      .watchQuery({
+        query: gql`
+        query vidByUser($userid: String!){
+          videosByUser(userid: $userid) {
+            title,
+            view,
+            thumbnail,
+            day,
+            month,
+            year,
+            id,
+          }
+        }
+        `,
+        variables: {
+          userid: this.channelUserInfo.id
+        }
+      })
+      .valueChanges.subscribe(result => {
+        this.videos = result.data.videosByUser
+        console.log(this.videos)
+        // this.totalviews = 0;
+        this.videos.forEach(element => {
+          this.totalviews += element.view
+          console.log(this.totalviews)
+        });
+
+        // return this.totalviews
+      })
+
+      // return 0;
+  }
+
   ngOnInit(): void {
     if(localStorage.getItem('users') == null){
       this.users = [];
@@ -248,6 +428,8 @@ export class ChannelAboutComponent implements OnInit {
         // console.log(this.channelUserInfo)
         this.channelUserInfo = this.channelUserInfo[0]
         // console.log(s[2])
+
+        this.getTotalViews()
 
         this.apollo
           .watchQuery({

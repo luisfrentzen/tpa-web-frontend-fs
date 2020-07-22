@@ -1,0 +1,90 @@
+@import '../channel-home/channel-home.component';
+
+.outerWrapper{
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+textarea {
+  white-space: pre-line;
+}
+
+.content {
+  // margin: 0 20vw;
+  margin-top: 20px;
+  width: 900px;
+}
+
+.userPic {
+  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+}
+
+
+.newPost {
+  *{
+    margin-left: 10px
+  }
+  width: 100%;
+
+
+  .newPostInput {
+    resize: none;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    width: 100%;
+    height: 150px;
+
+    &:focus, &:focus{
+    outline: none;
+    box-shadow: inset 0 0 0px 1px gray;
+    }
+  }
+
+}
+
+.newPostControl {
+  justify-content: flex-end;
+
+  .postButton {
+    justify-content: center;
+    align-items: center;
+    font-size: 10pt;
+    width: 100px;
+    height: 30px;
+    color: white;
+    margin-top: 10px;
+    background-color: #0086ec;
+    border-radius: 10px;
+    border: none;
+    letter-spacing: 1px;
+
+    &:active {
+      background-color: #0476cd;
+    }
+
+    &:focus {
+      outline: 0;
+    }
+  }
+}
+
+.newAttachment {
+  // justify-content: center;
+  align-items: center;
+  margin-left: 70px;
+  margin-top: 10px;
+  height: 40px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  input {
+
+  }
+
+
+}

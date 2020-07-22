@@ -1,0 +1,74 @@
+*{
+  display: flex;
+  // width: 100%;
+  box-sizing: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.userPic {
+  margin-right: 10px;
+  height: 25px;
+  width: 25px;
+  border-radius: 50px;
+}
+
+.postitem {
+  width: 100%;
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0 ;
+  margin-left: 70px;
+
+
+
+  .postContent{
+    flex-direction: column;
+    white-space: pre;
+    div {
+      b {
+        margin-top: -4px;
+        font-size: 10pt;
+        margin-right: 15px;
+      }
+
+      p {
+        margin-top: -4px;
+        font-size: 10pt;
+        color: #343434;
+      }
+    }
+
+    p {
+      font-size: 10pt;
+    }
+
+    .postattachment {
+      border-radius: 10px;
+      max-height: 300px;
+      margin-bottom: 20px;
+    }
+
+    .postStats {
+      font-size: 9pt;
+      align-items: center;
+      // color: gray;
+
+
+      *{
+        margin: 0;
+      }
+
+      p {
+        font-size: 10pt;
+        margin-right: 20px;
+      }
+
+      svg {
+        margin: 0;
+        margin-right: 7px;
+      }
+    }
+  }
+}

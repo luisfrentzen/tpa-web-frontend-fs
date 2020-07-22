@@ -26,6 +26,7 @@ import { ChannelAboutComponent } from './channel/channel-about/channel-about.com
 import { ChannelCommunityComponent } from './channel/channel-community/channel-community.component'
 import { ChannelPlaylistComponent } from './channel/channel-playlist/channel-playlist.component'
 import { ChannelVideosComponent } from './channel/channel-videos/channel-videos.component'
+import { PostComponent } from './post/post.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -52,7 +53,8 @@ const routes: Routes = [
     { path: 'community', component: ChannelCommunityComponent },
     { path: 'videos', component: ChannelVideosComponent },
     { path: 'playlist', component: ChannelPlaylistComponent },
-  ] }
+  ]},
+  { path: 'post/:id', component: PlaylistComponent },
 ];
 
 @NgModule({

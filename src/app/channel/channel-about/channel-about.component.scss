@@ -83,3 +83,51 @@
     }
   }
 }
+
+.newLink, .linkList {
+  flex-direction: row;
+
+  height: auto;
+
+  *{
+    margin: 5px;
+  }
+
+  a {
+    color: #00a3ff;
+    font-size: 11pt;
+  }
+
+  svg {
+    margin: 0;
+    color: gray;
+  }
+
+  .labelinput{
+    height: 20px;
+    width: 100px;
+    font-size: 11pt;
+    padding: 2px;
+  }
+
+  .urlinput {
+    height: 20px;
+    width: 300px;
+    font-size: 11pt;
+    padding: 2px;
+  }
+
+  .linkbtn {
+    border: none;
+    border-radius: 3px;
+    margin: 0 2px;
+    width: 20px;
+    background-color: transparent;
+    align-items: center;
+    justify-content: center;
+
+    &:active {
+      background-color: #c8c8c8;
+    }
+  }
+}

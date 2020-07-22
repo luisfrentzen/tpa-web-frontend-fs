@@ -52,6 +52,7 @@ import { ChannelAboutComponent } from './channel/channel-about/channel-about.com
 import { PlaylistBlockComponent } from './playlist-block/playlist-block.component';
 import { VideoBlockComponent } from './video-block/video-block.component';
 import { PostBlockComponent } from './post-block/post-block.component';
+import { PostComponent } from './post/post.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { PostBlockComponent } from './post-block/post-block.component';
     ChannelAboutComponent,
     PlaylistBlockComponent,
     VideoBlockComponent,
-    PostBlockComponent
+    PostBlockComponent,
+    PostComponent
   ],
   imports: [
     BrowserModule,

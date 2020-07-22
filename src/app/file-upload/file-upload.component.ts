@@ -32,7 +32,7 @@ export class FileUploadComponent implements OnInit {
   snapshot: Observable<any>;
   downloadURL: Observable<string>;
 
-  constructor(private storage: AngularFireStorage, private db: AngularFirestore, private apollo : Apollo) { }
+  constructor(private storage: AngularFireStorage, private apollo : Apollo) { }
 
   toggleHover(event: boolean) {
     this.isHovering = event;
@@ -111,7 +111,15 @@ export class FileUploadComponent implements OnInit {
   thumbnailFile = null;
 
   uploadThumbnail(files: FileList) {
-    const file = files.item(0)
+    var file;
+    if (files.item(0).type.split('/')[0]=='image') {
+      file = files.item(0)
+      // console.log("benar");
+    }
+    else {
+      return;
+    }
+
     this.thumbnailFile = file;
 
     const reader = new FileReader();

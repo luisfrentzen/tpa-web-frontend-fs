@@ -16,14 +16,27 @@
   <p>Stats</p>
   <div class="chnstats">
     <p>Joined {{getMonthName(channelUserInfo.month)}} {{channelUserInfo.day}}, {{channelUserInfo.year}}</p>
-    <p>x views</p>
+    <p>{{totalviews}} views</p>
   </div>
   <hr>
   <div class="header">
     <p>Links</p>
-    <button type="button" name="button"><i class="fa fa-plus" *ngIf="self"></i></button>
+    <button type="button" name="button" (click)="toggleAddLink()"><i class="fa fa-plus" *ngIf="self" ></i></button>
+    <button type="button" name="button" *ngIf="!editModeLinks" (click)="toggleEditLinks()"><i class="fa fa-pen"></i></button>
+    <button type="button" name="button" *ngIf="editModeLinks" (click)="updateLinks()"><i class="fa fa-check-circle"></i></button>
   </div>
-  <div class="">
-
+  <div class="linkList" *ngFor="let link of links; let i = index">
+    <a style="width: auto;" *ngIf="!editModeLinks" [href]="link.url">{{link.label}}</a>
+    <div class="editLink" *ngIf="editModeLinks">
+      <input style="margin-left: 0" class="labelinput" type="text" name="" [value]="link.label" (input)="linklabel[i] = $event.target.value"> :
+      <input class="urlinput" type="text" name="" [value]="link.url" (input)="linkurl[i] = $event.target.value">
+      <button class="linkbtn" type="button" name="button" (click)="deleteLink(link.id)"><i class="fa fa-trash-alt"></i></button>
+    </div>
+  </div>
+  <div class="newLink" *ngIf="addModeLink">
+    <input style="margin-left: 0" class="labelinput" type="text" name="" value="" (input)="newlinklabel = $event.target.value"> :
+    <input class="urlinput" type="text" name="" value="" (input)="newlinkurl = $event.target.value">
+    <button class="linkbtn" type="button" name="button" (click)="addNewLink()"><i class="fa fa-check-circle"></i></button>
+    <button class="linkbtn" type="button" name="button" (click)="toggleAddLink()"><i class="fa fa-times-circle"></i></button>
   </div>
 </div>

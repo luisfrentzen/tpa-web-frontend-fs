@@ -1,1 +1,15 @@
-<p>channel-community works!</p>
+<div class="outerWrapper">
+  <div class="content" *ngIf="channelUserInfo">
+    <div class="newPost" *ngIf="channelUserInfo.id == curUserId">
+      <img class="userPic" [src]="channelUserInfo.profilepic" alt="">
+      <textarea class="newPostInput" (input)="dsc = $event.target.value" name="name" placeholder="What's in your mind"></textarea>
+    </div>
+    <div class="newAttachment" *ngIf="channelUserInfo.id == curUserId">
+      <input type="file" name="" value="" (change)="getAttachment($event.target.files)">
+    </div>
+    <div class="newPostControl" *ngIf="channelUserInfo.id == curUserId">
+      <button class="postButton" type="button" name="button" (click)="newPost()">Posting</button>
+    </div>
+    <app-post-block [postId]="post.id" [channelInfo]="channelUserInfo" *ngFor="let post of posts"></app-post-block>
+  </div>
+</div>

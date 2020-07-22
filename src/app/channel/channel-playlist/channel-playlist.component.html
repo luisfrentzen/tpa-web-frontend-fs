@@ -3,10 +3,6 @@
     <p>Playlists</p>
     <div class="vidScroll">
       <div class="auto-grid">
-        <div class="vidItems" *ngFor="let playlist of playlists">
-          <img class="vid" src="../../assets/no_thumbnail.png" alt="">
-          <p style="font-size: 12pt; margin: 0;">{{playlist.title}}</p>
-          <p style="font-size: 10pt; color: gray;">{{playlist.videos.length}} videos</p>
-        </div>
+        <app-playlist-block [playlist]="playlist" *ngFor="let playlist of playlists" ></app-playlist-block>
       </div>
   </div>

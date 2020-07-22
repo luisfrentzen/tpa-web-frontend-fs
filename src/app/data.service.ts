@@ -19,7 +19,14 @@ export class DataService {
   private openKeyboardModal = new BehaviorSubject(false);
   currentKeyboardModal = this.openKeyboardModal.asObservable();
 
+  private isEditProfile = new BehaviorSubject(false);
+  currentEditProfile = this.isEditProfile.asObservable();
+
   constructor() { }
+
+  toggleEditProfile(next: boolean) {
+    this.isEditProfile.next(next)
+  }
 
   changePage(nextPage: string) {
     this.page.next(nextPage)
