@@ -17,9 +17,9 @@
         <div class="titleSettings">
           Settings
         </div>
-        <div *ngIf="user" class="profileInfo">
-          <img class="profilePic" src="{{user.photoUrl}}" alt="">
-          <p>{{user.name}}</p>
+        <div *ngIf="channelUserInfo" class="profileInfo">
+          <img class="profilePic" src="{{channelUserInfo.profilepic}}" alt="">
+          <p>{{channelUserInfo.name}}</p>
         </div>
         <a style="padding:0; margin:0" href=""><div (click)="signOut()" *ngIf="user" class=""><i class="fa fa-user fa3x"></i>Switch Account</div></a>
         <div *ngIf="user" class=""><i class="fa fa-star fa3x"></i>Membership</div>
@@ -33,7 +33,7 @@
     <button *ngIf="!user" (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-cog"></i></button>
     <button *ngIf="user" (click)="changePage('upload')" type="button" name="button" class="iconButton"><i class="fa fa-caret-square-up"></i></button>
     <button (click)="signInWithGoogle()" type="button" name="button" class="loginButton"  *ngIf="!user"><p><i class="fa fa-user-circle"></i>Login</p></button>
-    <img *ngIf="user" (click)="showSettings()" class="userProfile" src="{{ user.photoUrl }}" alt="nul">
+    <img *ngIf="channelUserInfo" (click)="showSettings()" class="userProfile" src="{{ channelUserInfo.profilepic }}" alt="nul">
     <!-- <img src="https://lh3.googleusercontent.com/a-/AOh14GgOTm0GoQxXZMPyA4lNtPYH-TBdkMh5ML8d1u94lg=s96-c" alt=""> -->
   </div>
 </div>
@@ -57,8 +57,19 @@
       <div class="sideBarItems" *ngIf="restPlaylist.length != 0 && openPlaylist != true" (click)="togglePlaylist()"><i class="fa fa-chevron-down"></i>Show More</div>
       <div class="sideBarItems" *ngIf="restPlaylist.length != 0 && openPlaylist == true" (click)="togglePlaylist()"><i class="fa fa-chevron-up"></i>Show Less</div>
     </div>
-    <div class="lineBreak">
+    <!-- <div class="lineBreak">
+
+    </div> -->
+    <p class="subtitle" *ngIf="user"><b>SUBSCRIPTIONS</b></p>
+    <div class="" *ngIf="user" style="flex-direction: column; justify-content: flex-start;">
+      <app-subscription-block class="sideBarItems" style="padding: 15px 25px" *ngFor="let channel of subbedChannel" [channel]="channel"></app-subscription-block>
+
     </div>
+    <div class="" *ngIf="restsubbedChannel.length != 0 && openSubs == true" style="flex-direction: column; justify-content: flex-start;">
+      <app-subscription-block class="sideBarItems" style="padding: 15px 25px" *ngFor="let channel of restsubbedChannel" [channel]="channel"></app-subscription-block>
+    </div>
+    <div class="sideBarItems" *ngIf="restsubbedChannel.length != 0 && openSubs != true" (click)="toggleRestSubs()"><i class="fa fa-chevron-down"></i>Show More</div>
+    <div class="sideBarItems" *ngIf="restsubbedChannel.length != 0 && openSubs == true" (click)="toggleRestSubs()"><i class="fa fa-chevron-up"></i>Show Less</div>
     <p class="subtitle"><b>CATEGORIES</b></p>
     <div class="sideBarItems" (click)="changePage('music')"><i class="fa fa-music"></i>Music</div>
     <div class="sideBarItems" (click)="changePage('gaming')"><i class="fa fa-gamepad"></i>Gaming</div>

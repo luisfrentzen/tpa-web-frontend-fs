@@ -167,6 +167,7 @@ export class ChannelCommunityComponent implements OnInit {
   }
 
   atcurl;
+  thmTask;
 
   newPost(){
 

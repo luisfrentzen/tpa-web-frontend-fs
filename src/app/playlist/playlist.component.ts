@@ -93,7 +93,114 @@ export class PlaylistComponent implements OnInit {
     return res;
   }
 
+  users = [];
+  user;
+
+  curUserId;
+
+  currentUserInfo;
+  isSubscribed = false;
+
+  subs = [];
+
+  toggleSubs(){
+    if(localStorage.getItem('users') == null){
+      return
+    }
+
+    this.apollo
+        .mutate({
+          mutation : gql`
+            mutation subscribe($id: String!, $chnid: String!){
+              subscribe(id: $id, chnid: $chnid){
+                name
+              }
+            }
+          `,
+          variables : {
+            id: this.currentUserInfo.id,
+            chnid: this.currentPlaylist.userid,
+          },
+          refetchQueries: [{
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                }
+              }
+            `,
+            variables: {
+              userid: this.currentPlaylist.userid,
+            }
+          },
+          {
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                }
+              }
+            `,
+            variables: {
+              userid: this.currentUserInfo.id,
+            }
+          }]
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+      this.isSubscribed = !this.isSubscribed
+
+      if(this.currentUserInfo.subscribed = "")
+      {
+        this.subs = this.currentUserInfo.subscribed.split(",")
+      }
+      else
+      {
+        this.subs = []
+      }
+
+      if ( this.subs.includes(this.currentPlaylist.userid) )
+      {
+        this.isSubscribed = true;
+      }
+      else
+      {
+        this.isSubscribed = false;
+      }
+
+    },(error) => {
+      console.log('there was an error sending the query', error);
+    });
+  }
+
+
   ngOnInit(): void {
+    if(localStorage.getItem('users') == null){
+      this.users = [];
+      this.curUserId = "";
+    }
+    else{
+      this.users = JSON.parse(localStorage.getItem('users'));
+      this.user = this.users[0];
+      // this.loggedIn = true;
+      this.curUserId = this.user.id;
+    }
+
     const passedId = +this.route.snapshot.paramMap.get('id');
 
     this.apollo
@@ -122,12 +229,52 @@ export class PlaylistComponent implements OnInit {
         this.currentPlaylist = this.currentPlaylist[0]
         console.log(this.currentPlaylist)
 
+        if(this.user)
+        {
+          this.apollo.watchQuery({
+            query: gql`
+              query getById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                }
+              }
+            `,
+            variables: {
+              userid: this.curUserId,
+            }
+          })
+          .valueChanges.subscribe(result => {
+            this.currentUserInfo = result.data.userById
+            this.currentUserInfo = this.currentUserInfo[0]
+
+            this.subs = this.currentUserInfo.subscribed.split(",")
+            if(this.subs.includes(this.currentPlaylist.userid))
+            {
+              this.isSubscribed = true;
+            }
+            else
+            {
+              this.isSubscribed = false;
+            }
+            // console.log(this.playlistOwner)
+          })
+        }
+
         this.apollo.watchQuery({
           query: gql`
             query getById($userid: String!){
               userById(userid: $userid){
                 name,
                 profilepic,
+                id,
               }
             }
           `,
@@ -149,6 +296,11 @@ export class PlaylistComponent implements OnInit {
                 title,
                 thumbnail,
                 channelname,
+                userid,
+                view,
+                day,
+                month,
+                year,
               }
             }
           `,

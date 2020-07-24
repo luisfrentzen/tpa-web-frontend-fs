@@ -2,13 +2,7 @@
   <div class="vidsection">
     <p>Recent Uploads</p>
     <div class="vidScroll">
-      <div class="vidContainer">
-        <div class="vidItems" *ngFor="let i of [1,2,3,4,5]">
-          <img class="vid" src="../../assets/no_thumbnail.png" alt="">
-          <p style="font-size: 12pt;">judul</p>
-          <p>view - x ago</p>
-        </div>
-      </div>
+      <app-video-block style="margin-right: 20px"  *ngFor="let recvideo of recentVid" [video]="recvideo" [typeView]=1></app-video-block>
       <div class="viewAll">
         <a href="channel/{{channelUserInfo.id}}/videos">
           <div class="viewAllBtn">
@@ -22,14 +16,8 @@
   <div class="vidsection">
     <p>Videos</p>
     <div class="vidScroll">
-      <div class="vidContainer">
-        <div class="vidItems" *ngFor="let i of [1,2,3,4,5]">
-          <img class="vid" src="../../assets/no_thumbnail.png" alt="">
-          <p style="font-size: 12pt;">judul</p>
-          <p>view - x ago</p>
-        </div>
+        <app-video-block style="margin-right: 20px"  *ngFor="let ranvideo of randomVid" [video]="ranvideo" [typeView]=1></app-video-block>
 
-      </div>
       <div class="viewAll">
         <a href="channel/{{channelUserInfo.id}}/videos">
           <div class="viewAllBtn">
@@ -42,14 +30,7 @@
   <div class="vidsection">
     <p>Playlist</p>
     <div class="vidScroll">
-      <div class="vidContainer">
-        <div class="vidItems" *ngFor="let i of [1,2,3]">
-          <img class="vid" src="../../assets/no_thumbnail.png" alt="">
-          <p style="font-size: 12pt;">judul</p>
-          <p>view - x ago</p>
-        </div>
-
-      </div>
+        <app-playlist-block style="margin-right: 20px" *ngFor="let playlist of randomPl" [playlist]="playlist"></app-playlist-block>
       <div class="viewAll">
         <a href="channel/{{channelUserInfo.id}}/playlist">
           <div class="viewAllBtn">

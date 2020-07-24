@@ -71,7 +71,7 @@ export class TrendingComponent implements OnInit {
       .watchQuery({
         query: gql`
           {
-            videos{
+            videos(sort: "view"){
               id,
               title,
               url,
@@ -90,6 +90,30 @@ export class TrendingComponent implements OnInit {
       })
       .valueChanges.subscribe(result => {
         this.videos = result.data.videos
+
+        let i = 0;
+        while (this.videos[0].view == 0) {
+          let val = this.videos.shift()
+          this.videos.push(val)
+        }
+
+        var s = []
+        var n = 0
+
+        this.videos.forEach(element => {
+          const vidDate = (element.year * 365) + (element.month * 30) + element.day
+          const current = new Date();
+          const curDate = (current.getDate()) + ((current.getMonth()) * 30) + (current.getFullYear() * 365)
+          const diff = curDate - vidDate
+
+          if(diff <= 7 && n < 20)
+          {
+            s.unshift(element)
+            n = n + 1
+          }
+
+          this.videos = s;
+        });
       });
   }
 

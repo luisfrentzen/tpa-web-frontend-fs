@@ -32,8 +32,14 @@ export class CommentBlockComponent implements OnInit {
 
   addNewReply = false;
 
+  replyValue = '';
   toggleAddReply(){
     this.addNewReply = !this.addNewReply;
+
+    if(this.curComment.videoid == 0)
+    {
+      this.replyValue = '@' + this.user.name
+    }
   }
 
   curDate = new Date()
@@ -207,6 +213,7 @@ export class CommentBlockComponent implements OnInit {
 
 
   addNewReplyBtn(newdesc){
+
     this.apollo
         .mutate({
           mutation : gql`
@@ -222,6 +229,7 @@ export class CommentBlockComponent implements OnInit {
               year: $year
               replyto: $replyto
               replycount: 0
+              postid: 0
             }){ replyto }
           }
           `,
@@ -231,7 +239,7 @@ export class CommentBlockComponent implements OnInit {
             day: this.curDate.getDate(),
             month: this.curDate.getMonth(),
             year: this.curDate.getFullYear(),
-            replyto: this.curComment.id,
+            replyto: (this.curComment.videoid == 0 ? this.curComment.replyto.toString() : this.curComment.id),
           },
           refetchQueries: [{
             query: gql`
@@ -517,11 +525,11 @@ export class CommentBlockComponent implements OnInit {
             this.isDisiliked = false;
           }
 
-          console.log(this.likes)
-          console.log(this.disilikes)
-          console.log(this.isLiked)
-          console.log(this.isDisiliked)
-          console.log(this.isLiked)
+          // console.log(this.likes)
+          // console.log(this.disilikes)
+          // console.log(this.isLiked)
+          // console.log(this.isDisiliked)
+          // console.log(this.isLiked)
         })
     }
 
@@ -552,7 +560,7 @@ export class CommentBlockComponent implements OnInit {
       .valueChanges.subscribe(result => {
         this.curComment = result.data.commentById
         this.curComment = this.curComment[0]
-        console.log(this.curComment)
+        // console.log(this.curComment)
 
         this.apollo
           .watchQuery({

@@ -378,6 +378,56 @@ export class WatchComponent implements OnInit {
     return ""
   }
 
+  sortBy = ""
+
+  toggleSort(){
+    if(this.sortBy == "")
+    {
+      this.sortBy = "like"
+    }
+    else {
+      this.sortBy = ""
+    }
+
+    this.apollo
+      .watchQuery({
+        query: gql`
+          query commentByVid($videoid: Int!, $sortBy: String!){
+            commentsByVideo(videoid: $videoid, sort: $sortBy){
+              id,
+              day,
+              month,
+              year,
+              userid,
+              replycount,
+              desc,
+              disilike,
+              like,
+              replyto,
+            }
+          }
+        `,
+        variables: {
+          videoid: this.targetVideo.id,
+          sortBy: this.sortBy
+        }
+      })
+      .valueChanges.subscribe(result => {
+        this.comments = result.data.commentsByVideo
+        // console.log(this.comments)
+
+        if(this.sortBy == 'like')
+        {
+          let i = 0;
+          while (this.comments[0].like == 0) {
+            let val = this.comments.shift()
+            this.comments.push(val)
+          }
+        }
+      });
+
+      // console.log(th)
+  }
 
   addNewCommentBtn(newdesc){
     this.apollo
@@ -395,6 +445,7 @@ export class WatchComponent implements OnInit {
               year: $year
               replyto: 0
               replycount: 0
+              postid: 0
             }){ replyto }
           }
           `,
@@ -409,7 +460,7 @@ export class WatchComponent implements OnInit {
           refetchQueries: [{
             query: gql`
               query commentByVid($videoid: Int!){
-                commentsByVideo(videoid: $videoid){
+                commentsByVideo(videoid: $videoid, sort: ""){
                   id,
                   day,
                   month,
@@ -614,7 +665,7 @@ export class WatchComponent implements OnInit {
             .watchQuery({
               query: gql`
                 query commentByVid($videoid: Int!){
-                  commentsByVideo(videoid: $videoid){
+                  commentsByVideo(videoid: $videoid, sort:""){
                     id,
                     day,
                     month,
@@ -643,7 +694,7 @@ export class WatchComponent implements OnInit {
         .watchQuery({
           query: gql`
             {
-              videos{
+              videos(sort: ""){
                 id,
                 title,
                 url,
@@ -816,7 +867,7 @@ export class WatchComponent implements OnInit {
                 .watchQuery({
                   query: gql`
                     query commentByVid($videoid: Int!){
-                      commentsByVideo(videoid: $videoid){
+                      commentsByVideo(videoid: $videoid, sort: ""){
                         id,
                         day,
                         month,
@@ -845,7 +896,7 @@ export class WatchComponent implements OnInit {
             .watchQuery({
               query: gql`
                 {
-                  videos{
+                  videos(sort: ""){
                     id,
                     title,
                     url,

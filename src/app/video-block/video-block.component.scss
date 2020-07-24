@@ -1,0 +1,35 @@
+.vidComp {
+  display: flex;
+
+  margin-bottom: 20px;
+
+  .thumbnailView {
+    // width: 40%;
+    img {
+      width: 300px;
+      height: 170px;
+    }
+  }
+
+  .thumbnailInfo {
+    // width: 60%;
+    img {
+      border-radius: 50px;
+      width: 35px;
+      height: 35px;
+    }
+
+    p{
+      margin: 0 10px;
+    }
+    display: flex;
+    flex-direction: row;
+  }
+
+}
+
+a {
+  width: 100%;
+  text-decoration: none;
+  color: black;
+}

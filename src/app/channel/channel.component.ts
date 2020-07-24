@@ -20,6 +20,97 @@ export class ChannelComponent implements OnInit {
   onPage;
   channelUserInfo;
 
+  thmTask;
+
+  isSubscribed = false;
+
+  subs = [];
+
+  toggleSubs(){
+    if(localStorage.getItem('users') == null){
+      return
+    }
+
+    this.apollo
+        .mutate({
+          mutation : gql`
+            mutation subscribe($id: String!, $chnid: String!){
+              subscribe(id: $id, chnid: $chnid){
+                name
+              }
+            }
+          `,
+          variables : {
+            id: this.currentUserInfo.id,
+            chnid: this.channelUserInfo.id,
+          },
+          refetchQueries: [{
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                }
+              }
+            `,
+            variables: {
+              userid: this.channelUserInfo.id,
+            }
+          },
+          {
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                }
+              }
+            `,
+            variables: {
+              userid: this.currentUserInfo.id,
+            }
+          }]
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+      this.isSubscribed = !this.isSubscribed
+
+      if(this.currentUserInfo.subscribed = "")
+      {
+        this.subs = this.currentUserInfo.subscribed.split(",")
+      }
+      else
+      {
+        this.subs = []
+      }
+
+      if ( this.subs.includes(this.channelUserInfo.id) )
+      {
+        this.isSubscribed = true;
+      }
+      else
+      {
+        this.isSubscribed = false;
+      }
+
+    },(error) => {
+      console.log('there was an error sending the query', error);
+    });
+  }
+
   changePage(nextPage:string) {
     this.router.navigateByUrl('channel/' + this.channelUserInfo.id + '/' + nextPage);
     this.onPage = nextPage;
@@ -269,6 +360,46 @@ export class ChannelComponent implements OnInit {
         // console.log(this.channelUserInfo)
         this.channelUserInfo = this.channelUserInfo[0]
         // console.log(s[2])
+
+        if(this.user)
+        {
+          this.apollo.watchQuery({
+            query: gql`
+              query getById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                }
+              }
+            `,
+            variables: {
+              userid: this.user.id,
+            }
+          })
+          .valueChanges.subscribe(result => {
+            this.currentUserInfo = result.data.userById
+            this.currentUserInfo = this.currentUserInfo[0]
+
+            this.subs = this.currentUserInfo.subscribed.split(",")
+            console.log(this.subs)
+            if(this.subs.includes(this.channelUserInfo.id))
+            {
+              this.isSubscribed = true;
+            }
+            else
+            {
+              this.isSubscribed = false;
+            }
+            // console.log(this.playlistOwner)
+          })
+        }
       })
   }
 

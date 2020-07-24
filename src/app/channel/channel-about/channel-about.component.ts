@@ -342,7 +342,7 @@ export class ChannelAboutComponent implements OnInit {
       .watchQuery({
         query: gql`
         query vidByUser($userid: String!){
-          videosByUser(userid: $userid) {
+          videosByUser(userid: $userid, sort: "") {
             title,
             view,
             thumbnail,
@@ -372,6 +372,8 @@ export class ChannelAboutComponent implements OnInit {
       // return 0;
   }
 
+  onPage;
+
   ngOnInit(): void {
     if(localStorage.getItem('users') == null){
       this.users = [];
@@ -382,6 +384,8 @@ export class ChannelAboutComponent implements OnInit {
       this.user = this.users[0];
       this.curUserId = this.user.id
     }
+
+    console.log("test")
 
 
     const url = this.router.url

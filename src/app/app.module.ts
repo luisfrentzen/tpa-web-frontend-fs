@@ -53,6 +53,7 @@ import { PlaylistBlockComponent } from './playlist-block/playlist-block.componen
 import { VideoBlockComponent } from './video-block/video-block.component';
 import { PostBlockComponent } from './post-block/post-block.component';
 import { PostComponent } from './post/post.component';
+import { SubscriptionBlockComponent } from './subscription-block/subscription-block.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { PostComponent } from './post/post.component';
     PlaylistBlockComponent,
     VideoBlockComponent,
     PostBlockComponent,
-    PostComponent
+    PostComponent,
+    SubscriptionBlockComponent
   ],
   imports: [
     BrowserModule,

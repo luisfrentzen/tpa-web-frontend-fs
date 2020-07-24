@@ -64,6 +64,60 @@ export class ChannelVideosComponent implements OnInit {
   videos;
   channelUserInfo;
 
+  sortBy = "";
+  sortLabel = "Newest"
+
+  toggleSort(){
+    if( this.sortBy == "")
+    {
+      this.sortBy = "old"
+      this.sortLabel = "Oldest"
+    }
+    else if( this.sortBy == "old")
+    {
+      this.sortBy = "view"
+      this.sortLabel = "Views"
+    }
+    else if( this.sortBy == "view")
+    {
+      this.sortBy = ""
+      this.sortLabel = "Newest"
+    }
+
+    this.apollo
+      .watchQuery({
+        query: gql`
+        query vidByUser($userid: String!, $sortBy: String!){
+          videosByUser(userid: $userid, sort: $sortBy) {
+            title,
+            view,
+            thumbnail,
+            day,
+            month,
+            year,
+            id,
+          }
+        }
+        `,
+        variables: {
+          userid: this.channelUserInfo.id,
+          sortBy: this.sortBy
+        }
+      })
+      .valueChanges.subscribe(result => {
+        this.videos = result.data.videosByUser
+
+        if(this.sortBy == 'view')
+        {
+          let i = 0;
+          while (this.videos[0].view == 0) {
+            let val = this.videos.shift()
+            this.videos.push(val)
+          }
+        }
+      })
+  }
+
   ngOnInit(): void {
     const url = this.router.url
     const s = url.split("/")
@@ -100,7 +154,7 @@ export class ChannelVideosComponent implements OnInit {
           .watchQuery({
             query: gql`
             query vidByUser($userid: String!){
-              videosByUser(userid: $userid) {
+              videosByUser(userid: $userid, sort: "") {
                 title,
                 view,
                 thumbnail,
@@ -108,6 +162,7 @@ export class ChannelVideosComponent implements OnInit {
                 month,
                 year,
                 id,
+                userid,
               }
             }
             `,

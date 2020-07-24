@@ -1,14 +1,11 @@
 <div class="content">
   <div class="vidsection">
-    <p>Videos</p>
+    <div class="" style="margin: 10px 0; flex-direction: row; justify-content: space-between; align-items: center;">
+      <p>Videos</p>
+      <button type="button" (click)="toggleSort()" name="button" style="border: none; color:gray; align-items: center" (click)="toggleSort()"><i class="fa fa-filter" style="font-size: 7pt; margin-right: 5px;"></i>{{sortLabel}}</button>
+    </div>
     <div class="vidScroll">
       <div class="auto-grid">
-        <div class="vidItems" *ngFor="let video of videos">
-          <a href="watch/{{video.id}}">
-            <img class="vid" [src]="video.thumbnail" alt="">
-            <p style="font-size: 12pt; margin: 0;">{{video.title}}</p>
-            <p style="font-size: 10pt; color: gray;">{{getViewCount(video.view)}} views - {{getDiff(video.day, video.month, video.year)}}</p>
-          </a>
-        </div>
+        <app-video-block *ngFor="let video of videos" [video]="video" [typeView]=1></app-video-block>
       </div>
   </div>

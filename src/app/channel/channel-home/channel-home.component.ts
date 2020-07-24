@@ -12,9 +12,15 @@ export class ChannelHomeComponent implements OnInit {
 
   constructor(private router : Router, private apollo : Apollo) { }
 
-  channelUserinfo;
+  channelUserInfo;
   playlists;
   videos;
+
+  recentVid;
+  randomVid;
+  randomPl;
+
+  onPage;
 
   changePage(nextPage:string) {
     this.router.navigateByUrl('channel/' + nextPage);
@@ -106,6 +112,49 @@ export class ChannelHomeComponent implements OnInit {
         this.apollo
           .watchQuery({
             query: gql`
+            query vidByUser($userid: String!){
+              videosByUser(userid: $userid, sort: "") {
+                title,
+                view,
+                thumbnail,
+                day,
+                month,
+                year,
+                id,
+                userid,
+              }
+            }
+            `,
+            variables: {
+              userid: s[2],
+            }
+          })
+          .valueChanges.subscribe(result => {
+            this.videos = result.data.videosByUser
+
+            if(this.videos.length <= 5 )
+            {
+              this.recentVid = result.data.videosByUser
+              this.randomVid = result.data.videosByUser
+              // console.log(result.data.videosByUser)
+            }
+            else {
+              this.recentVid = this.videos.slice(0,5)
+
+              this.randomVid = []
+              while (this.randomVid.length < 5) {
+                  var x = Math.floor(Math.random() * this.videos.length)
+                  if(!(this.videos[x] in this.randomVid)) {
+                    this.randomVid.push(this.videos[x])
+                    console.log(this.randomVid)
+                  }
+              }
+            }
+          })
+
+        this.apollo
+          .watchQuery({
+            query: gql`
             query getPlaylistById($userid: String!){
               playlistsByUser(userid: $userid){
                 title,
@@ -120,6 +169,20 @@ export class ChannelHomeComponent implements OnInit {
           })
           .valueChanges.subscribe(result => {
             this.playlists = result.data.playlistsByUser
+
+            if(this.playlists.length <= 3 )
+            {
+              this.randomPl = result.data.playlistsByUser
+            }
+            else {
+              this.randomPl = []
+              while (this.randomPl.length < 3) {
+                  var x = Math.floor(Math.random() * this.playlists.length)
+                  if(!(this.playlists[x] in this.randomPl)) {
+                    this.randomPl.push(this.playlists[x])
+                  }
+              }
+            }
           })
       })
   }

@@ -22,7 +22,7 @@
   <div class="header">
     <p>Links</p>
     <button type="button" name="button" (click)="toggleAddLink()"><i class="fa fa-plus" *ngIf="self" ></i></button>
-    <button type="button" name="button" *ngIf="!editModeLinks" (click)="toggleEditLinks()"><i class="fa fa-pen"></i></button>
+    <button type="button" name="button" *ngIf="!editModeLinks && self" (click)="toggleEditLinks()"><i class="fa fa-pen"></i></button>
     <button type="button" name="button" *ngIf="editModeLinks" (click)="updateLinks()"><i class="fa fa-check-circle"></i></button>
   </div>
   <div class="linkList" *ngFor="let link of links; let i = index">

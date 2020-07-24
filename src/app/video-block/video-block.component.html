@@ -1,1 +1,16 @@
-<p>video-block works!</p>
+<div class="vidComp" [style.flex-direction]="typeView == 1 ? 'column' : 'row'" *ngIf="channelUserInfo">
+    <div class="thumbnailView">
+      <a href="watch/{{video.id}}"><img [src]="video.thumbnail" alt=""></a>
+    </div>
+    <div class="thumbnailInfo">
+      <div *ngIf="typeView == 1" class="">
+        <a href="channel/{{video.userid}}/home"><img [src]="channelUserInfo.profilepic" alt=""></a>
+      </div>
+      <div class="">
+        <a href="watch/{{video.id}}"><p><b>{{ video.title }}</b></p></a>
+        <a href="channel/{{video.userid}}/home"><p style="color:gray;">{{ channelUserInfo.name }}</p></a>
+        <p style="color:gray;">{{ getViewCount(video.view) }} views - {{ getDiff(video.day, video.month, video.year) }}</p>
+
+      </div>
+    </div>
+</div>

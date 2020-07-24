@@ -22,7 +22,7 @@
     <div class="newReplayWrapper" *ngIf="addNewReply && user">
       <div class="newReply" *ngIf="myUser">
         <img class="userPic" style="width:30px; height:30px" [src]="myUser.photoUrl" alt="">
-        <input type="text" placeholder="Reply" class="replyBox" name="" value="" (input)="newReplyDesc = $event.target.value">
+        <input type="text" placeholder="Reply" class="replyBox" name="" [value]="replyValue" (input)="newReplyDesc = $event.target.value">
       </div>
       <div class="replyControl">
         <button class="cancelBtn" type="button" name="button" (click)="addNewReply = false">CANCEL</button>

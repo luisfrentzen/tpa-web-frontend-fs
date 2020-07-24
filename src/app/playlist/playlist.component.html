@@ -7,19 +7,18 @@
       <p>{{currentPlaylist.visibility}}</p>
       <p>{{currentPlaylist.desc}}</p>
       <div class="channelInfo">
-        <img [src]="playlistOwner.profilepic" class="channelPic" alt="">
-        <p>{{playlistOwner.name}}</p>
+        <div class="" style="flex-direction: row;">
+          <a href="channel/{{playlistOwner.id}}/home"><img [src]="playlistOwner.profilepic" class="channelPic" alt="">
+          <p>{{playlistOwner.name}}</p></a>
+        </div>
+        <div class="subButton" *ngIf="curUserId != playlistOwner.id" [style.background-color]="isSubscribed ? 'lightgray' : '#d70000'" [style.color]="isSubscribed? 'gray' : 'white'" (click)="toggleSubs()">
+          {{isSubscribed ? 'SUBSCRIBED' : 'SUBSCRIBE'}}
+        </div>
       </div>
     </div>
     <div class="playlistVideos">
       <div class="videoItem" *ngFor="let video of videos">
-        <a href="watch/{{video.id}}" style="margin:0; width:100%; height:100%; text-decoration: none; color: black;">
-          <img [src]="video.thumbnail" alt="">
-          <div class="vidInfo">
-            <p>{{video.title}}</p>
-            <p>{{video.channelname}}</p>
-        </div>
-      </a>
+        <app-video-block [typeView]=2 [video]="video"></app-video-block>
       </div>
     </div>
   </div>

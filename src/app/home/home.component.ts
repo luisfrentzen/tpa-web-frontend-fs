@@ -79,7 +79,7 @@ export class HomeComponent implements OnInit {
       .watchQuery({
         query: gql`
           {
-            videos{
+            videos(sort: ""){
               id,
               title,
               url,

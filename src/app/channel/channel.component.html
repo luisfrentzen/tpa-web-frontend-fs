@@ -8,12 +8,12 @@
       <img class="channelpic" [src]="channelUserInfo.profilepic" alt="">
       <div class="" style="flex-direction: column;">
         <p>{{channelUserInfo.name}}</p>
-        <p style="color: gray; font-size: 10pt;">{{getViewCount(channelUserInfo.subscribers)}} subsribers</p>
+        <p style="color: gray; font-size: 10pt;">{{getViewCount(channelUserInfo.subscribers)}} subscribers</p>
       </div>
     </div>
     <div class="navcontent">
-      <div class="subButton" *ngIf="channelUserInfo.id != curUserId">
-        SUBSCRIBE
+      <div class="subButton" *ngIf="curUserId != channelUserInfo.id" [style.background-color]="isSubscribed ? 'lightgray' : '#d70000'" [style.color]="isSubscribed? 'gray' : 'white'" (click)="toggleSubs()">
+        {{isSubscribed ? 'SUBSCRIBED' : 'SUBSCRIBE'}}
       </div>
       <div class="subButton" (click)="toggleModal()" *ngIf="channelUserInfo.id == curUserId" style="background-color: #0080d9; width: 130px">
         EDIT PROFILE

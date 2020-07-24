@@ -186,6 +186,19 @@ export class NavbarComponent implements OnInit {
     // console.log(this.restPlaylist && this.openPlaylist)
   }
 
+  channelUserInfo;
+  subbedChannel;
+  restsubbedChannel = [];
+
+  openSubs = false;
+
+  toggleRestSubs(){
+    this.openSubs = !this.openSubs
+    // console.log(this.openPlaylist)
+    // console.log(this.restPlaylist)
+    // console.log(this.restPlaylist && this.openPlaylist)
+  }
+
   ngOnInit(){
     // this.authService.renewTokens();
     // this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
@@ -199,6 +212,64 @@ export class NavbarComponent implements OnInit {
 
     if(this.user)
     {
+      this.apollo
+        .watchQuery({
+          query: gql`
+            query userById($userid: String!){
+              userById(userid: $userid){
+                id,
+                name,
+                profilepic,
+                subscribers,
+                subscribed,
+                likedvideos,
+                likedcomments,
+                disilikedvideos,
+                disilikedcomments,
+                channelart,
+                about,
+                day,
+                month,
+                year
+              }
+            }
+          `,
+          variables: {
+            userid: this.user.id,
+          }
+        })
+        .valueChanges.subscribe(result => {
+          this.channelUserInfo = result.data.userById
+          // console.log(this.channelUserInfo)
+          this.channelUserInfo = this.channelUserInfo[0]
+          // console.log(s[2])
+
+          this.apollo
+            .watchQuery({
+              query: gql`
+                query subs($id: String!) {
+                  usersByIds(id: $id)
+                  {
+                    name,
+                    profilepic,
+                    id,
+                  }
+                }
+              `,
+              variables: {
+                id: this.channelUserInfo.subscribed
+              }
+            })
+            .valueChanges.subscribe(result => {
+              this.subbedChannel = result.data.usersByIds
+
+              while(this.subbedChannel.length > 10)
+              {
+                this.restsubbedChannel.push(this.subbedChannel.pop())
+              }
+            })
+  })
+
       this.apollo
         .watchQuery({
           query: gql`

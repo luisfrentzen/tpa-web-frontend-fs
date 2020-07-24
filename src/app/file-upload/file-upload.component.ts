@@ -16,6 +16,8 @@ export class FileUploadComponent implements OnInit {
   dropmsg = 'No File Selected'
   isHovering: boolean;
 
+  uploadedVideo;
+
   thmsrc = '../assets/no_thumbnail.png'
   files: File[] = [];
   file: File = null;
