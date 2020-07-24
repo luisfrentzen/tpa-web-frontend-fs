@@ -1,4 +1,4 @@
-<div class="content">
+<div class="content" *ngIf="!isPrem">
   <div class="container">
     <img src="../assets/LogoPremium.png" alt="">
     <p>Watch premium-exclusive videos, watch scheduled videos,
@@ -19,10 +19,24 @@
         </div>
       </div>
     </div>
-    <div class="getButton">
+    <div class="getButton" (click)="getPremium()">
       GET FESTUBE PREMIUM
     </div>
     <p style="color:gray; font-size: 11pt; margin-top:-20px; margin-bottom: 0;">recurring billing - cancel anytime</p>
   </div>
+</div>
+<div class="content" *ngIf="isPrem">
+ <div class="container">
+   <img src="../assets/LogoPremium.png" alt="">
+   <p>Watch premium-exclusive videos, watch scheduled videos,
+   <br>and download access</p>
+   <div class="plan" style="display: flex; flex-direction: column; *{ margin: 0 };">
+     <h1 style="margin: 0; margin-top: 10px;">You are a FesTube Premium!</h1>
+     <p style="margin: 0; font-size: 12pt; color: gray;">since</p>
+     <p style="margin: 0; font-size: 36pt">{{currentUserInfo.premiday}}/{{currentUserInfo.premimonth}}/{{currentUserInfo.premiyear}}</p>
+     <p style="color: gray;">next billing in {{nextbillday}}/{{nextbillmonth}}/{{nextbillyear}}</p>
 
+   </div>
+
+ </div>
 </div>

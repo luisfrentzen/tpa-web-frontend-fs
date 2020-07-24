@@ -17,39 +17,45 @@ export class PlaylistBlockComponent implements OnInit {
   s;
 
   ngOnInit(): void {
-    this.s = this.playlist.videos.split(",")
-    console.log(this.s[0])
+    if (this.playlist.videos != "") {
+      this.s = this.playlist.videos.split(",")
+      console.log(this.s[0])
 
-    this.apollo
-      .watchQuery({
-        query: gql`
-          query videoById($id: Int!){
-            videoById(id: $id){
-              id,
-              title,
-              url,
-              thumbnail,
-              userid,
-              channelpic,
-              channelname,
-              view,
-              day,
-              month,
-              year,
-              desc,
-              like,
-              disilike,
+      this.apollo
+        .watchQuery({
+          query: gql`
+            query videoById($id: Int!){
+              videoById(id: $id){
+                id,
+                title,
+                url,
+                thumbnail,
+                userid,
+                channelpic,
+                channelname,
+                view,
+                day,
+                month,
+                year,
+                desc,
+                like,
+                disilike,
+              }
             }
+          `,
+          variables: {
+            id: this.s[0],
           }
-        `,
-        variables: {
-          id: this.s[0],
-        }
-      })
-      .valueChanges.subscribe(result => {
-        this.video = result.data.videoById
-        this.video = this.video[0]
-      })
+        })
+        .valueChanges.subscribe(result => {
+          this.video = result.data.videoById
+          this.video = this.video[0]
+        })
+    }
+    else {
+      this.s = []
+    }
   }
+
 
 }

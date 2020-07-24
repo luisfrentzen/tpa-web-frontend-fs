@@ -3,6 +3,25 @@
 
   margin-bottom: 20px;
 
+  .dura {
+    background-color: black;
+    opacity: 85%;
+    color: white;
+    // font-weight: bold;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // padding: 1px;
+    height: 15px;
+    width: 33px;
+    font-size: 8pt;
+    bottom: 18px;
+    *{
+      margin: 0;
+    }
+  }
+
   .thumbnailView {
     // width: 40%;
     img {
@@ -10,6 +29,7 @@
       height: 170px;
     }
   }
+
 
   .thumbnailInfo {
     // width: 60%;

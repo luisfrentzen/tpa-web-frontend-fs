@@ -188,8 +188,149 @@ export class PlaylistComponent implements OnInit {
     });
   }
 
+  lastKey;
+  observer;
+
+  // checkScroll(){
+  //   var d = document.querySelector(".playlistVideos")
+  //   if(d.scrollHeight - d.offsetHeight - d.scrollTop < 1) {
+  //     alert("test")
+  //   }
+  // }
+  removeAll(){
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation removevidfrompl($id: ID!) {
+            removeAllFromPlaylist(id: $id ){
+              title,
+            }
+          }
+        `,
+        variables: {
+          id: parseInt(this.currentPlaylist.id),
+        },
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        // this.isLiked = !this.isLiked;
+        // console.log(this.isLiked);
+        // this.addModeLink = false;
+      },(error) => {
+        console.log('there was an error sending the query', error);
+
+        this.apollo.watchQuery({
+          query: gql`
+            query videosByIds($id: String!){
+              videosByIds(id: $id){
+                id,
+                title,
+                thumbnail,
+                channelname,
+                userid,
+                view,
+                day,
+                month,
+                year,
+              }
+            }
+          `,
+          variables: {
+            id: this.currentPlaylist.videos,
+          }
+        })
+        .valueChanges.subscribe(result => {
+          this.videos = result.data.videosByIds
+          console.log(this.videos)
+          window.location.reload();
+        })
+      });
+  }
+
+  removeVideo(vidid){
+    console.log(parseInt(vidid))
+    console.log(parseInt(this.currentPlaylist.id))
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation removevidfrompl($id: ID!, $videoid: Int!) {
+            removeFromPlaylist(id: $id, videoid: $videoid ){
+              title,
+            }
+          }
+        `,
+        variables: {
+          id: parseInt(this.currentPlaylist.id),
+          videoid: parseInt(vidid),
+        },
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        // this.isLiked = !this.isLiked;
+        // console.log(this.isLiked);
+        // this.addModeLink = false;
+      },(error) => {
+        console.log('there was an error sending the query', error);
+
+        this.apollo.watchQuery({
+          query: gql`
+            query videosByIds($id: String!){
+              videosByIds(id: $id){
+                id,
+                title,
+                thumbnail,
+                channelname,
+                userid,
+                view,
+                day,
+                month,
+                year,
+              }
+            }
+          `,
+          variables: {
+            id: this.currentPlaylist.videos,
+          }
+        })
+        .valueChanges.subscribe(result => {
+          this.videos = result.data.videosByIds
+          console.log(this.videos)
+          // location.reload()
+          window.location.reload();
+        })
+      });
+  }
+
+  viewVidFromPlaylist(){
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation viewVid($id: ID!){
+            viewPlaylist(id: $id){
+              title
+            }
+          }
+        `,
+        variables: {
+          id: parseInt(this.currentPlaylist.id),
+        },
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        // this.isLiked = !this.isLiked;
+        // console.log(this.isLiked);
+        // this.addModeLink = false;
+      },(error) => {
+        console.log('there was an error sending the query', error);
+      })
+  }
 
   ngOnInit(): void {
+
+    const passedId = +this.route.snapshot.paramMap.get('id');
+    // this.checkScroll()
+
+
     if(localStorage.getItem('users') == null){
       this.users = [];
       this.curUserId = "";
@@ -201,13 +342,32 @@ export class PlaylistComponent implements OnInit {
       this.curUserId = this.user.id;
     }
 
-    const passedId = +this.route.snapshot.paramMap.get('id');
+
+    // this.lastKey = 10;
+    // this.observer = new IntersectionObserver((entry) => {
+    //   if(entry[0].isIntersecting){
+    //     console.log("tes")
+    //     let card = document.querySelector(".playlistVideos")
+    //     for(let i = 0; i < 5; i ++){
+    //       if(this.lastKey < (this.videos ? this.videos.length : 0)){
+    //         let div = document.createElement("div")
+    //         let vid = document.createElement("app-video-block")
+    //         vid.setAttribute("video", this.videos[this.lastKey])
+    //         div.appendChild(vid)
+    //         card.appendChild(div)
+    //         this.lastKey++
+    //       }
+    //     }
+    //   }
+    // })
+    // this.observer.observe(document.querySelector(".footer"))
 
     this.apollo
       .watchQuery({
         query: gql`
           query playlistById($id: Int!){
             playlistById(id: $id){
+              id,
               title,
               userid,
               view,
@@ -301,6 +461,7 @@ export class PlaylistComponent implements OnInit {
                 day,
                 month,
                 year,
+                url,
               }
             }
           `,
@@ -311,6 +472,8 @@ export class PlaylistComponent implements OnInit {
         .valueChanges.subscribe(result => {
           this.videos = result.data.videosByIds
           console.log(this.videos)
+
+
         })
       })
   }

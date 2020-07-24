@@ -342,7 +342,7 @@ export class ChannelAboutComponent implements OnInit {
       .watchQuery({
         query: gql`
         query vidByUser($userid: String!){
-          videosByUser(userid: $userid, sort: "") {
+          videosByUser(userid: $userid, sort: "", privacy:"all", premium: "yes") {
             title,
             view,
             thumbnail,

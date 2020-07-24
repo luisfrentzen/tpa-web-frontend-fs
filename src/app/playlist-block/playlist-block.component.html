@@ -1,7 +1,7 @@
-<div class="vidItems" *ngIf="video">
+<div class="vidItems">
   <a href="playlist/{{playlist.id}}">
     <div class="vidContainer">
-      <img class="vid" [src]="video.thumbnail" alt="">
+      <img class="vid" [src]="video ? video.thumbnail : '../assets/no_video.png'" alt="">
       <div class="overlay"><b>{{s.length}} <i class="fa fa-stream"></i></b></div>
     </div>
     <p style="font-size: 12pt; margin: 0; margin-top: 12px;">{{playlist.title}}</p>

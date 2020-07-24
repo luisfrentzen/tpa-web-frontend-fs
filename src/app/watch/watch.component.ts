@@ -430,6 +430,9 @@ export class WatchComponent implements OnInit {
   }
 
   addNewCommentBtn(newdesc){
+    if(!this.user){
+      return
+    }
     this.apollo
         .mutate({
           mutation : gql`
@@ -584,10 +587,66 @@ export class WatchComponent implements OnInit {
   }
 
   curUserId = "";
+  lastKey;
+  lastComment;
+  observer;
 
   ngOnInit(): void {
 
     const passedId = +this.route.snapshot.paramMap.get('id');
+
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation viewVid($id: ID!){
+            viewVideo(id: $id){
+              title
+            }
+          }
+        `,
+        variables: {
+          id: parseInt(passedId),
+        },
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        // this.isLiked = !this.isLiked;
+        // console.log(this.isLiked);
+        // this.addModeLink = false;
+      },(error) => {
+        console.log('there was an error sending the query', error);
+      })
+
+    this.lastKey = 6;
+    this.lastComment = 4;
+    this.observer = new IntersectionObserver((entry) => {
+      if(entry[0].isIntersecting){
+        let card = document.querySelector(".recContainer")
+        for(let i = 0; i < 3; i ++){
+          if(this.lastKey < this.videos.length){
+            let div = document.createElement("div")
+            let vid = document.createElement("app-video-block")
+            vid.setAttribute("video", this.videos[this.lastKey])
+            div.appendChild(vid)
+            card.appendChild(div)
+            this.lastKey++
+          }
+        }
+
+        let cont = document.querySelector(".commentContainer")
+        for(let i = 0; i < 6; i ++){
+          if(this.lastComment < this.comments.length){
+            let div = document.createElement("div")
+            let vid = document.createElement("app-comment-block")
+            vid.setAttribute("comment", this.comments[this.lastComment].id)
+            div.appendChild(vid)
+            card.appendChild(div)
+            this.lastComment++
+          }
+        }
+      }
+    })
+    this.observer.observe(document.querySelector(".footer"))
 
     if(localStorage.getItem('users') == null){
       this.users = [];
@@ -694,7 +753,7 @@ export class WatchComponent implements OnInit {
         .watchQuery({
           query: gql`
             {
-              videos(sort: ""){
+              videos(sort: "", filter: "", premium: "yes"){
                 id,
                 title,
                 url,
@@ -896,7 +955,7 @@ export class WatchComponent implements OnInit {
             .watchQuery({
               query: gql`
                 {
-                  videos(sort: ""){
+                  videos(sort: "", filter: "", premium: ""){
                     id,
                     title,
                     url,

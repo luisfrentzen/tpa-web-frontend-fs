@@ -262,7 +262,7 @@ export class NavbarComponent implements OnInit {
             })
             .valueChanges.subscribe(result => {
               this.subbedChannel = result.data.usersByIds
-
+              this.restsubbedChannel = [];
               while(this.subbedChannel.length > 10)
               {
                 this.restsubbedChannel.push(this.subbedChannel.pop())
@@ -291,6 +291,7 @@ export class NavbarComponent implements OnInit {
 
           if(this.playlists.length > 5 )
           {
+            this.restPlaylist = []
             for (let i = 5; i < this.playlists.length; i++) {
               this.restPlaylist.push(this.playlists[i])
             }

@@ -88,7 +88,7 @@ export class ChannelVideosComponent implements OnInit {
       .watchQuery({
         query: gql`
         query vidByUser($userid: String!, $sortBy: String!){
-          videosByUser(userid: $userid, sort: $sortBy) {
+          videosByUser(userid: $userid, sort: $sortBy, premium: "", privacy: "") {
             title,
             view,
             thumbnail,
@@ -96,6 +96,7 @@ export class ChannelVideosComponent implements OnInit {
             month,
             year,
             id,
+            userid,
           }
         }
         `,
@@ -106,7 +107,7 @@ export class ChannelVideosComponent implements OnInit {
       })
       .valueChanges.subscribe(result => {
         this.videos = result.data.videosByUser
-
+        console.log("test")
         if(this.sortBy == 'view')
         {
           let i = 0;
@@ -114,15 +115,42 @@ export class ChannelVideosComponent implements OnInit {
             let val = this.videos.shift()
             this.videos.push(val)
           }
+          console.log(this.videos)
         }
       })
   }
+
+  lastKey;
+  obeserver;
+
+  user;
+  users = [];
+  currentUserInfo;
+  curUserId = ''
 
   ngOnInit(): void {
     const url = this.router.url
     const s = url.split("/")
 
-    console.log(this.channelUserInfo)
+    this.lastKey = 12;
+    this.observer = new IntersectionObserver((entry) => {
+      if(entry[0].isIntersecting){
+        let card = document.querySelector(".auto-grid")
+        for(let i = 0; i < 4; i ++){
+          if(this.lastKey < this.videos.length){
+            let div = document.createElement("div")
+            let vid = document.createElement("app-video-block")
+            vid.setAttribute("video", this.videos[this.lastKey])
+            div.appendChild(vid)
+            card.appendChild(div)
+            this.lastKey++
+          }
+        }
+      }
+    })
+    this.observer.observe(document.querySelector(".footer"))
+
+    // console.log(this.channelUserInfo)
     this.apollo
       .watchQuery({
         query: gql`
@@ -137,6 +165,7 @@ export class ChannelVideosComponent implements OnInit {
               likedcomments,
               disilikedvideos,
               disilikedcomments,
+              premium,
             }
           }
         `,
@@ -150,29 +179,101 @@ export class ChannelVideosComponent implements OnInit {
         this.channelUserInfo = this.channelUserInfo[0]
         // console.log(s[2])
 
-        this.apollo
-          .watchQuery({
-            query: gql`
-            query vidByUser($userid: String!){
-              videosByUser(userid: $userid, sort: "") {
-                title,
-                view,
-                thumbnail,
-                day,
-                month,
-                year,
-                id,
-                userid,
+        if(localStorage.getItem('users') == null){
+          this.users = [];
+          this.curUserId = "";
+
+          this.apollo
+            .watchQuery({
+              query: gql`
+              query vidByUser($userid: String!, $premium: String!){
+                videosByUser(userid: $userid, sort: "", premium: $premium, privacy: "") {
+                  title,
+                  view,
+                  thumbnail,
+                  day,
+                  month,
+                  year,
+                  id,
+                  userid,
+                  premium,
+                  url,
+                }
               }
-            }
+              `,
+              variables: {
+                userid: this.channelUserInfo.id,
+                premium: ""
+              }
+            })
+            .valueChanges.subscribe(result => {
+              this.videos = result.data.videosByUser
+              console.log(this.videos)
+            })
+
+        }
+        else{
+          this.users = JSON.parse(localStorage.getItem('users'));
+          this.user = this.users[0];
+          // this.loggedIn = true;
+          this.curUserId = this.user.id;
+          console.log('premi')
+          this.apollo.watchQuery({
+            query: gql`
+              query getById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                  premium,
+                }
+              }
             `,
             variables: {
-              userid: this.channelUserInfo.id
+              userid: this.curUserId,
             }
           })
           .valueChanges.subscribe(result => {
-            this.videos = result.data.videosByUser
-          })
+            this.currentUserInfo = result.data.userById
+            this.currentUserInfo = this.currentUserInfo[0]
+            let pri = (this.currentUserInfo.id == s[2] ? 'all' : '');
+            this.apollo
+              .watchQuery({
+                query: gql`
+                query vidByUser($userid: String!, $premium: String!, $privacy: String!){
+                  videosByUser(userid: $userid, sort: "", premium: $premium, privacy: $privacy) {
+                    title,
+                    view,
+                    thumbnail,
+                    day,
+                    month,
+                    year,
+                    id,
+                    userid,
+                    premium,
+                    url,
+                    visibility,
+                  }
+                }
+                `,
+                variables: {
+                  userid: this.channelUserInfo.id,
+                  premium: (this.currentUserInfo.premium == "yes" ? "yes" : ""),
+                  privacy: pri,
+                }
+              })
+              .valueChanges.subscribe(result => {
+                this.videos = result.data.videosByUser
+                console.log(this.videos)
+              })
+            })
+          }
       })
   }
 

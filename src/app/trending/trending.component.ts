@@ -71,7 +71,7 @@ export class TrendingComponent implements OnInit {
       .watchQuery({
         query: gql`
           {
-            videos(sort: "view"){
+            videos(sort: "view", filter:"", premium:""){
               id,
               title,
               url,
@@ -83,7 +83,6 @@ export class TrendingComponent implements OnInit {
               day,
               month,
               year,
-              desc,
             }
           }
         `,

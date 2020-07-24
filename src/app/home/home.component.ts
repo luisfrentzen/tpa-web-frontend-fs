@@ -74,30 +74,138 @@ export class HomeComponent implements OnInit {
     return res
   }
 
+  lastKey;
+  observer;
+
+  onRestriction = false;
+
+  users = []
+  user;
+  curUserId = '';
+
+  currentUserInfo;
+
   ngOnInit(): void {
-    this.apollo
-      .watchQuery({
+    this.data.currentRestriction.subscribe(onRestriction => this.onRestriction = onRestriction)
+
+    this.lastKey = 12;
+    this.observer = new IntersectionObserver((entry) => {
+      if(entry[0].isIntersecting){
+        let card = document.querySelector(".auto-grid")
+        for(let i = 0; i < 4; i ++){
+          if(this.lastKey < this.videos.length){
+            let div = document.createElement("div")
+            let vid = document.createElement("app-video-block")
+            vid.setAttribute("video", this.videos[this.lastKey])
+            div.appendChild(vid)
+            card.appendChild(div)
+            this.lastKey++
+          }
+        }
+      }
+    })
+    this.observer.observe(document.querySelector(".footer"))
+
+    if(localStorage.getItem('users') == null){
+      this.users = [];
+      this.curUserId = "";
+console.log('g')
+      this.apollo
+        .watchQuery({
+          query: gql`
+            query vis($filter: String!, $premium: String!){
+              videos(sort: "", filter:$filter, premium:$premium){
+                id,
+                title,
+                url,
+                thumbnail,
+                userid,
+                channelpic,
+                channelname,
+                view,
+                day,
+                month,
+                year,
+                premium,
+              }
+            }
+          `,
+          variables: {
+            filter: (this.onRestriction ? "" : "all"),
+            premium: ""
+          }
+        })
+        .valueChanges.subscribe(result => {
+          this.videos = result.data.videos
+        });
+    }
+    else{
+      this.users = JSON.parse(localStorage.getItem('users'));
+      this.user = this.users[0];
+      // this.loggedIn = true;
+      this.curUserId = this.user.id;
+      console.log('premi')
+      this.apollo.watchQuery({
         query: gql`
-          {
-            videos(sort: ""){
+          query getById($userid: String!){
+            userById(userid: $userid){
               id,
-              title,
-              url,
-              thumbnail,
-              userid,
-              channelpic,
-              channelname,
-              view,
-              day,
-              month,
-              year,
+              name,
+              profilepic,
+              subscribers,
+              subscribed,
+              likedvideos,
+              likedcomments,
+              disilikedvideos,
+              disilikedcomments,
+              premium,
             }
           }
         `,
+        variables: {
+          userid: this.curUserId,
+        }
       })
       .valueChanges.subscribe(result => {
-        this.videos = result.data.videos
-      });
+        this.currentUserInfo = result.data.userById
+        this.currentUserInfo = this.currentUserInfo[0]
+        console.log(this.currentUserInfo.premium)
+        this.apollo
+          .watchQuery({
+            query: gql`
+              query vis($filter: String!, $premium: String!){
+                videos(sort: "", filter:$filter, premium:$premium){
+                  id,
+                  title,
+                  url,
+                  thumbnail,
+                  userid,
+                  channelpic,
+                  channelname,
+                  view,
+                  day,
+                  month,
+                  year,
+                  premium,
+                  visibility,
+                }
+              }
+            `,
+            variables: {
+              filter: (this.onRestriction ? "" : "all"),
+              premium: (this.currentUserInfo.premium == "yes" ? "yes" : "")
+            }
+          })
+          .valueChanges.subscribe(result => {
+            this.videos = result.data.videos
+            console.log(this.videos)
+          });
+      })
+    }
+
+
+
+
 
     this.data.currentPage.subscribe(currentPage => this.currentPage = currentPage)
   }

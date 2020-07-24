@@ -209,6 +209,8 @@ export class FileUploadComponent implements OnInit {
             day: this.day,
             month: this.month,
             year: this.year,
+            duration: 1000,
+            premium: "no"
           },
           refetchQueries: [{
             query: gql`
@@ -244,7 +246,7 @@ export class FileUploadComponent implements OnInit {
     // The storage path
     const thmPath = `thm/${Date.now()}_${this.thumbnailFile}`
     const path = `vid/${Date.now()}_${file.name}`;
-    const prem = this.isPremium ? 'premium' : 'no'
+    const prem = this.isPremium ? 'yes' : 'no'
 
     // console.log(path)
     // Reference to storage bucket
@@ -281,7 +283,7 @@ export class FileUploadComponent implements OnInit {
       this.apollo
           .mutate({
             mutation : gql`
-            mutation createVideo($url: String!, $restriction: String!, $location: String!, $visibility: String!, $desc: String!, $category: String!, $thumbnail: String!, $userid: String!, $title: String!, $channelpic: String!, $channelname: String!, $day: Int!, $month: Int!, $year: Int!) {
+            mutation createVideo($url: String!, $restriction: String!, $location: String!, $visibility: String!, $desc: String!, $category: String!, $thumbnail: String!, $userid: String!, $title: String!, $channelpic: String!, $channelname: String!, $day: Int!, $month: Int!, $year: Int!, $premium: String!) {
               createVideo(input: {
                 url: $url
                 restriction: $restriction
@@ -300,6 +302,8 @@ export class FileUploadComponent implements OnInit {
                 day: $day
                 month: $month
                 year: $year
+                premium: $premium
+                duration: 0
               }){ title, id }
             }
             `,
@@ -318,6 +322,7 @@ export class FileUploadComponent implements OnInit {
               day: this.day,
               month: this.month,
               year: this.year,
+              premium: prem,
             }
           }).subscribe(result => {
         this.uploadedVideo = result.data.createVideo.id;

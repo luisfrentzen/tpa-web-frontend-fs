@@ -45,7 +45,7 @@
         </div>
       </div>
       <hr>
-      <div *ngIf="comments" style="flex-direction: column;">
+      <div class="commentContainer" *ngIf="comments" style="flex-direction: column;">
         <div class="" style="flex-direction: row; align-items: center; justify-content:space-between;">
           <p>{{comments.length}} Comments</p>
           <div class="" style="flex-direction: row; align-items: center;">
@@ -61,13 +61,20 @@
             <button type="button" class="newCommentBtn" (click)="addNewCommentBtn(newCommentDesc)" [disabled]="newCommentDesc ? false : true" name="button">COMMENT</button>
           </div>
         </div>
-        <app-comment-block [comment]="comment.id" *ngFor="let comment of comments"></app-comment-block>
+        <div class="" *ngFor="let comment of comments; let j = index">
+          <app-comment-block [comment]="comment.id" *ngIf="j < lastComment"></app-comment-block>
+        </div>
       </div>
     </div>
   </div>
   <div class="recContainer" *ngIf="targetVideo">
-    <app-video-block class="relatedVids" [typeView]=2 *ngFor="let video of videos" [video]="video"></app-video-block>
+    <div class="" *ngFor="let video of videos; let i =index">
+      <app-video-block class="relatedVids" [typeView]=2 *ngIf="i < lastKey" [video]="video"></app-video-block>
+    </div>
   </div>
   </div>
+
+</div>
+<div class="footer">
 
 </div>

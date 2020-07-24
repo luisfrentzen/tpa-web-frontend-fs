@@ -1,8 +1,11 @@
 <div class="content">
   <h1>Recommended</h1>
-  <div class="homeComponentWrapper" class="auto-grid">
-
-    <app-video-block [video]="video" [typeView]=1 *ngFor="let video of videos"></app-video-block>
+  <div class="auto-grid">
+    <div class="" *ngFor="let video of videos; let i = index">
+      <app-video-block [video]="video" *ngIf="i < (lastKey)"[typeView]=1 ></app-video-block>
+    </div>
   </div>
+  <div class="footer">
 
+  </div>
 </div>
