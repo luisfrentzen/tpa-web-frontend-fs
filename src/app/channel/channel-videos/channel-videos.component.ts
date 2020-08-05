@@ -84,11 +84,13 @@ export class ChannelVideosComponent implements OnInit {
       this.sortLabel = "Newest"
     }
 
+    let pri = (this.currentUserInfo.id == this.channelUserInfo.id ? 'all' : '');
+
     this.apollo
       .watchQuery({
         query: gql`
-        query vidByUser($userid: String!, $sortBy: String!){
-          videosByUser(userid: $userid, sort: $sortBy, premium: "", privacy: "") {
+        query vidByUser($userid: String!, $sortBy: String!, $privacy: String!){
+          videosByUser(userid: $userid, sort: $sortBy, premium: "", privacy: $privacy) {
             title,
             view,
             thumbnail,
@@ -97,17 +99,20 @@ export class ChannelVideosComponent implements OnInit {
             year,
             id,
             userid,
+            premium,
+            url,
           }
         }
         `,
         variables: {
           userid: this.channelUserInfo.id,
-          sortBy: this.sortBy
+          sortBy: this.sortBy,
+          privacy: pri
         }
       })
       .valueChanges.subscribe(result => {
         this.videos = result.data.videosByUser
-        console.log("test")
+        console.log(this.videos)
         if(this.sortBy == 'view')
         {
           let i = 0;

@@ -21,7 +21,7 @@
           <img class="profilePic" src="{{channelUserInfo.profilepic}}" alt="">
           <p>{{channelUserInfo.name}}</p>
         </div>
-        <a style="padding:0; margin:0" href=""><div (click)="signOut()" *ngIf="user" class=""><i class="fa fa-user fa3x"></i>Switch Account</div></a>
+        <div (click)="toggleLogout()" *ngIf="user" class=""><i class="fa fa-user fa3x"></i>Switch Account</div>
         <a style="padding:0; margin:0" href="membership"><div *ngIf="user" class=""><i class="fa fa-star fa3x"></i>Membership</div></a>
         <a *ngIf="user" style="padding:0; margin:0" href="channel/{{user.id}}/home"><div  class=""><i class="fa fa-caret-square-right fa3x"></i>Your Channel</div></a>
         <div (click)="toggleRestrictionButton()"><i class="fa fa-lock fa-3x"></i>Restricted Mode : {{onRestriction ? 'ON' : 'OFF'}}</div>
@@ -32,7 +32,7 @@
     <button *ngIf="user" (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-bell"></i></button>
     <button *ngIf="!user" (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-cog"></i></button>
     <button *ngIf="user" (click)="changePage('upload')" type="button" name="button" class="iconButton"><i class="fa fa-caret-square-up"></i></button>
-    <button (click)="signInWithGoogle()" type="button" name="button" class="loginButton"  *ngIf="!user"><p><i class="fa fa-user-circle"></i>Login</p></button>
+    <button (click)="toggleModal()" type="button" name="button" class="loginButton"  *ngIf="!user"><p><i class="fa fa-user-circle"></i>Login</p></button>
     <img *ngIf="channelUserInfo" (click)="showSettings()" class="userProfile" src="{{ channelUserInfo.profilepic }}" alt="nul">
     <!-- <img src="https://lh3.googleusercontent.com/a-/AOh14GgOTm0GoQxXZMPyA4lNtPYH-TBdkMh5ML8d1u94lg=s96-c" alt=""> -->
   </div>
@@ -92,7 +92,7 @@
     [show]="showLogin"
     [closeCallback]="toggleModal"
   >
-  <div class="contentWrapper" [style.max-height]="reg ? '750px' : '260px'">
+  <div class="contentWrapper" [style.max-height]="'750px'">
     <h3>Login</h3>
     <div class="loginForms">
       <input type="text" placeholder="Username" name="" value="">
@@ -100,20 +100,36 @@
     </div>
 
     <button class="loginBut" type="button" name="button">Sign In</button>
-    <div class="">
-      or <a (click)="toggleReg()">Sign up</a> now.
-    </div>
 
+    <br>
+    <hr style="display: inline; height: 1px; width: 100%; border: none; background-color: #d2d2d2">
     <br>
 
     <div class="accordionReg">
-      <h3>Register</h3>
-      <div class="registerForms">
-        <input type="text" placeholder="Name" name="" value="">
-        <input type="text" placeholder="Username" name="" value="">
-        <input type="password" placeholder="Password" name="" value="">
+      <h3>Login with Google</h3>
+      <button class="googleBut" type="button" name="button" (click)="signInWithGoogle()"><i class="fab fa-google"></i>Sign In with Google</button>
+    </div>
+    <br>
+  </div>
+</app-modal>
+
+<app-modal
+    [show]="showLogout"
+    [closeCallback]="toggleLogout"
+  >
+  <div class="contentWrapper" [style.max-height]="'750px'">
+    <h3>Do you want to sign out ?</h3>
+
+    <div class="" style="flex-direction: column; width: 100%">
+      <button class="loginBut" style="height: 50px; width: 155px;" type="button" name="button" (click)="signOut()">Sign Out</button>
+
+      <!-- <br> -->
+
+      <div class="accordionReg">
+        <!-- <h3>Login with Google</h3> -->
+        <button class="googleBut" style="height: 50px; width: 155px;" type="button" name="button" (click)="switchAcc()"><i class="fab fa-google"></i>Switch account</button>
       </div>
-      <button class="loginBut" type="button" name="button">Sign Up</button>
+      <br>
     </div>
   </div>
 </app-modal>

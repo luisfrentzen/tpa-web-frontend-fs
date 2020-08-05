@@ -83,6 +83,7 @@ export class TrendingComponent implements OnInit {
               day,
               month,
               year,
+              desc,
             }
           }
         `,

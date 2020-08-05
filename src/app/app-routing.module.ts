@@ -46,6 +46,7 @@ const routes: Routes = [
   { path: 'news', component: NewsComponent },
   { path: 'travel', component: TravelComponent },
   { path: 'watch/:id', component: WatchComponent },
+  { path: 'watch/:id/:playlistid', component: WatchComponent },
   { path: 'playlist/:id', component: PlaylistComponent },
   { path: 'channel/:id', component: ChannelComponent, children: [
     { path: 'home', component: ChannelHomeComponent },

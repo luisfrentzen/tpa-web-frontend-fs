@@ -14,12 +14,16 @@
         <div class="subButton" *ngIf="curUserId != playlistOwner.id" [style.background-color]="isSubscribed ? 'lightgray' : '#d70000'" [style.color]="isSubscribed? 'gray' : 'white'" (click)="toggleSubs()">
           {{isSubscribed ? 'SUBSCRIBED' : 'SUBSCRIBE'}}
         </div>
-        <button type="button" name="button" style="color: gray; border: none; background-color: transparent" (click)="removeAll()" ><i class="fa fa-dumpster" ></i></button>
+      </div>
+      <div class="toolbar">
+        <button type="button" name="button" (click)="removeAll()" ><i class="fa fa-dumpster"></i></button>
+        <button type="button" name="button" ><i class="fa fa-random"></i></button>
+        <button type="button" name="button" *ngIf="curUserId != playlistOwner.id  && currentPlaylist.visibility != 'private'" (click)="addToLib()"><i [class]="inLib ? 'fa fa-minus-circle' : 'fa fa-plus'"></i>{{inLib? 'REMOVE' : 'ADD'}}</button>
       </div>
     </div>
     <div class="playlistVideos">
       <div class="videoItem" *ngFor="let video of videos" style="justify-content: space-between">
-        <app-video-block [typeView]=2 [video]="video" (click)="viewVidFromPlaylist()"></app-video-block>
+        <app-video-block [video]="video" [fromPlaylist]=currentPlaylist.id></app-video-block>
         <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="removeVideo(video.id)" style="color: gray; border: none; background-color: transparent"><i class="fa fa-trash"></i></button>
       </div>
     </div>

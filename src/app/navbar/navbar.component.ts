@@ -23,6 +23,7 @@ export class NavbarComponent implements OnInit {
   menuVisible = false;
 
   showLogin = false;
+  showLogout = false;
   reg = false;
 
   onLocation = false;
@@ -46,6 +47,15 @@ export class NavbarComponent implements OnInit {
     window.location.reload();
   }
 
+  switchAcc(){
+    // this.removeUser();
+    // this.authService.signOut();
+    // this.changePage('');
+    // this.menuVisible = false
+    // this.settingsVisible = false
+    this.signInWithGoogle();
+  }
+
   signInWithGoogle(){
 
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
@@ -53,9 +63,8 @@ export class NavbarComponent implements OnInit {
     this.authService.authState.subscribe(user => {
       this.user = user;
       this.loggedIn = (user != null);
-
+      console.log(this.user);
       this.addToLocalStorage(user);
-      window.location.reload();
 
 
 
@@ -152,6 +161,7 @@ export class NavbarComponent implements OnInit {
             }
           });
 
+      window.location.reload();
       // console.log('asd')
     });
 
@@ -159,6 +169,7 @@ export class NavbarComponent implements OnInit {
   }
 
   addToLocalStorage(user){
+    this.users = []
     this.users.push(user);
     localStorage.setItem('users', JSON.stringify(this.users));
   }
@@ -167,6 +178,7 @@ export class NavbarComponent implements OnInit {
     this.users = JSON.parse(localStorage.getItem('users'));
     this.user = this.users[0];
     this.loggedIn = true;
+    console.log(this.user)
   }
 
   removeUser(){
@@ -174,7 +186,7 @@ export class NavbarComponent implements OnInit {
     this.loggedIn = false;
   }
 
-  playlists;
+  playlists = [];
   restPlaylist = [];
 
   openPlaylist = false;
@@ -203,6 +215,9 @@ export class NavbarComponent implements OnInit {
     // this.authService.renewTokens();
     // this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
 
+    var pl;
+    var arch;
+
     if(localStorage.getItem('users') == null){
       this.users = [];
     }
@@ -230,7 +245,8 @@ export class NavbarComponent implements OnInit {
                 about,
                 day,
                 month,
-                year
+                year,
+                archivedplaylists
               }
             }
           `,
@@ -262,43 +278,78 @@ export class NavbarComponent implements OnInit {
             })
             .valueChanges.subscribe(result => {
               this.subbedChannel = result.data.usersByIds
+              console.log(this.subbedChannel)
+              // console.log(this.channelUserInfo.subscribed)
               this.restsubbedChannel = [];
               while(this.subbedChannel.length > 10)
               {
-                this.restsubbedChannel.push(this.subbedChannel.pop())
+                this.restsubbedChannel.unshift(this.subbedChannel.pop())
               }
+
+              this.apollo
+                .watchQuery({
+                  query: gql`
+                  query getPlaylistById($userid: String!){
+                    playlistsByUser(userid: $userid, visibility: ""){
+                      title,
+                      id,
+                    }
+                  }
+                  `,
+                  variables: {
+                    userid: this.user.id
+                  }
+                })
+                .valueChanges.subscribe(result => {
+                  pl = result.data.playlistsByUser
+                  // console.log(this.playlists)
+                  // console.log(this.user)
+
+                  // console.log(this.channelUserInfo.archivedplaylists)
+                  this.restPlaylist = []
+                  this.apollo
+                    .watchQuery({
+                      query: gql`
+                        query getArchived($ids: String!) {
+                          getArchivedPlaylist(ids: $ids){
+                            title,
+                            id,
+                          }
+                        }
+                      `,
+                      variables: {
+                        ids: this.channelUserInfo.archivedplaylists
+                      }
+                    })
+                    .valueChanges.subscribe(result => {
+                      arch = result.data.getArchivedPlaylist
+                      // if(this.channelUserInfo.archivedplaylists != "")
+                      // {
+                      //   // console.log(result.data.getArchivedPlaylist[0])
+                      //   this.playlists.unshift(result.data.getArchivedPlaylist[0])
+                      // }
+                      console.log(arch)
+                      console.log(pl)
+                      // this.playlist.append(arch)
+                      // this.playlist =
+
+                      this.playlists = pl.concat(arch)
+                      // console.log(this.playlist)
+
+                      while(this.playlists.length > 5){
+                        this.restPlaylist.unshift(this.playlists.pop())
+                      }
+
+                      console.log(this.playlists);
+                      console.log(this.restPlaylist);
+                    })
+                });
+
+
             })
-  })
+          })
 
-      this.apollo
-        .watchQuery({
-          query: gql`
-          query getPlaylistById($userid: String!){
-            playlistsByUser(userid: $userid){
-              title,
-              id,
-            }
-          }
-          `,
-          variables: {
-            userid: this.user.id
-          }
-        })
-        .valueChanges.subscribe(result => {
-          this.playlists = result.data.playlistsByUser
-          console.log(this.playlists)
-          console.log(this.user)
 
-          if(this.playlists.length > 5 )
-          {
-            this.restPlaylist = []
-            for (let i = 5; i < this.playlists.length; i++) {
-              this.restPlaylist.push(this.playlists[i])
-            }
-
-            this.playlists = this.playlists.splice(5, this.playlists.length - 5)
-          }
-        });
     }
 
 
@@ -307,6 +358,7 @@ export class NavbarComponent implements OnInit {
     this.reg = false;
 
     this.data.currentMessage.subscribe(showLogin => this.showLogin = showLogin)
+    this.data.currentLogout.subscribe(showLogout => this.showLogout = showLogout)
     this.data.currentLocation.subscribe(onLocation => this.onLocation = onLocation)
     this.data.currentRestriction.subscribe(onRestriction => this.onRestriction = onRestriction)
     this.data.currentKeyboardModal.subscribe(showKeyboard => this.showKeyboard = showKeyboard)
@@ -330,7 +382,12 @@ export class NavbarComponent implements OnInit {
 
   toggleModal = () => {
     this.data.toggleLoginModal(!this.showLogin);
-    this.reg = false;
+    // this.reg = false;
+  }
+
+  toggleLogout = () => {
+    this.data.toggleLogoutModal(!this.showLogout);
+    this.settingsVisible = false;
   }
 
   toggleReg() {

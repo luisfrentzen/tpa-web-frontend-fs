@@ -1,16 +1,17 @@
 <div class="content">
-  <div class="" *ngIf="currentUserInfo">
+  <div class="" *ngIf="curUserId != ''">
     <h1>Recommended</h1>
     <div class="auto-grid">
       <div class="" *ngFor="let video of videos; let i = index">
-        <app-video-block [video]="video" *ngIf="i < (lastKey)"[typeView]=1 ></app-video-block>
+        <app-video-block [video]="video" *ngIf="i < lastKey" [typeView]=1 ></app-video-block>
       </div>
     </div>
     <div class="footer">
 
     </div>
   </div>
-  <div class="" *ngIf="!currentUserInfo">
-    <h1>please login</h1>
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh;" *ngIf="curUserId == ''">
+    <h1>Please Sign In</h1>
+    <button (click)="toggleModal()" type="button" name="button" class="loginButton"  *ngIf="!user"><p><i class="fa fa-user-circle"></i>Login</p></button>
   </div>
 </div>

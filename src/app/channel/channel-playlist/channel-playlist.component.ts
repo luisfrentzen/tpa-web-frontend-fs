@@ -12,6 +12,10 @@ export class ChannelPlaylistComponent implements OnInit {
   channelUserInfo;
   playlists;
 
+  users = [];
+  user;
+  curUserId;
+
   constructor(private apollo : Apollo, private router : Router) { }
 
   ngOnInit(): void {
@@ -46,19 +50,35 @@ export class ChannelPlaylistComponent implements OnInit {
         this.channelUserInfo = this.channelUserInfo[0]
         // console.log(s[2])
 
+        if (localStorage.getItem('users') != null)
+        {
+          this.users = JSON.parse(localStorage.getItem('users'));
+          this.user = this.users[0];
+          // this.loggedIn = true;
+          this.curUserId = this.user.id;
+        }
+        else {
+          this.curUserId = ""
+        }
+
+
+        let pri = (this.curUserId == this.channelUserInfo.id ? '' : 'private');
+
         this.apollo
           .watchQuery({
             query: gql`
-            query getPlaylistById($userid: String!){
-              playlistsByUser(userid: $userid){
+            query getPlaylistById($userid: String!, $visibility: String!){
+              playlistsByUser(userid: $userid, visibility: $visibility){
                 title,
                 id,
                 videos,
+                visibility,
               }
             }
             `,
             variables: {
-              userid: this.channelUserInfo.id
+              userid: this.channelUserInfo.id,
+              visibility: pri
             }
           })
           .valueChanges.subscribe(result => {

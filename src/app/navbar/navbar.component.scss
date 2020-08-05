@@ -195,6 +195,7 @@ title {
   }
 }
 
+
 .fa-user-circle {
   padding: -50px;
   margin: -10px;
@@ -318,7 +319,7 @@ i {
   align-items: flex-start;
 
   h3 {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
   * {
     margin: 5px;
@@ -370,6 +371,32 @@ i {
     &:active {
       background-color: $buttonhovercolor;
     }
+
+  }
+
+  .googleBut {
+    margin-top: 10px;
+    background-color: $fesblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // width: 100px;
+    color: white;
+    border: 1px solid $fesblue;
+    border-radius: 3px;
+    padding: 10px;
+    padding-right: 17px;
+    font-weight: bold;
+
+    svg {
+      margin-bottom: 7px;
+    }
+
+
+    &:active {
+      background-color: $buttonhovercolor;
+    }
+
 
   }
 }

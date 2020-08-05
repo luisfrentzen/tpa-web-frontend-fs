@@ -232,6 +232,7 @@ export class PlaylistComponent implements OnInit {
                 day,
                 month,
                 year,
+                desc,
               }
             }
           `,
@@ -285,6 +286,7 @@ export class PlaylistComponent implements OnInit {
                 day,
                 month,
                 year,
+                desc,
               }
             }
           `,
@@ -324,6 +326,56 @@ export class PlaylistComponent implements OnInit {
         console.log('there was an error sending the query', error);
       })
   }
+
+  addToLib(){
+    const passedId = +this.route.snapshot.paramMap.get('id');
+    console.log("test")
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation archived($id: String!, $plid: ID!) {
+            archiveplaylist(id: $id, plid: $plid){
+              archivedplaylists
+            }
+          }
+        `,
+        variables: {
+          id: this.curUserId,
+          plid: passedId
+        },
+        refetchQueries: [{
+          query: gql`
+            query getById($userid: String!){
+              userById(userid: $userid){
+                id,
+                name,
+                profilepic,
+                subscribers,
+                subscribed,
+                likedvideos,
+                likedcomments,
+                disilikedvideos,
+                disilikedcomments,
+                archivedplaylists
+              }
+            }
+          `,
+          variables: {
+            userid: this.curUserId,
+          }
+        }],
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        // this.isLiked = !this.isLiked;
+        // console.log(this.isLiked);
+        // this.addModeLink = false;
+      },(error) => {
+        console.log('there was an error sending the query', error);
+      })
+  }
+
+  inLib = false;
 
   ngOnInit(): void {
 
@@ -404,6 +456,7 @@ export class PlaylistComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  archivedplaylists
                 }
               }
             `,
@@ -415,6 +468,8 @@ export class PlaylistComponent implements OnInit {
             this.currentUserInfo = result.data.userById
             this.currentUserInfo = this.currentUserInfo[0]
 
+            this.inLib = this.currentUserInfo.archivedplaylists.includes(passedId) ? true : false
+            console.log(this.inLib)
             this.subs = this.currentUserInfo.subscribed.split(",")
             if(this.subs.includes(this.currentPlaylist.userid))
             {
@@ -462,6 +517,7 @@ export class PlaylistComponent implements OnInit {
                 month,
                 year,
                 url,
+                desc,
               }
             }
           `,

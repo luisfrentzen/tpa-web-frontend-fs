@@ -44,6 +44,7 @@ export class FileUploadComponent implements OnInit {
     if(files.item(0).type.split('/')[0]=='video')
     {
       this.file = files.item(0)
+      // console.log(this.file)
       // this.video = document.createElement('video')
       // this.video.preload = 'metadata'
       //

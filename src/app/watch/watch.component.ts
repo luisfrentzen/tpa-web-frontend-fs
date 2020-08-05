@@ -590,10 +590,78 @@ export class WatchComponent implements OnInit {
   lastKey;
   lastComment;
   observer;
+  plid;
 
-  ngOnInit(): void {
+  videosInPl = [];
+  currentPlaylist;
+
+  ngOnInit(){
 
     const passedId = +this.route.snapshot.paramMap.get('id');
+
+    this.plid = +this.route.snapshot.paramMap.get('playlistid');
+
+    if(this.plid != 0)
+    {
+      this.apollo
+        .watchQuery({
+          query: gql`
+            query playlistById($id: Int!){
+              playlistById(id: $id){
+                id,
+                title,
+                userid,
+                view,
+                day,
+                month,
+                year,
+                desc,
+                videos,
+                visibility,
+              }
+            }
+          `,
+          variables: {
+            id: this.plid,
+          }
+        })
+        .valueChanges.subscribe(result => {
+          this.currentPlaylist = result.data.playlistById
+          this.currentPlaylist = this.currentPlaylist[0]
+          console.log(this.currentPlaylist)
+
+          this.apollo.watchQuery({
+            query: gql`
+              query videosByIds($id: String!){
+                videosByIds(id: $id){
+                  id,
+                  title,
+                  thumbnail,
+                  channelname,
+                  userid,
+                  view,
+                  url,
+                }
+              }
+            `,
+            variables: {
+              id: this.currentPlaylist.videos,
+            }
+          })
+          .valueChanges.subscribe(result => {
+            this.videosInPl = result.data.videosByIds
+            // console.log(this.videosInPl)
+
+
+          })
+        })
+    }
+
+    //
+    // if(document.referrer.includes("playlist"))
+    // {
+    //   console.log("fromplaylist")
+    // }
 
     this.apollo
       .mutate({

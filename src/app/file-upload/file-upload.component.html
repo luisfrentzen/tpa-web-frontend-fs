@@ -3,6 +3,7 @@
   <div *ngIf="file == null" class="dropzone" droppingkimak (hovered)="toggleHover($event)" (dropped)="onDrop($event)" [class.hovering]="isHovering">
 
        <h3>Drop File</h3>
+       <input style="border: 1px solid #c6c6c6; margin-bottom: 5px; padding: 2px; border-radius: 3px;"type="file" name="" value="" (change)="onDrop($event.target.files)">
        <p>{{ dropmsg }}</p>
 
   </div>

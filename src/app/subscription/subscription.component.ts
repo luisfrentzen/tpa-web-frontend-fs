@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Apollo } from 'apollo-angular';
+import { DataService } from '../data.service';
 import gql from 'graphql-tag';
 
 @Component({
@@ -13,7 +14,7 @@ export class SubscriptionComponent implements OnInit {
 
   videos:any;
 
-  constructor(private apollo:Apollo) { }
+  constructor(private apollo:Apollo, private data : DataService) { }
   // getChannelName(userid: String) {
   //
   // }
@@ -78,25 +79,15 @@ export class SubscriptionComponent implements OnInit {
   curUserId = '';
 
   currentUserInfo;
+
+  toggleModal = () => {
+    this.data.toggleLoginModal(!this.showLogin);
+    // this.reg = false;
+  }
+
   ngOnInit(): void {
 
-    this.lastKey = 12;
-    this.observer = new IntersectionObserver((entry) => {
-      if(entry[0].isIntersecting){
-        let card = document.querySelector(".auto-grid")
-        for(let i = 0; i < 4; i ++){
-          if(this.lastKey < this.videos.length){
-            let div = document.createElement("div")
-            let vid = document.createElement("app-video-block")
-            vid.setAttribute("video", this.videos[this.lastKey])
-            div.appendChild(vid)
-            card.appendChild(div)
-            this.lastKey++
-          }
-        }
-      }
-    })
-    this.observer.observe(document.querySelector(".footer"))
+
 
     if(localStorage.getItem('users') == null){
       this.users = [];
@@ -109,6 +100,8 @@ export class SubscriptionComponent implements OnInit {
       // this.loggedIn = true;
       this.curUserId = this.user.id;
       console.log('premi')
+
+
       this.apollo.watchQuery({
         query: gql`
           query getById($userid: String!){
@@ -162,6 +155,24 @@ export class SubscriptionComponent implements OnInit {
           .valueChanges.subscribe(result => {
             this.videos = result.data.videosByUsers
             console.log(this.videos)
+
+            this.lastKey = 12;
+            this.observer = new IntersectionObserver((entry) => {
+              if(entry[0].isIntersecting){
+                let card = document.querySelector(".auto-grid")
+                for(let i = 0; i < 4; i ++){
+                  if(this.lastKey < this.videos.length){
+                    let div = document.createElement("div")
+                    let vid = document.createElement("app-video-block")
+                    vid.setAttribute("video", this.videos[this.lastKey])
+                    div.appendChild(vid)
+                    card.appendChild(div)
+                    this.lastKey++
+                  }
+                }
+              }
+            })
+            this.observer.observe(document.querySelector(".footer"))
           });
       })
     }

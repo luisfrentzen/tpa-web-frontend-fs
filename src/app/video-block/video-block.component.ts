@@ -12,6 +12,9 @@ export class VideoBlockComponent implements OnInit {
 
   @Input() video;
   @Input() typeView;
+  @Input() width = 300;
+  @Input() height = 170;
+  @Input() fromPlaylist = 0;
 
   constructor(private apollo : Apollo, private router : Router) { }
 
@@ -77,7 +80,19 @@ export class VideoBlockComponent implements OnInit {
       this.duration = "00:" + d
     }
     else if(d < 3600){
-      this.duration = (d / 60).toString() + (d % 60).toString()
+      this.duration = Math.round(d / 60).toString() + ':'
+      if(Math.round(d / 60) < 10)
+      {
+        this.duration = '0' + this.duration;
+      }
+
+      let temp;
+      if(Math.round(d % 60) < 10)
+      {
+        temp = '0' + Math.round(d % 60).toString()
+      }
+
+      this.duration = this.duration + temp;
     }
   }
 
@@ -106,6 +121,7 @@ export class VideoBlockComponent implements OnInit {
     })
   }
 
+
   downloadVideo(){
     var element = document.createElement('a');
     element.setAttribute('href',
@@ -121,7 +137,7 @@ export class VideoBlockComponent implements OnInit {
 
   }
 
-  s
+  s;
 
   ngOnInit(): void {
     const url = this.router.url

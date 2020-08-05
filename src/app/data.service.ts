@@ -13,6 +13,9 @@ export class DataService {
   private useLocation = new BehaviorSubject(false);
   currentLocation = this.useLocation.asObservable();
 
+  private logout = new BehaviorSubject(false);
+  currentLogout = this.logout.asObservable();
+
   private useRestriction = new BehaviorSubject(false);
   currentRestriction = this.useRestriction.asObservable();
 
@@ -34,6 +37,10 @@ export class DataService {
 
   toggleLoginModal(showLogin: boolean) {
     this.messageSource.next(showLogin)
+  }
+
+  toggleLogoutModal(showLogout: boolean) {
+    this.logout.next(showLogout)
   }
 
   toggleLocation(onLocation: boolean) {

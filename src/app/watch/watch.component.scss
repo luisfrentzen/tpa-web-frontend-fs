@@ -7,9 +7,8 @@
 }
 
 .content {
-  margin: 30px;
+  margin: 30px 5vw;
   margin-top: 80px;
-  margin-right: 45px;
 }
 
 .container {
@@ -101,7 +100,7 @@
     height: 0.5px;
   }
 
-  margin: 0 40px;
+  // margin: 0 5vw;
 
   .videoContainer {
     flex-direction: column;
@@ -115,7 +114,26 @@
     display: flex;
     flex-direction: column;
 
-    width: 700px;
+    width: 30vw;
+
+    .playlistContainer {
+      flex-direction: column;
+      background-color: #e8e8e8;
+      height: 33vw;
+      overflow-y: scroll;
+
+      .playlistVids{
+        // align-items: center;
+        margin: 0;
+        padding: 5px;
+        padding-top: 3px;
+        height: 100px;
+
+        &:hover {
+          background-color: lightgray;
+        }
+      }
+    }
 
     img {
       width: 200px;

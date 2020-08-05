@@ -4,7 +4,8 @@
       <img class="vid" [src]="video ? video.thumbnail : '../assets/no_video.png'" alt="">
       <div class="overlay"><b>{{s.length}} <i class="fa fa-stream"></i></b></div>
     </div>
-    <p style="font-size: 12pt; margin: 0; margin-top: 12px;">{{playlist.title}}</p>
+    <p style="font-size: 12pt; margin: 0; margin-top: 12px;">{{playlist.title}}
+    <i style="font-size: 9pt; margin-bottom: 1px; color: #b5b5b5"*ngIf="playlist.visibility == 'private'" class="fa fa-lock"></i></p>
     <p style="font-size: 10pt; color: gray;">{{s.length}} videos</p>
   </a>
 </div>

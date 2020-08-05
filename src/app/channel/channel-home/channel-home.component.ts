@@ -122,6 +122,7 @@ export class ChannelHomeComponent implements OnInit {
                 year,
                 id,
                 userid,
+                url,
               }
             }
             `,

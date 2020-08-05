@@ -11,8 +11,46 @@
 
 }
 
+.loginButton {
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  border: 1.8px solid $fesblue;
+  width: 100px;
+  height: 40px;
+  border-radius: 3px;
+
+  p {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-weight: bold;
+    color: $fesblue;
+    text-align: center;
+
+    svg {
+      margin: 0;
+      margin-right: 8px;
+      padding: 0;
+      border: 0;
+    }
+  }
+
+  &:active {
+    background-color: #e6e6e6;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+}
+
 .content {
   // padding: 0 30px;
+  min-width: 100vw;
+  min-height: 100vh;
   margin: 30px;
   margin-top: 80px;
   margin-right: 45px;
