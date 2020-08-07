@@ -1,11 +1,30 @@
 <div class="content">
   <div class="playlistContainer" *ngIf="currentPlaylist && playlistOwner && videos">
     <div class="playlistOverview" *ngIf="currentPlaylist">
-      <img [src]="videos[0] ? videos[0].thumbnail : '../assets/no_video.png'" alt="">
-      <h1>{{currentPlaylist.title}}</h1>
+      <img [src]="topthm ? topthm : '../assets/no_video.png'" alt="">
+      <div class="" style="flex-direction: row">
+        <h1 *ngIf="!toggleEditTitle">{{currentPlaylist.title}}</h1>
+        <input type="text" name="" value="{{currentPlaylist.title}}" (input)="editedTitle = $event.target.value" *ngIf="toggleEditTitle">
+        <button type="button" *ngIf="curUserId == currentPlaylist.userid && !toggleEditTitle" (click)="toggleEditTitle = !toggleEditTitle" name="button"><i class="fa fa-pen"></i></button>
+        <button type="button" *ngIf="toggleEditTitle" (click)="editPlaylist('','',editedTitle)" name="button"><i class="fa fa-check-circle"></i></button>
+      </div>
       <p>{{getLen(videos)}} videos - {{getViewCount(currentPlaylist.view)}} views - last updated on {{currentPlaylist.day}} {{getMonthName(currentPlaylist.month)}} {{currentPlaylist.year}}</p>
-      <p>{{currentPlaylist.visibility}}</p>
-      <p>{{currentPlaylist.desc}}</p>
+      <div class="" style="flex-direction: row">
+        <p *ngIf="!toggleEditVisibility">{{currentPlaylist.visibility}}</p>
+        <select id="visSelect" name="" *ngIf="toggleEditVisibility" (change)="getCategory()">
+          <option value=""></option>
+          <option value="private">private</option>
+          <option value="public">public</option>
+        </select>
+        <button type="button" *ngIf="curUserId == currentPlaylist.userid && !toggleEditVisibility" name="button" (click)="toggleEditVisibility = !toggleEditVisibility"><i class="fa fa-pen"></i></button>
+        <button type="button" *ngIf="toggleEditVisibility" (click)="editPlaylist('',editedVis,'')" name="button"><i class="fa fa-check-circle"></i></button>
+      </div>
+      <div class="" style="flex-direction: row">
+        <p *ngIf="!toggleEditDesc">{{currentPlaylist.desc}}</p>
+        <textarea name="name" rows="8" cols="80" value="{{currentPlaylist.desc}}" *ngIf="toggleEditDesc" (input)="editedDesc = $event.target.value"></textarea>
+        <button type="button" *ngIf="curUserId == currentPlaylist.userid && !toggleEditDesc" name="button" (click)="toggleEditDesc = !toggleEditDesc"><i class="fa fa-pen"></i></button>
+        <button type="button" *ngIf="toggleEditDesc" (click)="editPlaylist(editedDesc,'','')" name="button"><i class="fa fa-check-circle"></i></button>
+      </div>
       <div class="channelInfo">
         <div class="" style="flex-direction: row;">
           <a href="channel/{{playlistOwner.id}}/home"><img [src]="playlistOwner.profilepic" class="channelPic" alt="">
@@ -16,12 +35,17 @@
         </div>
       </div>
       <div class="toolbar">
-        <button type="button" name="button" (click)="removeAll()" ><i class="fa fa-dumpster"></i></button>
-        <button type="button" name="button" ><i class="fa fa-random"></i></button>
+        <button type="button" name="button" *ngIf="currentPlaylist.visibility != 'private'"><i class="fa fa-share"></i></button>
+        <button type="button" name="button" (click)="removeAll()" *ngIf="curUserId == currentPlaylist.userid"><i class="fa fa-dumpster"></i></button>
+        <button (click)="shufflePlay()" [style.pointer-events]="videos.length != 0 ? 'auto' : 'none'"><i class="fa fa-random"></i></button>
         <button type="button" name="button" *ngIf="curUserId != playlistOwner.id  && currentPlaylist.visibility != 'private'" (click)="addToLib()"><i [class]="inLib ? 'fa fa-minus-circle' : 'fa fa-plus'"></i>{{inLib? 'REMOVE' : 'ADD'}}</button>
+        <button type="button" *ngIf="curUserId == playlistOwner.id" name="button" (click)="deletePlaylist()"><i class="fa fa-times-circle"></i>DELETE</button>
       </div>
     </div>
     <div class="playlistVideos">
+      <div class="justify-content: flex-end; width: 100%">
+        <button type="button" name="button"><i class="fa fa-filter"></i></button>
+      </div>
       <div class="videoItem" *ngFor="let video of videos" style="justify-content: space-between">
         <app-video-block [video]="video" [fromPlaylist]=currentPlaylist.id></app-video-block>
         <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="removeVideo(video.id)" style="color: gray; border: none; background-color: transparent"><i class="fa fa-trash"></i></button>

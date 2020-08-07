@@ -23,19 +23,7 @@ a {
   color: black;
 }
 
-.toolbar {
-  width: 100%;
-  justify-content: flex-end;
-  margin-top: 15px;
 
-  button {
-    align-items: center;
-    margin-left: 10px;
-    color: gray;
-    border: none;
-    background-color: transparent;
-  }
-}
 
 .playlistContainer{
   flex-direction: row;
@@ -46,10 +34,37 @@ a {
     width: 500px;
     margin-right: 50px;
 
+    button{
+      font-size: 10pt;
+      margin-bottom: 20px;
+      align-items: flex-start;
+      align-items: center;
+      margin-left: 10px;
+      color: gray;
+      border: none;
+      background-color: transparent;
+    }
+
     img{
       width: 530px;
       height: 310px;
       margin-bottom: 20px;
+    }
+
+    .toolbar {
+      width: 100%;
+      justify-content: flex-end;
+      margin-top: 15px;
+
+      button, a{
+        align-items: center;
+        margin: 0;
+        margin-left: 10px;
+        color: gray;
+        border: none;
+        background-color: transparent;
+
+      }
     }
 
     .channelInfo{

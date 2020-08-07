@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 
@@ -10,7 +10,7 @@ import gql from 'graphql-tag';
 })
 export class PlaylistComponent implements OnInit {
 
-  constructor(private route : ActivatedRoute, private apollo : Apollo) { }
+  constructor(private route : ActivatedRoute, private router : Router, private apollo : Apollo) { }
 
   currentPlaylist;
   videos;
@@ -197,6 +197,181 @@ export class PlaylistComponent implements OnInit {
   //     alert("test")
   //   }
   // }
+  randid = 0;
+  toggleEditTitle = false;
+  toggleEditDesc = false;
+  toggleEditVisibility = false;
+
+  editedDesc = "";
+  editedVis = "";
+  editedTitle = "";
+
+  getCategory() {
+    const selectOpt  = document.getElementById('visSelect');
+    this.editedVis = selectOpt.value
+    console.log(this.editedVis)
+  }
+
+  compareView(a,b){
+    let comparison = 0;
+
+    if(a.view > b.view) {
+      comparison = 1
+    }
+    else {
+      comparison = 0
+    }
+
+    return comparison;
+  }
+
+  sortVideosBy(sortBy){
+    let sorted = this.currentPlaylist.videos
+
+    if(sortBy == 'view'){
+      sorted.sort(compareView)
+    }
+
+    console.log(sorted)
+  }
+
+  deletePlaylist(){
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation delete($plid: Int!){
+            deletePlaylist(id: $plid)
+          }
+        `,
+        variables: {
+          plid: this.currentPlaylist.id,
+        },
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        this.router.navigateByUrl('');
+
+      },(error) => {
+        console.log('there was an error sending the query', error);
+      })
+  }
+
+  editPlaylist(de, vi, ti){
+    // vi = "a"
+    console.log(ti)
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation edit($plid: ID!, $desc: String!, $visibility: String!, $title: String!){
+            editPlaylist(id: $plid, desc: $desc, visibility: $visibility, title: $title){
+              videos
+            }
+          }
+        `,
+        variables: {
+          plid: parseInt(this.currentPlaylist.id),
+          desc: de == "" ? this.currentPlaylist.desc : de,
+          visibility: vi == "" ? this.currentPlaylist.visibility : vi,
+          title: ti == "" ? this.currentPlaylist.title : ti
+        },
+        refetchQueries: [{
+          query: gql`
+            query playlistById($id: Int!){
+              playlistById(id: $id){
+                id,
+                title,
+                userid,
+                view,
+                day,
+                month,
+                year,
+                desc,
+                videos,
+                visibility,
+              }
+            }
+          `,
+          variables: {
+            id: this.currentPlaylist.id,
+          }
+        }]
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+          // window.location.reload();
+        if(vi != ""){
+          this.toggleEditVisibility = false;
+        }
+        else if(de != "")
+        {
+          this.toggleEditDesc = false;
+        }
+        else if(ti != "")
+        {
+          this.toggleEditTitle = false;
+        }
+      },(error) => {
+        console.log('there was an error sending the query', error);
+      })
+  }
+
+  shufflePlay(){
+    if(this.videos.length != 0)
+    {
+      this.router.navigateByUrl("watch/" + this.videos[Math.floor(Math.random() * this.videos.length)].id + "/" + this.currentPlaylist.id)
+    }
+  }
+
+  shufflePlaylist(){
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation shuffle($plid: ID!){
+            shuffleVideos(plid: $plid){
+              videos
+            }
+          }
+        `,
+        variables: {
+          plid: parseInt(this.currentPlaylist.id),
+        },
+        refetchQueries: [{
+          query: gql`
+            query playlistById($id: Int!){
+              playlistById(id: $id){
+                id,
+                title,
+                userid,
+                view,
+                day,
+                month,
+                year,
+                desc,
+                videos,
+                visibility,
+              }
+            }
+          `,
+          variables: {
+            id: this.currentPlaylist.id,
+          }
+        }]
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        let v = this.videos
+        let vinDb = this.currentPlaylist.videos.split(",")
+        this.videos = new Array(v.length)
+        for (let i = 0; i < v.length; i++) {
+          this.videos[vinDb.indexOf(v[i].id)] = v[i]
+
+        }
+          // window.location.reload();
+      },(error) => {
+        console.log('there was an error sending the query', error);
+      })
+  }
+
   removeAll(){
     this.apollo
       .mutate({
@@ -376,6 +551,7 @@ export class PlaylistComponent implements OnInit {
   }
 
   inLib = false;
+  topthm;
 
   ngOnInit(): void {
 
@@ -526,7 +702,30 @@ export class PlaylistComponent implements OnInit {
           }
         })
         .valueChanges.subscribe(result => {
-          this.videos = result.data.videosByIds
+          let v = result.data.videosByIds
+          if(v.length != 0){
+            this.topthm = v[v.length-1].thumbnail
+          }
+          let vinDb = this.currentPlaylist.videos.split(",")
+          this.videos = new Array(v.length)
+          for (let i = 0; i < v.length; i++) {
+            this.videos[vinDb.indexOf(v[i].id)] = v[i]
+          }
+
+          // this.videos.forEach((element, index) => {
+          //   // console.log(element, index)
+          //   if(element == ''){
+          //     console.log(index)
+          //
+          //     this.videos = this.videos.splice(index,1)
+          //   }
+          // });
+
+          this.videos = this.videos.filter(function(element) {
+            if(element != '') return element
+          })
+
+          // console.log(this.videos)
           console.log(this.videos)
 
 
