@@ -35,22 +35,47 @@
         </div>
       </div>
       <div class="toolbar">
-        <button type="button" name="button" *ngIf="currentPlaylist.visibility != 'private'"><i class="fa fa-share"></i></button>
+        <button (click)="firstPlay()" [style.pointer-events]="videos.length != 0 ? 'auto' : 'none'"><i class="fa fa-play"></i></button>
+        <button type="button" name="button" *ngIf="currentPlaylist.visibility != 'private'" (click)="toggleShareModal()"><i class="fa fa-share"></i></button>
         <button type="button" name="button" (click)="removeAll()" *ngIf="curUserId == currentPlaylist.userid"><i class="fa fa-dumpster"></i></button>
         <button (click)="shufflePlay()" [style.pointer-events]="videos.length != 0 ? 'auto' : 'none'"><i class="fa fa-random"></i></button>
-        <button type="button" name="button" *ngIf="curUserId != playlistOwner.id  && currentPlaylist.visibility != 'private'" (click)="addToLib()"><i [class]="inLib ? 'fa fa-minus-circle' : 'fa fa-plus'"></i>{{inLib? 'REMOVE' : 'ADD'}}</button>
+        <button type="button" name="button" *ngIf="curUserId != '' && curUserId != playlistOwner.id  && currentPlaylist.visibility != 'private'" (click)="addToLib()"><i [class]="inLib ? 'fa fa-minus-circle' : 'fa fa-plus'"></i>{{inLib? 'REMOVE' : 'ADD'}}</button>
         <button type="button" *ngIf="curUserId == playlistOwner.id" name="button" (click)="deletePlaylist()"><i class="fa fa-times-circle"></i>DELETE</button>
       </div>
     </div>
     <div class="playlistVideos">
       <div class="justify-content: flex-end; width: 100%">
-        <button type="button" name="button"><i class="fa fa-filter"></i></button>
+        <button type="button" name="button" *ngIf="curUserId == playlistOwner.id" (click)="sortVideosBy('view')"><i class="fa fa-filter"></i>View</button>
+        <button type="button" name="button" *ngIf="curUserId == playlistOwner.id" (click)="sortVideosBy('date')"><i class="fa fa-filter"></i>Date uploaded</button>
       </div>
-      <div class="videoItem" *ngFor="let video of videos" style="justify-content: space-between">
+      <div class="videoItem" *ngFor="let video of videos; let i = index" style="justify-content: space-between">
         <app-video-block [video]="video" [fromPlaylist]=currentPlaylist.id></app-video-block>
-        <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="removeVideo(video.id)" style="color: gray; border: none; background-color: transparent"><i class="fa fa-trash"></i></button>
+        <div class="vidToolBox" style="display: flex; flex-direction: column">
+          <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('toveryup', i)"><i class="fa fa-angle-double-up"></i></button>
+          <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('toup', i)"><i class="fa fa-angle-up"></i></button>
+          <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="removeVideo(video.id)"><i class="fa fa-trash"></i></button>
+          <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('todown', i)"><i class="fa fa-angle-down"></i></button>
+          <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('toverydown', i)"><i class="fa fa-angle-double-down"></i></button>
+        </div>
       </div>
     </div>
   </div>
+
+  <app-modal
+    [show]="showShareModal"
+    [closeCallback]="toggleShareModal"
+    [modalWidth]=500
+  >
+    <div class="shareContainer">
+      <div class="shareIcons">
+        <a [href]="'https://www.facebook.com/sharer/sharer.php?u=http://localhost:4200' + router.url" target="_blank"><img src="../assets/fb.png" alt=""></a>
+        <a [href]="'http://twitter.com/share?text=Check this playlist! &url=http://localhost:4200' + router.url"><img src="../assets/twitterlogo.jpg" alt=""></a>
+      </div>
+      <div class="shareUrl">
+        <p id="link">http://localhost:4200{{router.url}}</p>
+        <button type="button" name="button" (click)="copyToClipboard()">COPY</button>
+      </div>
+    </div>
+  </app-modal>
 
 </div>

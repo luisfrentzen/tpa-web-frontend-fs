@@ -246,7 +246,8 @@ export class NavbarComponent implements OnInit {
                 day,
                 month,
                 year,
-                archivedplaylists
+                archivedplaylists,
+                premium,
               }
             }
           `,

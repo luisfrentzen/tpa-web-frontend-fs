@@ -604,6 +604,28 @@ export class WatchComponent implements OnInit {
     if(this.plid != 0)
     {
       this.apollo
+        .mutate({
+          mutation: gql`
+            mutation viewPl($id: ID!){
+              viewPlaylist(id: $id){
+                title
+              }
+            }
+          `,
+          variables: {
+            id: parseInt(this.plid),
+          },
+        })
+        .subscribe(({ data }) => {
+          console.log('got data', data);
+          // this.isLiked = !this.isLiked;
+          // console.log(this.isLiked);
+          // this.addModeLink = false;
+        },(error) => {
+          console.log('there was an error sending the query', error);
+        })
+
+      this.apollo
         .watchQuery({
           query: gql`
             query playlistById($id: Int!){

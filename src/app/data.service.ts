@@ -25,10 +25,17 @@ export class DataService {
   private isEditProfile = new BehaviorSubject(false);
   currentEditProfile = this.isEditProfile.asObservable();
 
+  private openShareModal = new BehaviorSubject(false);
+  currentShareModal = this.openShareModal.asObservable();
+
   constructor() { }
 
   toggleEditProfile(next: boolean) {
     this.isEditProfile.next(next)
+  }
+
+  toggleShareModal(next: boolean) {
+    this.openShareModal.next(next)
   }
 
   changePage(nextPage: string) {

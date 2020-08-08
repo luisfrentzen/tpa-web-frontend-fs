@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DataService } from '../data.service';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 
@@ -10,7 +11,7 @@ import gql from 'graphql-tag';
 })
 export class PlaylistComponent implements OnInit {
 
-  constructor(private route : ActivatedRoute, private router : Router, private apollo : Apollo) { }
+  constructor(private route : ActivatedRoute, private router : Router, private apollo : Apollo, private data : DataService) { }
 
   currentPlaylist;
   videos;
@@ -20,6 +21,16 @@ export class PlaylistComponent implements OnInit {
   {
     return vids.length
   }
+
+  copyToClipboard() {
+    var from = document.getElementById('link');
+    var range = document.createRange();
+    window.getSelection().removeAllRanges();
+    range.selectNode(from);
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+ }
 
   getMonthName(mon)
   {
@@ -134,6 +145,7 @@ export class PlaylistComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  premium,
                 }
               }
             `,
@@ -206,6 +218,8 @@ export class PlaylistComponent implements OnInit {
   editedVis = "";
   editedTitle = "";
 
+  isUserPrem = 'no';
+
   getCategory() {
     const selectOpt  = document.getElementById('visSelect');
     this.editedVis = selectOpt.value
@@ -213,26 +227,127 @@ export class PlaylistComponent implements OnInit {
   }
 
   compareView(a,b){
-    let comparison = 0;
+    // let comparison = 0;
 
     if(a.view > b.view) {
-      comparison = 1
+      return -1
     }
-    else {
-      comparison = 0
+    if(a.view < b.view){
+      return 1
     }
 
-    return comparison;
+    return 0;
+  }
+
+  compareDate(a,b){
+    // let comparison = 0;
+
+    if(a.year * 365 + a.month * 30 + a.day > b.year * 365 + b.month * 30 + b.day) {
+      return -1
+    }
+    if(a.year * 365 + a.month * 30 + a.day < b.year * 365 + b.month * 30 + b.day){
+      return 1
+    }
+
+    return 0;
+  }
+
+  customSort(type, idx){
+
+    if(type == 'toup'){
+      if(idx == 0) return
+      let temp = this.videos[idx]
+      this.videos[idx] = this.videos[idx-1]
+      this.videos[idx-1] = temp;
+    }
+    else if(type == 'todown'){
+      if(idx == this.videos.length-1) return
+      let temp = this.videos[idx]
+      this.videos[idx] = this.videos[idx+1]
+      this.videos[idx+1] = temp;
+    }
+    else if(type == 'toveryup'){
+      if(idx == 0) return
+      let temp = this.videos[idx]
+      this.videos.splice(idx, 1)
+      this.videos.unshift(temp)
+    }
+    else if(type == 'toverydown'){
+      if(idx == this.videos.length-1) return
+      let temp = this.videos[idx]
+      this.videos.splice(idx, 1)
+      this.videos.push(temp)
+    }
+
+    let res = []
+    this.videos.forEach(element => {
+      res.push(element.id)
+    });
+    let resultStr = res.join(",")
+    console.log(resultStr)
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation sort($plid: Int!, $videos: String!){
+            updatePlaylistSort(id: $plid, videos: $videos){
+              videos
+            }
+          }
+        `,
+        variables: {
+          plid: this.currentPlaylist.id,
+          videos: resultStr,
+        },
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        // this.router.navigateByUrl('');
+
+      },(error) => {
+        console.log('there was an error sending the query', error);
+      })
   }
 
   sortVideosBy(sortBy){
-    let sorted = this.currentPlaylist.videos
-
+    let sorted = this.videos
+    // console.log(sorted)
     if(sortBy == 'view'){
-      sorted.sort(compareView)
+      sorted.sort(this.compareView)
+    }
+    else if(sortBy == 'date')
+    {
+      sorted.sort(this.compareDate)
     }
 
-    console.log(sorted)
+    let res = []
+    sorted.forEach(element => {
+      res.push(element.id)
+    });
+    let resultStr = res.join(",")
+    console.log(resultStr)
+    this.apollo
+      .mutate({
+        mutation: gql`
+          mutation sort($plid: Int!, $videos: String!){
+            updatePlaylistSort(id: $plid, videos: $videos){
+              videos
+            }
+          }
+        `,
+        variables: {
+          plid: this.currentPlaylist.id,
+          videos: resultStr,
+        },
+      })
+      .subscribe(({ data }) => {
+        console.log('got data', data);
+        // this.router.navigateByUrl('');
+
+      },(error) => {
+        console.log('there was an error sending the query', error);
+      })
+
+    // console.log(sorted)
   }
 
   deletePlaylist(){
@@ -313,6 +428,13 @@ export class PlaylistComponent implements OnInit {
       },(error) => {
         console.log('there was an error sending the query', error);
       })
+  }
+
+  firstPlay(){
+    if(this.videos.length != 0)
+    {
+      this.router.navigateByUrl("watch/" + this.videos[0].id + "/" + this.currentPlaylist.id)
+    }
   }
 
   shufflePlay(){
@@ -408,6 +530,7 @@ export class PlaylistComponent implements OnInit {
                 month,
                 year,
                 desc,
+                premium,
               }
             }
           `,
@@ -462,6 +585,7 @@ export class PlaylistComponent implements OnInit {
                 month,
                 year,
                 desc,
+                premium,
               }
             }
           `,
@@ -531,7 +655,8 @@ export class PlaylistComponent implements OnInit {
                 likedcomments,
                 disilikedvideos,
                 disilikedcomments,
-                archivedplaylists
+                archivedplaylists,
+                premium,
               }
             }
           `,
@@ -552,8 +677,15 @@ export class PlaylistComponent implements OnInit {
 
   inLib = false;
   topthm;
+  showShareModal;
+
+  toggleShareModal = () => {
+      this.data.toggleShareModal(!this.showShareModal);
+  }
 
   ngOnInit(): void {
+
+    this.data.currentShareModal.subscribe(showShareModal => this.showShareModal = showShareModal)
 
     const passedId = +this.route.snapshot.paramMap.get('id');
     // this.checkScroll()
@@ -632,7 +764,8 @@ export class PlaylistComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
-                  archivedplaylists
+                  archivedplaylists,
+                  premium,
                 }
               }
             `,
@@ -656,6 +789,7 @@ export class PlaylistComponent implements OnInit {
               this.isSubscribed = false;
             }
             // console.log(this.playlistOwner)
+            this.isUserPrem = this.currentUserInfo.premium
           })
         }
 
@@ -666,6 +800,7 @@ export class PlaylistComponent implements OnInit {
                 name,
                 profilepic,
                 id,
+                premium,
               }
             }
           `,
@@ -694,6 +829,7 @@ export class PlaylistComponent implements OnInit {
                 year,
                 url,
                 desc,
+                premium,
               }
             }
           `,
@@ -724,6 +860,12 @@ export class PlaylistComponent implements OnInit {
           this.videos = this.videos.filter(function(element) {
             if(element != '') return element
           })
+
+          if(this.isUserPrem == 'no'){
+            this.videos = this.videos.filter(function(element) {
+              if(element.premium != 'yes') return element
+            })
+          }
 
           // console.log(this.videos)
           console.log(this.videos)
