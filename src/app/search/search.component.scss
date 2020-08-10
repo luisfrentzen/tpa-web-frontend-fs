@@ -1,0 +1,27 @@
+*{
+  display: flex;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.content {
+  margin-top: 50px;
+  padding: 20px;
+  .searchResults {
+    flex-direction: column;
+    .sectionResult {
+      flex-direction: column;
+
+      .channelInfo {
+        margin: 10px;
+        flex-direction: row;
+        align-items: center;
+        img {
+          width: 60px;
+          height: 60px;
+          border-radius: 50px;
+        }
+      }
+    }
+  }
+}

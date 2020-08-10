@@ -54,6 +54,7 @@ import { VideoBlockComponent } from './video-block/video-block.component';
 import { PostBlockComponent } from './post-block/post-block.component';
 import { PostComponent } from './post/post.component';
 import { SubscriptionBlockComponent } from './subscription-block/subscription-block.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { SubscriptionBlockComponent } from './subscription-block/subscription-bl
     VideoBlockComponent,
     PostBlockComponent,
     PostComponent,
-    SubscriptionBlockComponent
+    SubscriptionBlockComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

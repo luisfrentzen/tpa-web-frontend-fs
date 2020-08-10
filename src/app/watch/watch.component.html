@@ -54,7 +54,7 @@
         </div>
         <div class="newCommentWrapper" *ngIf="user">
           <div class="inputNewComment">
-            <img class="userPic" [src]="user.photoUrl" alt="">
+            <img class="userPic" [src]="currentUserInfo.profilepic" alt="">
             <input type="text" class="newCommentSection" placeholder="Comment" name="" value="" (input)="newCommentDesc = $event.target.value">
           </div>
           <div class="inputControl">
@@ -62,7 +62,7 @@
           </div>
         </div>
         <div class="" *ngFor="let comment of comments; let j = index">
-          <app-comment-block [comment]="comment.id" *ngIf="j < lastComment"></app-comment-block>
+          <app-comment-block [comment]="comment.id" *ngIf="j < lastComment" style="width: 100%"></app-comment-block>
         </div>
       </div>
     </div>
@@ -81,5 +81,5 @@
 
 </div>
 <div class="footer">
-
+<p> </p>
 </div>

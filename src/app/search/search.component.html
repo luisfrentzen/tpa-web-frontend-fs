@@ -1,0 +1,16 @@
+<div class="content">
+  <div class="searchResults">
+    <div class="sectionResult">
+      <div class="channelInfo" *ngFor="let channel of channels">
+        <img [src]="channel.profilepic" class="channelPic" alt="">
+        <p>{{channel.name}}</p>
+      </div>
+    </div>
+    <div class="sectionResult">
+      <app-playlist-block [playlist]="playlist" *ngFor="let playlist of playlists"></app-playlist-block>
+    </div>
+    <div class="sectionResult">
+      <app-video-block [video]="video" *ngFor="let video of videos"></app-video-block>
+    </div>
+  </div>
+</div>

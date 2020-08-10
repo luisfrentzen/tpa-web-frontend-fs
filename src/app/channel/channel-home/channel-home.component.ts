@@ -157,10 +157,11 @@ export class ChannelHomeComponent implements OnInit {
           .watchQuery({
             query: gql`
             query getPlaylistById($userid: String!){
-              playlistsByUser(userid: $userid){
+              playlistsByUser(userid: $userid, visibility: ""){
                 title,
                 id,
                 videos,
+                visibility,
               }
             }
             `,

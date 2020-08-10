@@ -27,6 +27,7 @@ import { ChannelCommunityComponent } from './channel/channel-community/channel-c
 import { ChannelPlaylistComponent } from './channel/channel-playlist/channel-playlist.component'
 import { ChannelVideosComponent } from './channel/channel-videos/channel-videos.component'
 import { PostComponent } from './post/post.component'
+import { SearchComponent } from './search/search.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -56,6 +57,7 @@ const routes: Routes = [
     { path: 'playlist', component: ChannelPlaylistComponent },
   ]},
   { path: 'post/:id', component: PlaylistComponent },
+  { path: 'search/:keyword', component: SearchComponent },
 ];
 
 @NgModule({

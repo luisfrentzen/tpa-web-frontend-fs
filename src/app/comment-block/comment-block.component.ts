@@ -100,6 +100,7 @@ export class CommentBlockComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  profilepic,
                 }
               }
             `,
@@ -181,6 +182,7 @@ export class CommentBlockComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  profilepic,
                 }
               }
             `,
@@ -471,6 +473,7 @@ export class CommentBlockComponent implements OnInit {
                 likedcomments,
                 disilikedvideos,
                 disilikedcomments,
+                profilepic,
               }
             }
           `,

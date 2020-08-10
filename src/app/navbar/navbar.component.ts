@@ -56,6 +56,43 @@ export class NavbarComponent implements OnInit {
     this.signInWithGoogle();
   }
 
+  searchBarValue = '';
+  autocompletes = [];
+
+  search(){
+    this.router.navigateByUrl('/search/' + this.searchBarValue)
+  }
+
+  checkFocus(){
+    const tb = document.querySelector(".searchInput")
+    if( tb === document.activeElement ){
+      return true
+    }
+    else {
+      return false
+    }
+  }
+
+  autoCompleteFill(keyword){
+    this.apollo
+      .watchQuery({
+        query: gql`
+          query autocomplete($kword: String!) {
+            autocomplete(kword: $kword)
+          }
+        `,
+        variables: {
+          kword: keyword
+        }
+      })
+      .valueChanges.subscribe(result => {
+        this.autocompletes = result.data.autocomplete
+        if(!this.autocompletes){
+          this.autocompletes = []
+        }
+      });
+  }
+
   signInWithGoogle(){
 
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
@@ -64,7 +101,6 @@ export class NavbarComponent implements OnInit {
       this.user = user;
       this.loggedIn = (user != null);
       console.log(this.user);
-      this.addToLocalStorage(user);
 
 
 
@@ -121,7 +157,21 @@ export class NavbarComponent implements OnInit {
               query userById($userid: String!){
                 userById(userid: $userid){
                   id,
-                  name
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                  channelart,
+                  about,
+                  day,
+                  month,
+                  year,
+                  archivedplaylists,
+                  premium,
                 }
               }
             `,
@@ -159,9 +209,11 @@ export class NavbarComponent implements OnInit {
                 console.log('there was an error sending the query', error);
               });
             }
+
+            this.addToLocalStorage(res[0]);
+            window.location.reload();
           });
 
-      window.location.reload();
       // console.log('asd')
     });
 
@@ -214,7 +266,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(){
     // this.authService.renewTokens();
     // this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
-
+    // this.removeUser()
     var pl;
     var arch;
 
@@ -223,6 +275,7 @@ export class NavbarComponent implements OnInit {
     }
     else{
       this.getUserFromStorage();
+      // console.log(this.user)
     }
 
     if(this.user)

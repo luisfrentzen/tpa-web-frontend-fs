@@ -9,7 +9,7 @@ import gql from 'graphql-tag';
   templateUrl: './playlist.component.html',
   styleUrls: ['./playlist.component.scss']
 })
-export class PlaylistComponent implements OnInit {
+export class PlaylistComponent implements OnInit, AfterViewInit, AfterContentInit {
 
   constructor(private route : ActivatedRoute, private router : Router, private apollo : Apollo, private data : DataService) { }
 
@@ -702,26 +702,6 @@ export class PlaylistComponent implements OnInit {
       this.curUserId = this.user.id;
     }
 
-
-    // this.lastKey = 10;
-    // this.observer = new IntersectionObserver((entry) => {
-    //   if(entry[0].isIntersecting){
-    //     console.log("tes")
-    //     let card = document.querySelector(".playlistVideos")
-    //     for(let i = 0; i < 5; i ++){
-    //       if(this.lastKey < (this.videos ? this.videos.length : 0)){
-    //         let div = document.createElement("div")
-    //         let vid = document.createElement("app-video-block")
-    //         vid.setAttribute("video", this.videos[this.lastKey])
-    //         div.appendChild(vid)
-    //         card.appendChild(div)
-    //         this.lastKey++
-    //       }
-    //     }
-    //   }
-    // })
-    // this.observer.observe(document.querySelector(".footer"))
-
     this.apollo
       .watchQuery({
         query: gql`
@@ -867,12 +847,48 @@ export class PlaylistComponent implements OnInit {
             })
           }
 
+
           // console.log(this.videos)
-          console.log(this.videos)
+          // console.log(document.querySelector(".footer"))
 
 
         })
       })
+  }
+
+  ngAfterContentInit(){
+    console.log(document.querySelector(".footer"))
+    // root: document.querySelector(".playlistVideos")
+    var intersectionOpt = {
+      root: document.querySelector(".playlistVideos"),
+      threshold: [0.5,1.0],
+    }
+
+    this.lastKey = 10;
+    this.observer = new IntersectionObserver((entry) => {
+      if(entry[0].isIntersecting){
+        console.log("tes")
+        let card = document.querySelector(".videosContainer")
+        for(let i = 0; i < 5; i ++){
+          if(this.lastKey < (this.videos ? this.videos.length : 0)){
+            let outerdiv = document.createElement("div")
+            let div = document.createElement("div")
+            div.setAttribute('class', 'videoItem')
+            let vid = document.createElement("app-video-block")
+            vid.setAttribute("video", this.videos[this.lastKey])
+            div.appendChild(vid)
+            outerdiv.appendChild(div)
+            card.appendChild(div)
+            this.lastKey++
+            console.log("testing")
+          }
+        }
+      }
+    }, intersectionOpt);
+
+
+
+    this.observer.observe(document.querySelector(".footer"))
   }
 
 }

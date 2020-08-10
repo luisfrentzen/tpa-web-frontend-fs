@@ -88,24 +88,6 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.data.currentRestriction.subscribe(onRestriction => this.onRestriction = onRestriction)
 
-    this.lastKey = 12;
-    this.observer = new IntersectionObserver((entry) => {
-      if(entry[0].isIntersecting){
-        let card = document.querySelector(".auto-grid")
-        for(let i = 0; i < 4; i ++){
-          if(this.lastKey < this.videos.length){
-            let div = document.createElement("div")
-            let vid = document.createElement("app-video-block")
-            vid.setAttribute("video", this.videos[this.lastKey])
-            div.appendChild(vid)
-            card.appendChild(div)
-            this.lastKey++
-          }
-        }
-      }
-    })
-    this.observer.observe(document.querySelector(".footer"))
-
     if(localStorage.getItem('users') == null){
       this.users = [];
       this.curUserId = "";
@@ -137,6 +119,24 @@ console.log('g')
         })
         .valueChanges.subscribe(result => {
           this.videos = result.data.videos
+
+          this.lastKey = 12;
+          this.observer = new IntersectionObserver((entry) => {
+            if(entry[0].isIntersecting){
+              let card = document.querySelector(".auto-grid")
+              for(let i = 0; i < 4; i ++){
+                if(this.lastKey < this.videos.length){
+                  let div = document.createElement("div")
+                  let vid = document.createElement("app-video-block")
+                  vid.setAttribute("video", this.videos[this.lastKey])
+                  div.appendChild(vid)
+                  card.appendChild(div)
+                  this.lastKey++
+                }
+              }
+            }
+          })
+          this.observer.observe(document.querySelector(".footer"))
         });
     }
     else{
@@ -199,6 +199,27 @@ console.log('g')
           .valueChanges.subscribe(result => {
             this.videos = result.data.videos
             console.log(this.videos)
+
+
+            console.log(document.querySelector(".footer"))
+            this.lastKey = 12;
+            this.observer = new IntersectionObserver((entry) => {
+              if(entry[0].isIntersecting){
+                console.log("test")
+                let card = document.querySelector(".auto-grid")
+                for(let i = 0; i < 4; i ++){
+                  if(this.lastKey < this.videos.length){
+                    let div = document.createElement("div")
+                    let vid = document.createElement("app-video-block")
+                    vid.setAttribute("video", this.videos[this.lastKey])
+                    div.appendChild(vid)
+                    card.appendChild(div)
+                    this.lastKey++
+                  }
+                }
+              }
+            })
+            this.observer.observe(document.querySelector(".footer"))
           });
       })
     }

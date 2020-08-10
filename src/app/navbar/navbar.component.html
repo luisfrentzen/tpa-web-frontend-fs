@@ -7,8 +7,15 @@
     <img src="../assets/Logo.png" (click)="changePage('')" class="imLogo">
   </div>
   <div class="searchBar">
-    <input type="text" name="" placeholder="Search" class="searchInput">
-    <button type="button" name="button" class="searchButton"><i class="fa fa-search"></i></button>
+    <div class="" style="flex-direction: column">
+        <input type="text" name="" placeholder="Search" class="searchInput" [value]="searchBarValue" (input)="searchBarValue = $event.target.value; autoCompleteFill(searchBarValue)">
+        <div class="autocompleteBox" *ngIf="autocompletes.length > 0 && searchBarValue != '' && checkFocus()">
+          <div class="autoItems" *ngFor="let result of autocompletes" (click)="searchBarValue = result">
+            <p>{{result}}</p>
+          </div>
+        </div>
+    </div>
+    <button type="button" name="button" class="searchButton" (click)="search()"><i class="fa fa-search"></i></button>
   </div>
 
   <div>

@@ -10,6 +10,8 @@
 
 }
 
+
+
 a {
   margin: 0;
   text-decoration: none;
@@ -207,9 +209,43 @@ title {
 }
 
 .searchBar {
+  // width: 100%;
   * {
     margin: 0;
+    // height: 30px;
+  }
+
+  .searchInput {
     height: 30px;
+  }
+
+  .searchButton {
+    height: 30px;
+  }
+}
+
+.autocompleteBox{
+  position: absolute;
+  height: auto;
+  // width: 100%;
+  height: auto;
+  width: 40vw;
+  top: 45px;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-top: none;
+  flex-direction: column;
+
+  .autoItems {
+    height: 30px;
+    width: 100%;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 10pt;
+
+    &:hover{
+      background-color: #f4f4f4;
+    }
   }
 }
 

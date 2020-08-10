@@ -1,6 +1,6 @@
 <div class="content">
-  <div class="playlistContainer" *ngIf="currentPlaylist && playlistOwner && videos">
-    <div class="playlistOverview" *ngIf="currentPlaylist">
+  <div class="playlistContainer"  >
+    <div class="playlistOverview" *ngIf="currentPlaylist && playlistOwner && videos">
       <img [src]="topthm ? topthm : '../assets/no_video.png'" alt="">
       <div class="" style="flex-direction: row">
         <h1 *ngIf="!toggleEditTitle">{{currentPlaylist.title}}</h1>
@@ -44,19 +44,27 @@
       </div>
     </div>
     <div class="playlistVideos">
-      <div class="justify-content: flex-end; width: 100%">
+      <div class="justify-content: flex-end; width: 100%" *ngIf="currentPlaylist && playlistOwner && videos">
         <button type="button" name="button" *ngIf="curUserId == playlistOwner.id" (click)="sortVideosBy('view')"><i class="fa fa-filter"></i>View</button>
         <button type="button" name="button" *ngIf="curUserId == playlistOwner.id" (click)="sortVideosBy('date')"><i class="fa fa-filter"></i>Date uploaded</button>
       </div>
-      <div class="videoItem" *ngFor="let video of videos; let i = index" style="justify-content: space-between">
-        <app-video-block [video]="video" [fromPlaylist]=currentPlaylist.id></app-video-block>
-        <div class="vidToolBox" style="display: flex; flex-direction: column">
-          <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('toveryup', i)"><i class="fa fa-angle-double-up"></i></button>
-          <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('toup', i)"><i class="fa fa-angle-up"></i></button>
-          <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="removeVideo(video.id)"><i class="fa fa-trash"></i></button>
-          <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('todown', i)"><i class="fa fa-angle-down"></i></button>
-          <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('toverydown', i)"><i class="fa fa-angle-double-down"></i></button>
+      <div class="videosContainer" style="flex-direction: column" *ngIf="currentPlaylist && playlistOwner && videos">
+        <div class="" *ngFor="let video of videos; let i = index">
+          <div class="videoItem" *ngIf="i < (lastKey)" style="justify-content: space-between">
+            <app-video-block [video]="video" [fromPlaylist]=currentPlaylist.id></app-video-block>
+            <div class="vidToolBox" style="display: flex; flex-direction: column">
+              <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('toveryup', i)"><i class="fa fa-angle-double-up"></i></button>
+              <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('toup', i)"><i class="fa fa-angle-up"></i></button>
+              <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="removeVideo(video.id)"><i class="fa fa-trash"></i></button>
+              <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('todown', i)"><i class="fa fa-angle-down"></i></button>
+              <button *ngIf="curUserId == playlistOwner.id" type="button" name="button" (click)="customSort('toverydown', i)"><i class="fa fa-angle-double-down"></i></button>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="footer">
+        <p> </p>
       </div>
     </div>
   </div>

@@ -97,6 +97,7 @@ export class WatchComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  profilepic,
                 }
               }
             `,
@@ -210,6 +211,7 @@ export class WatchComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  profilepic,
                 }
               }
             `,
@@ -532,6 +534,7 @@ export class WatchComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  profilepic,
                 }
               }
             `,
@@ -707,37 +710,6 @@ export class WatchComponent implements OnInit {
         console.log('there was an error sending the query', error);
       })
 
-    this.lastKey = 6;
-    this.lastComment = 4;
-    this.observer = new IntersectionObserver((entry) => {
-      if(entry[0].isIntersecting){
-        let card = document.querySelector(".recContainer")
-        for(let i = 0; i < 3; i ++){
-          if(this.lastKey < this.videos.length){
-            let div = document.createElement("div")
-            let vid = document.createElement("app-video-block")
-            vid.setAttribute("video", this.videos[this.lastKey])
-            div.appendChild(vid)
-            card.appendChild(div)
-            this.lastKey++
-          }
-        }
-
-        let cont = document.querySelector(".commentContainer")
-        for(let i = 0; i < 6; i ++){
-          if(this.lastComment < this.comments.length){
-            let div = document.createElement("div")
-            let vid = document.createElement("app-comment-block")
-            vid.setAttribute("comment", this.comments[this.lastComment].id)
-            div.appendChild(vid)
-            card.appendChild(div)
-            this.lastComment++
-          }
-        }
-      }
-    })
-    this.observer.observe(document.querySelector(".footer"))
-
     if(localStorage.getItem('users') == null){
       this.users = [];
       this.curUserId = "";
@@ -861,6 +833,38 @@ export class WatchComponent implements OnInit {
         })
         .valueChanges.subscribe(result => {
           this.videos = result.data.videos
+
+          this.lastKey = 6;
+          this.lastComment = 4;
+          this.observer = new IntersectionObserver((entry) => {
+            if(entry[0].isIntersecting){
+              let card = document.querySelector(".recContainer")
+              for(let i = 0; i < 3; i ++){
+                if(this.lastKey < this.videos.length){
+                  let div = document.createElement("div")
+                  let vid = document.createElement("app-video-block")
+                  vid.setAttribute("video", this.videos[this.lastKey])
+                  div.appendChild(vid)
+                  card.appendChild(div)
+                  this.lastKey++
+                }
+              }
+
+              let cont = document.querySelector(".commentContainer")
+              for(let i = 0; i < 6; i ++){
+                if(this.lastComment < this.comments.length){
+                  let div = document.createElement("div")
+                  let vid = document.createElement("app-comment-block")
+                  vid.setAttribute("comment", this.comments[this.lastComment].id)
+                  div.appendChild(vid)
+                  card.appendChild(div)
+                  this.lastComment++
+                }
+              }
+            }
+          })
+          this.observer.observe(document.querySelector(".footer"))
+
         });
     }
     else{
@@ -880,6 +884,7 @@ export class WatchComponent implements OnInit {
                 likedcomments,
                 disilikedvideos,
                 disilikedcomments,
+                profilepic,
               }
             }
           `,
@@ -1063,6 +1068,38 @@ export class WatchComponent implements OnInit {
             })
             .valueChanges.subscribe(result => {
               this.videos = result.data.videos
+
+              this.lastKey = 6;
+              this.lastComment = 4;
+              this.observer = new IntersectionObserver((entry) => {
+                if(entry[0].isIntersecting){
+                  let card = document.querySelector(".recContainer")
+                  for(let i = 0; i < 3; i ++){
+                    if(this.lastKey < this.videos.length){
+                      let div = document.createElement("div")
+                      let vid = document.createElement("app-video-block")
+                      vid.setAttribute("video", this.videos[this.lastKey])
+                      div.appendChild(vid)
+                      card.appendChild(div)
+                      this.lastKey++
+                    }
+                  }
+
+                  let cont = document.querySelector(".commentContainer")
+                  for(let i = 0; i < 6; i ++){
+                    if(this.lastComment < this.comments.length){
+                      let div = document.createElement("div")
+                      let vid = document.createElement("app-comment-block")
+                      vid.setAttribute("comment", this.comments[this.lastComment].id)
+                      div.appendChild(vid)
+                      card.appendChild(div)
+                      this.lastComment++
+                    }
+                  }
+                }
+              })
+              this.observer.observe(document.querySelector(".footer"))
+
             });
         })
       }
