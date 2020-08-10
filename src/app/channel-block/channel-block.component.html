@@ -1,0 +1,11 @@
+<div class="channelInfo">
+  <a href="channel/{{channel.id}}/home"><img [src]="channel.profilepic" class="channelPic" alt=""></a>
+  <div class="channelDetails">
+    <a href="channel/{{channel.id}}/home"><p>{{channel.name}}</p></a>
+    <p>{{getViewCount(channel.subscribers)}} subscribers - {{videoCount}} videos</p>
+    <p>{{channel.about}}</p>
+  </div>
+  <div class="subButton" *ngIf="curUserId != channel.id" [style.background-color]="isSubscribed ? 'lightgray' : '#d70000'" [style.color]="isSubscribed? 'gray' : 'white'" (click)="toggleSubs()">
+    {{isSubscribed ? 'SUBSCRIBED' : 'SUBSCRIBE'}}
+  </div>
+</div>

@@ -17,6 +17,7 @@ export class SearchComponent implements OnInit {
   playlists;
   channels;
 
+
   ngOnInit(): void {
     const passedSearch = this.route.snapshot.paramMap.get('keyword');
     console.log(passedSearch)
@@ -26,7 +27,10 @@ export class SearchComponent implements OnInit {
           query search($kword: String!) {
             searchPlaylist(kword: $kword){
               title,
+              id,
               videos,
+              desc,
+              userid,
             }
           }
         `,
@@ -56,6 +60,7 @@ export class SearchComponent implements OnInit {
                 month,
                 year,
                 premium,
+                desc,
               }
             }
           `,
@@ -76,6 +81,8 @@ export class SearchComponent implements OnInit {
                   id,
                   name,
                   profilepic,
+                  subscribers,
+                  about,
                 }
               }
             `,

@@ -5,7 +5,7 @@ a {
 
 .vidItems {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   *{
     color: black;
   }
@@ -39,6 +39,10 @@ a {
         left: 32%
       }
     }
+  }
+
+  .vidInfo{
+    flex-direction: column;
   }
 
 
