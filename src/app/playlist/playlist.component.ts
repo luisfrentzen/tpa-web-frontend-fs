@@ -308,6 +308,8 @@ export class PlaylistComponent implements OnInit, AfterViewInit, AfterContentIni
       })
   }
 
+  sortDatePub = 'Newest'
+
   sortVideosBy(sortBy){
     let sorted = this.videos
     // console.log(sorted)
@@ -317,6 +319,10 @@ export class PlaylistComponent implements OnInit, AfterViewInit, AfterContentIni
     else if(sortBy == 'date')
     {
       sorted.sort(this.compareDate)
+
+      if(this.sortDatePub == 'Newest'){
+        sorted = sorted.reverse()
+      }
     }
 
     let res = []

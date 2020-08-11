@@ -13,9 +13,26 @@ export class SearchComponent implements OnInit {
 
   constructor(private apollo : Apollo, private route : ActivatedRoute, private router : Router) { }
 
+
+
   videos;
   playlists;
   channels;
+
+  showFilter = false;
+
+  dateFilter = 0;
+  typeFilter = "";
+
+  now = new Date();
+
+  // test(video){
+  //   return ((this.now.getDay() + this.now.getMonth() * 30 + this.now.getFullYear() * 365) - (video.day + video.month * 30 + video.year * 365))
+  // }
+
+  toggleFilter(){
+    this.showFilter = !this.showFilter
+  }
 
 
   ngOnInit(): void {

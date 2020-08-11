@@ -4,11 +4,54 @@
   box-sizing: border-box;
 }
 
+hr {
+  height: 1px;
+  margin-top: 2px;
+  background-color: lightgray;
+  border: none;
+}
+
 .content {
   margin-top: 50px;
   padding: 20px;
   margin-left: 20vw;
   width: 55vw;
+  flex-direction: column;
+
+  position: relative;
+  transition: 0.5s ease;
+
+  .filterOptions {
+    flex-direction: row;
+    .filterCategories{
+        flex-direction: column;
+        margin: 2px;
+        margin-right: 20px;
+
+        p {
+          margin: 4px;
+        }
+    }
+    padding-bottom: 20px;
+  }
+
+  .filter{
+    color: gray;
+    align-items: center;
+
+    p {
+      font-size: 9pt;
+      margin: 0;
+    }
+
+    svg {
+      font-size: 7pt;
+      margin: 0;
+      margin-right: 2px;
+    }
+
+  }
+
   .searchResults {
     width: 100%;
     flex-direction: column;

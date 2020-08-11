@@ -46,7 +46,7 @@
     <div class="playlistVideos">
       <div class="justify-content: flex-end; width: 100%" *ngIf="currentPlaylist && playlistOwner && videos">
         <button type="button" name="button" *ngIf="curUserId == playlistOwner.id" (click)="sortVideosBy('view')"><i class="fa fa-filter"></i>View</button>
-        <button type="button" name="button" *ngIf="curUserId == playlistOwner.id" (click)="sortVideosBy('date')"><i class="fa fa-filter"></i>Date uploaded</button>
+        <button type="button" name="button" *ngIf="curUserId == playlistOwner.id" (click)="sortVideosBy('date'); sortDatePub == 'Oldest' ? sortDatePub = 'Newest' : sortDatePub = 'Oldest'"><i class="fa fa-filter"></i>Date uploaded ({{ sortDatePub }})</button>
       </div>
       <div class="videosContainer" style="flex-direction: column" *ngIf="currentPlaylist && playlistOwner && videos">
         <div class="" *ngFor="let video of videos; let i = index">

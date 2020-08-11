@@ -60,6 +60,8 @@ export class FileUploadComponent implements OnInit {
     }
   }
 
+  // a = "10 vw";
+
   users = [];
   user;
 
@@ -87,7 +89,7 @@ export class FileUploadComponent implements OnInit {
       .watchQuery({
         query: gql`
         query getPlaylistById($userid: String!){
-          playlistsByUser(userid: $userid){
+          playlistsByUser(userid: $userid, visibility: ""){
             title,
             id,
           }
@@ -216,7 +218,7 @@ export class FileUploadComponent implements OnInit {
           refetchQueries: [{
             query: gql`
             query getPlaylistById($userid: String!){
-              playlistsByUser(userid: $userid){
+              playlistsByUser(userid: $userid, visibility: ""){
                 title,
                 id,
               }
@@ -235,21 +237,23 @@ export class FileUploadComponent implements OnInit {
   }
 
   startUpload(file: File) {
-    if( this.vidDesc == '' || this.vidTitle == '' || this.thumbnailFile == null )
-    {
-      console.log(this.isPrivate)
-      console.log(this.ageRestriction)
-      return;
-    }
 
     this.users = JSON.parse(localStorage.getItem('users'));
     this.user = this.users[0];
     // The storage path
     const thmPath = `thm/${Date.now()}_${this.thumbnailFile}`
     const path = `vid/${Date.now()}_${file.name}`;
+    const checkBox  = document.getElementById('premium');
+    this.isPremium = checkBox.checked;
     const prem = this.isPremium ? 'yes' : 'no'
 
-    // console.log(path)
+    if( this.vidDesc == '' || this.vidTitle == '' || this.thumbnailFile == null )
+    {
+      console.log(this.isPrivate)
+      console.log(this.ageRestriction)
+      console.log(prem)
+      return;
+    }
     // Reference to storage bucket
     const ref = this.storage.ref(path);
     const thmref = this.storage.ref(thmPath);
@@ -318,8 +322,8 @@ export class FileUploadComponent implements OnInit {
               thumbnail: this.thmurl,
               userid: this.user.id,
               title: this.vidTitle,
-              channelname: this.user.name,
-              channelpic: this.user.photoUrl,
+              channelname: "a",
+              channelpic: "a",
               day: this.day,
               month: this.month,
               year: this.year,
@@ -355,19 +359,19 @@ export class FileUploadComponent implements OnInit {
         }
 
       },(error) => {
-        // console.log(this.vidurl)
-        // console.log(this.ageRestriction)
-        // console.log(this.isPrivate)
-        // console.log(this.vidDesc)
-        // console.log(this.vidCategory)
-        // console.log(this.thmurl)
-        // console.log(this.user.id)
-        // console.log(this.vidTitle)
-        // console.log(this.user.name)
+        console.log(this.vidurl)
+        console.log(this.ageRestriction)
+        console.log(this.isPrivate)
+        console.log(this.vidDesc)
+        console.log(this.vidCategory)
+        console.log(this.thmurl)
+        console.log(this.user.id)
+        console.log(this.vidTitle)
+        console.log(this.user.name)
         // console.log(this.user.photoUrl)
-        // console.log(this.day)
-        // console.log(this.month)
-        // console.log(this.year)
+        console.log(this.day)
+        console.log(this.month)
+        console.log(this.year)
         console.log('there was an error sending the query', error);
       })
 

@@ -328,51 +328,51 @@ export class WatchComponent implements OnInit {
 
   getMonthName(mon)
   {
-    if(mon == 1)
+    if(mon == 0)
     {
       return "Jan"
     }
-    else if(mon == 2)
+    else if(mon == 1)
     {
       return "Feb"
     }
-    else if(mon == 3)
+    else if(mon == 2)
     {
       return "Mar"
     }
-    else if(mon == 4)
+    else if(mon == 3)
     {
       return "Apr"
     }
-    else if(mon == 5)
+    else if(mon == 4)
     {
       return "May"
     }
-    else if(mon == 6)
+    else if(mon == 5)
     {
       return "Jun"
     }
-    else if(mon == 7)
+    else if(mon == 6)
     {
       return "Jul"
     }
-    else if(mon == 8)
+    else if(mon == 7)
     {
       return "Aug"
     }
-    else if(mon == 9)
+    else if(mon == 8)
     {
       return "Sep"
     }
-    else if(mon == 10)
+    else if(mon == 9)
     {
       return "Oct"
     }
-    else if(mon == 11)
+    else if(mon == 10)
     {
       return "Nov"
     }
-    else if(mon == 12)
+    else if(mon == 11)
     {
       return "Dec"
     }

@@ -78,12 +78,12 @@
     <div class="sideBarItems" *ngIf="restsubbedChannel.length != 0 && openSubs != true" (click)="toggleRestSubs()"><i class="fa fa-chevron-down"></i>Show More</div>
     <div class="sideBarItems" *ngIf="restsubbedChannel.length != 0 && openSubs == true" (click)="toggleRestSubs()"><i class="fa fa-chevron-up"></i>Show Less</div>
     <p class="subtitle"><b>CATEGORIES</b></p>
-    <div class="sideBarItems" (click)="changePage('music')"><i class="fa fa-music"></i>Music</div>
-    <div class="sideBarItems" (click)="changePage('gaming')"><i class="fa fa-gamepad"></i>Gaming</div>
-    <div class="sideBarItems" (click)="changePage('sport')"><i class="fa fa-dumbbell"></i>Sport</div>
-    <div class="sideBarItems" (click)="changePage('entertainment')"><i class="fa fa-magic"></i>Entertainment</div>
-    <div class="sideBarItems" (click)="changePage('news')"><i class="fa fa-newspaper"></i>News</div>
-    <div class="sideBarItems" (click)="changePage('travel')"><i class="fa fa-map-marked-alt"></i>Travel</div>
+    <a href="category/music"><div class="sideBarItems" ><i class="fa fa-music"></i>Music</div></a>
+    <a href="category/gaming"><div class="sideBarItems" ><i class="fa fa-gamepad"></i>Gaming</div></a>
+    <a href="category/sport"><div class="sideBarItems" ><i class="fa fa-dumbbell"></i>Sport</div></a>
+    <a href="category/entertainment"><div class="sideBarItems" ><i class="fa fa-magic"></i>Entertainment</div></a>
+    <a href="category/news"><div class="sideBarItems" ><i class="fa fa-newspaper"></i>News</div></a>
+    <a href="category/travel"><div class="sideBarItems" ><i class="fa fa-map-marked-alt"></i>Travel</div></a>
     <div class="lineBreak">
       <!-- &nbsp; -->
     </div>

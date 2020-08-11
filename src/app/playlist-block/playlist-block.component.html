@@ -1,17 +1,17 @@
 <div class="vidItems" [style.flex-direction]="typeView == 2 ? 'row' : 'column'">
-  <a [href]="typeView == 2 ? 'watch/' + s[0] + '/' + playlist.id : 'playlist/' + playlist.id">
+  <a [href]="typeView == 2 && s.length > 0 ? 'watch/' + s[0] + '/' + playlist.id : 'playlist/' + playlist.id">
     <div class="vidContainer" [style.margin-right]="typeView == 2 ? '10px' : '0px'">
       <img class="vid" [src]="video ? video.thumbnail : '../assets/no_video.png'" alt="">
       <div class="overlay" [style.left]="typeView == 2 ? '67%' : '70%'"><b>{{s.length}} <i class="fa fa-stream"></i></b></div>
     </div>
   </a>
-    <div class="vidInfo" *ngIf="playlistOwner">
-      <p style="font-size: 12pt; margin: 0;" [style.margin-top]="typeView == 2 ? '0px' : '12px'">{{playlist.title}}
-      <i style="font-size: 9pt; margin-bottom: 1px; color: #b5b5b5"*ngIf="playlist.visibility == 'private'" class="fa fa-lock"></i></p>
-      <a href="channel/{{playlistOwner.id}}/home" *ngIf="typeView == 2"><p style="font-size: 10pt; color: gray; margin-bottom: 1px" >{{playlistOwner.name}}</p></a>
-      <p style="font-size: 10pt; color: gray; margin-bottom: 1px" *ngIf="typeView == 2">{{playlist.desc}}</p>
-      <p style="font-size: 10pt; color: gray; margin-bottom: 1px">{{s.length}} videos</p>
-      <a href="playlist/{{playlist.id}}" *ngIf="typeView == 2"><p style="font-size: 10pt; color: #b1b1b1;">VIEW PLAYLIST</p></a>
-    </div>
+  <div class="vidInfo" *ngIf="playlistOwner">
+    <p style="font-size: 12pt; margin: 0;" [style.margin-top]="typeView == 2 ? '0px' : '12px'">{{playlist.title}}
+    <i style="font-size: 9pt; margin-bottom: 1px; color: #b5b5b5"*ngIf="playlist.visibility == 'private'" class="fa fa-lock"></i></p>
+    <a href="channel/{{playlistOwner.id}}/home" *ngIf="typeView == 2"><p style="font-size: 10pt; color: gray; margin-bottom: 1px" >{{playlistOwner.name}}</p></a>
+    <p style="font-size: 10pt; color: gray; margin-bottom: 1px" *ngIf="typeView == 2">{{playlist.desc}}</p>
+    <p style="font-size: 10pt; color: gray; margin-bottom: 1px">{{s.length}} videos</p>
+    <a href="playlist/{{playlist.id}}" *ngIf="typeView == 2"><p style="font-size: 10pt; color: #b1b1b1;">VIEW PLAYLIST</p></a>
+  </div>
 
 </div>

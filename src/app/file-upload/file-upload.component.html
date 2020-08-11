@@ -90,10 +90,16 @@
 
     </div>
 
-    <div *ngIf="percentage | async as pct">
 
-      <progress [value]="pct" max="100" >0%</progress>
+    <div>
 
+      <!-- <progress [value]="pct" max="100" >0%</progress> -->
+      <!-- <p> {{pct}} </p> -->
+      <div class="percentage" *ngIf="percentage | async as pct">
+        <div class="bar" [style.width]="pct + '%'">
+          &nbsp;
+        </div>
+      </div>
     </div>
 
   </div>

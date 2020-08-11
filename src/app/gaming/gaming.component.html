@@ -1,14 +1,41 @@
 <div class="content">
   <div class="header">
     <div class="iconCat">
-      <i class="fa fa-gamepad"></i>
+      <i [class]="iconClass"></i>
     </div>
     <div class="catTitle">
-      <h1>Gaming</h1>
+      <h1>{{passedCat}}</h1>
       <p><b>Category</b></p>
     </div>
   </div>
   <hr>
-  <app-video-block [video]="video" *ngFor="let video of videos"></app-video-block>
-
+  <div class="" style="flex-direction: column" *ngIf="videos && weekvideos && monthvideos && recentvideos">
+    <p class="headTitle" >All Time Popular</p>
+    <div class="auto-grid">
+      <div class="" *ngFor="let video of videos.slice(0,20)">
+        <app-video-block [video]="video" [typeView]=1 ></app-video-block>
+      </div>
+    </div>
+    <hr>
+    <p class="headTitle">Popular This Week</p>
+    <div class="auto-grid">
+      <div class="" *ngFor="let video of weekvideos.slice(0,20)">
+        <app-video-block [video]="video" [typeView]=1 ></app-video-block>
+      </div>
+    </div>
+    <hr>
+    <p class="headTitle">Popular This Month</p>
+    <div class="auto-grid">
+      <div class="" *ngFor="let video of monthvideos.slice(0,20)">
+        <app-video-block [video]="video" [typeView]=1 ></app-video-block>
+      </div>
+    </div>
+    <hr>
+    <p class="headTitle">Recently Uploaded</p>
+    <div class="auto-grid">
+      <div class="" *ngFor="let video of recentvideos.slice(0,20)">
+        <app-video-block [video]="video" [typeView]=1 ></app-video-block>
+      </div>
+    </div>
+  </div>
 </div>

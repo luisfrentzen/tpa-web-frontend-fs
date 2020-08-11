@@ -66,12 +66,24 @@ export class TrendingComponent implements OnInit {
     return res
   }
 
+  users = [];
+  user;
+  premi = '';
+
   ngOnInit(): void {
+    if(localStorage.getItem('users') != null){
+      this.users = JSON.parse(localStorage.getItem('users'));
+      this.user = this.users[0]
+
+      this.premi = this.user.premium == 'yes' ? 'yes' : ''
+    }
+    console.log(this.premi)
+
     this.apollo
       .watchQuery({
         query: gql`
-          {
-            videos(sort: "view", filter:"", premium:""){
+          query videos($premi: String!){
+            videos(sort: "view", filter:"all", premium: $premi){
               id,
               title,
               url,
@@ -84,13 +96,17 @@ export class TrendingComponent implements OnInit {
               month,
               year,
               desc,
+              premium,
             }
           }
         `,
+        variables: {
+          premi: this.premi
+        }
       })
       .valueChanges.subscribe(result => {
         this.videos = result.data.videos
-
+        console.log(this.videos)
         let i = 0;
         while (this.videos[0].view == 0) {
           let val = this.videos.shift()
@@ -105,15 +121,15 @@ export class TrendingComponent implements OnInit {
           const current = new Date();
           const curDate = (current.getDate()) + ((current.getMonth()) * 30) + (current.getFullYear() * 365)
           const diff = curDate - vidDate
-
+          // console.log(diff)
           if(diff <= 7 && n < 20)
           {
             s.unshift(element)
             n = n + 1
           }
 
-          this.videos = s;
         });
+        this.videos = s;
       });
   }
 

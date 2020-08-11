@@ -1,13 +1,36 @@
-<div class="content">
+<div class="content" [style.bottom]="showFilter ? '0px' : '140px'">
+  <div class="filterOptions">
+    <div class="filterCategories">
+      <p style="color: gray; font-size: 8pt;">UPLOAD DATE</p>
+      <hr>
+      <p [style.color]="dateFilter == 7 ? '#0086de' : 'black'" (click)="dateFilter == 7 ? dateFilter = 0 : dateFilter = 7">this week</p>
+      <p [style.color]="dateFilter == 30 ? '#0086de' : 'black'" (click)="dateFilter == 30 ? dateFilter = 0 : dateFilter = 30">this month</p>
+      <p [style.color]="dateFilter == 365 ? '#0086de' : 'black'" (click)="dateFilter == 365 ? dateFilter = 0 : dateFilter = 365">this year</p>
+    </div>
+    <div class="filterCategories">
+      <p style="color: gray; font-size: 8pt;">TYPE</p>
+      <hr>
+      <p [style.color]="typeFilter == 'video' ? '#0086de' : 'black'" (click)="typeFilter == 'video' ? typeFilter = '' : typeFilter = 'video'">video</p>
+      <p [style.color]="typeFilter == 'playlist' ? '#0086de' : 'black'" (click)="typeFilter == 'playlist' ? typeFilter = '' : typeFilter = 'playlist'">playlist</p>
+      <p [style.color]="typeFilter == 'channel' ? '#0086de' : 'black'" (click)="typeFilter == 'channel' ? typeFilter = '' : typeFilter = 'channel'">channel</p>
+    </div>
+  </div>
+  <div class="filter" (click)="toggleFilter()">
+    <i class="fa fa-filter"></i><p>FILTER BY</p>
+  </div>
+  <hr>
   <div class="searchResults">
-    <div class="sectionResult">
+    <div class="sectionResult" *ngIf="typeFilter == 'channel' || typeFilter == ''">
       <app-channel-block [channel]="channel" *ngFor="let channel of channels"></app-channel-block>
     </div>
-    <div class="sectionResult">
+    <div class="sectionResult" *ngIf="typeFilter == 'playlist' || typeFilter == ''">
       <app-playlist-block [playlist]="playlist" [typeView]=2 style="margin: 17px 0" *ngFor="let playlist of playlists"></app-playlist-block>
     </div>
-    <div class="sectionResult">
-      <app-video-block [video]="video" *ngFor="let video of videos"></app-video-block>
+    <div class="sectionResult" style="margin-top: 13px" *ngIf="typeFilter == 'video' || typeFilter == ''">
+      <div class="" *ngFor="let video of videos">
+        <app-video-block [video]="video" *ngIf="dateFilter != 0 ? (now.getDate() + now.getMonth() * 30 + now.getFullYear() * 365) - (video.day + video.month * 30 + video.year * 365) <= dateFilter : 1 == 1"></app-video-block>
+        <!-- <p>a : {{test(video)}} {{video.title}}</p> -->
+      </div>
     </div>
   </div>
 </div>
