@@ -2,7 +2,7 @@
   <div class="container">
     <div class="videoContainer" *ngIf="targetVideo">
       <div class="vid">
-        <mat-video [src]="targetVideo.url" autoplay="true"></mat-video>
+        <mat-video id="matVid" [src]="targetVideo.url" autoplay="true" [keyboard]="false" (mouseenter)="onKey = true" (mouseleave)="onKey = false"></mat-video>
       </div>
       <div class="channelOverview">
         <div class="" style="justify-content: space-between;">
@@ -19,6 +19,15 @@
                 </div>
                 <div class="" style="margin: 0; align-items:center;" (click)="toggleDisilike(false)" [style.color]="isDisiliked ? '#0070c2' : 'gray'">
                   <p>{{getViewCount(targetVideo.disilike)}}</p> <i class="fa fa-thumbs-down" style="margin-bottom: 0;"></i>
+                </div>
+                <div class="" style="margin: 0; align-items:center; color: gray;" (click)="toggleShareModal()" *ngIf="targetVideo.visibility == 'public'">
+                  <i class="fa fa-share" style="margin-bottom: 0;"></i>
+                </div>
+                <div class="" style="margin: 0; align-items:center; color: gray;" *ngIf="currentUserInfo.premium == 'yes'">
+                  <a [href]="targetVideo.url" download><i class="fa fa-file-download" style="margin-bottom: 0;"></i></a>
+                </div>
+                <div class="" style="margin: 0; align-items:center; color: gray;">
+                  <i class="fa fa-outdent" style="margin-bottom: 0;"></i>
                 </div>
               </div>
               <div class="bar">
@@ -74,7 +83,7 @@
       </div>
     </div>
     <div class="" *ngFor="let video of videos; let i =index">
-      <app-video-block class="relatedVids" [typeView]=2 *ngIf="i < lastKey" [video]="video"></app-video-block>
+      <app-video-block class="relatedVids" [typeView]=2 [width]=160 [height]=90 *ngIf="i < lastKey" [video]="video"></app-video-block>
     </div>
   </div>
   </div>

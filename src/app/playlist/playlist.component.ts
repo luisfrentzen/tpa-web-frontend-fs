@@ -683,10 +683,11 @@ export class PlaylistComponent implements OnInit, AfterViewInit, AfterContentIni
 
   inLib = false;
   topthm;
-  showShareModal;
+  showShareModal = false;;
 
   toggleShareModal = () => {
       this.data.toggleShareModal(!this.showShareModal);
+      console.log("tes")
   }
 
   ngOnInit(): void {

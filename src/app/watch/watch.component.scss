@@ -11,6 +11,12 @@
   margin-top: 80px;
 }
 
+a {
+  text-decoration: none;
+  color: gray;
+}
+
+
 .container {
   * {
     margin: 5px;
@@ -27,32 +33,37 @@
 
     .channelStats {
       // color: gray;
+      display: flex;
       flex-direction: column;
       align-items: center;
-
-      .bar {
-        display: flex;
-        width: 100%;
-        min-height: 1.5px;
-        *{
-          margin: 0;
-        }
-
-        .like {
-          width: 50%;
-          min-height: 1.5px;
-          background-color: gray;
-        }
-        .disilike {
-          width: 50%;
-          min-height: 1.5px;
-          background-color: lightgray;
-        }
-      }
+      justify-content: flex-start;
 
       .stats {
-        align-items: center;
+        align-items: flex-start;
         flex-direction: column;
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+
+        .bar {
+          display: flex;
+          width: 100px;
+          min-height: 1.5px;
+          *{
+            margin: 0;
+          }
+
+          .like {
+            width: 50%;
+            min-height: 1.5px;
+            background-color: gray;
+          }
+          .disilike {
+            width: 50%;
+            min-height: 1.5px;
+            background-color: lightgray;
+          }
+        }
       }
 
       svg {
@@ -107,6 +118,10 @@
     .vid{
       height: 33vw;
       width: 60vw;
+
+      *{
+        width: 100%;
+      }
     }
   }
 

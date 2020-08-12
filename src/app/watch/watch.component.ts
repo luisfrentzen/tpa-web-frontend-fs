@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DataService } from '../data.service';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 
@@ -12,10 +13,25 @@ export class WatchComponent implements OnInit {
 
   url = "";
 
-  constructor(private apollo : Apollo, private route : ActivatedRoute, private router : Router) { }
+  constructor(private apollo : Apollo, private route : ActivatedRoute, private router : Router, private data : DataService) { }
 
   videos;
   targetVideo;
+
+  downloadVideo(){
+    var element = document.createElement('a');
+    element.setAttribute('href',
+    'data:video/mp4;base64,'
+    + btoa(encodeURIComponent(this.targetVideo.url)));
+    console.log(this.targetVideo.url)
+    element.setAttribute('download', this.targetVideo.name);
+
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+  }
 
   toWatchView(nextPage){
 
@@ -79,6 +95,7 @@ export class WatchComponent implements OnInit {
                   desc,
                   like,
                   disilike,
+                  category,
                 }
               }
             `,
@@ -193,6 +210,7 @@ export class WatchComponent implements OnInit {
                   desc,
                   like,
                   disilike,
+                  category,
                 }
               }
             `,
@@ -425,6 +443,11 @@ export class WatchComponent implements OnInit {
             let val = this.comments.shift()
             this.comments.push(val)
           }
+
+          this.comments.sort(this.compareLike)
+        }
+        else {
+          this.comments.sort(this.compareDate)
         }
       });
 
@@ -598,7 +621,71 @@ export class WatchComponent implements OnInit {
   videosInPl = [];
   currentPlaylist;
 
+  premi = ''
+
+  compareLike(a,b){
+    // let comparison = 0;
+
+    if(a.like > b.like) {
+      return -1
+    }
+    if(a.like < b.like){
+      return 1
+    }
+
+    return 0;
+  }
+
+  compareDate(a,b){
+    // let comparison = 0;
+
+    if(a.year * 365 + a.month * 30 + a.day > b.year * 365 + b.month * 30 + b.day) {
+      return -1
+    }
+    if(a.year * 365 + a.month * 30 + a.day < b.year * 365 + b.month * 30 + b.day){
+      return 1
+    }
+
+    return 0;
+  }
+
+  showShareModal = false;;
+
+  toggleShareModal = () => {
+      this.data.toggleShareModal(!this.showShareModal);
+      console.log("tes")
+  }
+
+  onKey = false;
+
   ngOnInit(){
+
+    document.onkeyup = (e) => {
+      let vid = document.getElementById('matVid').querySelector('video') as HTMLVideoElement
+      e.preventDefault()
+      if(this.onKey){
+        if(e.keyCode == 74){
+          vid.currentTime -= 10
+        }
+        if(e.keyCode == 75){
+          vid.paused ? vid.play() : vid.pause()
+        }
+        if(e.keyCode == 76){
+          vid.currentTime += 10
+        }
+        if(e.keyCode == 70){
+          vid.requestFullscreen();
+        }
+        if(e.keyCode == 38){
+          vid.volume += 0.2
+        }
+        if(e.keyCode == 40){
+          vid.volume -= 0.2
+        }
+      }
+    }
+
+    this.data.currentShareModal.subscribe(showShareModal => this.showShareModal = showShareModal)
 
     const passedId = +this.route.snapshot.paramMap.get('id');
 
@@ -733,6 +820,8 @@ export class WatchComponent implements OnInit {
                 desc,
                 like,
                 disilike,
+                premium,
+                category,
               }
             }
           `,
@@ -743,7 +832,12 @@ export class WatchComponent implements OnInit {
         .valueChanges.subscribe(result => {
           this.targetVideo = result.data.videoById
           this.targetVideo = this.targetVideo[0]
-          // console.log(this.targetVideo)
+          console.log(this.targetVideo)
+
+
+          if(this.targetVideo.premium == 'yes'){
+            this.router.navigateByUrl('')
+          }
 
           this.apollo
             .watchQuery({
@@ -759,6 +853,7 @@ export class WatchComponent implements OnInit {
                     likedcomments,
                     disilikedvideos,
                     disilikedcomments,
+                    premium,
                   }
                 }
               `,
@@ -769,6 +864,7 @@ export class WatchComponent implements OnInit {
             .valueChanges.subscribe(result => {
               this.channel = result.data.userById
               this.channel = this.channel[0]
+
 
               if ( this.subs.includes(this.channel.id) )
               {
@@ -871,6 +967,10 @@ export class WatchComponent implements OnInit {
       this.users = JSON.parse(localStorage.getItem('users'));
       this.user = this.users[0];
 
+      if(this.user.premium == "yes"){
+        this.premi = "yes"
+      }
+
       this.apollo
         .watchQuery({
           query: gql`
@@ -885,6 +985,7 @@ export class WatchComponent implements OnInit {
                 disilikedvideos,
                 disilikedcomments,
                 profilepic,
+                premium,
               }
             }
           `,
@@ -916,6 +1017,9 @@ export class WatchComponent implements OnInit {
                     desc,
                     like,
                     disilike,
+                    premium,
+                    visibility,
+                    category,
                   }
                 }
               `,
@@ -926,7 +1030,10 @@ export class WatchComponent implements OnInit {
             .valueChanges.subscribe(result => {
               this.targetVideo = result.data.videoById
               this.targetVideo = this.targetVideo[0]
-              // console.log(this.targetVideo)
+              console.log(this.targetVideo)
+              if(this.targetVideo.premium == 'yes' && this.currentUserInfo.premium != 'yes'){
+                this.router.navigateByUrl('')
+              }
 
 
               if ( this.currentUserInfo.subscribed != "")
@@ -1042,66 +1149,74 @@ export class WatchComponent implements OnInit {
                 .valueChanges.subscribe(result => {
                   this.comments = result.data.commentsByVideo
                   console.log(this.comments)
+                  console.log(this.targetVideo)
                 });
-            });
 
-
-          this.apollo
-            .watchQuery({
-              query: gql`
-                {
-                  videos(sort: "", filter: "", premium: ""){
-                    id,
-                    title,
-                    url,
-                    thumbnail,
-                    userid,
-                    channelpic,
-                    channelname,
-                    view,
-                    day,
-                    month,
-                    year,
-                  }
-                }
-              `,
-            })
-            .valueChanges.subscribe(result => {
-              this.videos = result.data.videos
-
-              this.lastKey = 6;
-              this.lastComment = 4;
-              this.observer = new IntersectionObserver((entry) => {
-                if(entry[0].isIntersecting){
-                  let card = document.querySelector(".recContainer")
-                  for(let i = 0; i < 3; i ++){
-                    if(this.lastKey < this.videos.length){
-                      let div = document.createElement("div")
-                      let vid = document.createElement("app-video-block")
-                      vid.setAttribute("video", this.videos[this.lastKey])
-                      div.appendChild(vid)
-                      card.appendChild(div)
-                      this.lastKey++
+                this.apollo
+                  .watchQuery({
+                    query: gql`
+                      query videosByCategory($category: String!, $premi: String!){
+                        videosByCategory(category: $category, sortBy: "date", premi: $premi){
+                          id,
+                          title,
+                          url,
+                          thumbnail,
+                          userid,
+                          channelpic,
+                          channelname,
+                          view,
+                          day,
+                          month,
+                          year,
+                          desc,
+                          premium,
+                        }
+                      }
+                    `,
+                    variables: {
+                      category: this.targetVideo.category,
+                      premi: this.premi == 'yes' ? '' : 'yes',
                     }
-                  }
+                  })
+                  .valueChanges.subscribe(result => {
+                    this.videos = result.data.videosByCategory
 
-                  let cont = document.querySelector(".commentContainer")
-                  for(let i = 0; i < 6; i ++){
-                    if(this.lastComment < this.comments.length){
-                      let div = document.createElement("div")
-                      let vid = document.createElement("app-comment-block")
-                      vid.setAttribute("comment", this.comments[this.lastComment].id)
-                      div.appendChild(vid)
-                      card.appendChild(div)
-                      this.lastComment++
-                    }
-                  }
-                }
+                    this.lastKey = 6;
+                    this.lastComment = 4;
+                    this.observer = new IntersectionObserver((entry) => {
+                      if(entry[0].isIntersecting){
+                        let card = document.querySelector(".recContainer")
+                        for(let i = 0; i < 3; i ++){
+                          if(this.lastKey < this.videos.length){
+                            let div = document.createElement("div")
+                            let vid = document.createElement("app-video-block")
+                            vid.setAttribute("video", this.videos[this.lastKey])
+                            div.appendChild(vid)
+                            card.appendChild(div)
+                            this.lastKey++
+                          }
+                        }
+
+                        let cont = document.querySelector(".commentContainer")
+                        for(let i = 0; i < 6; i ++){
+                          if(this.lastComment < this.comments.length){
+                            let div = document.createElement("div")
+                            let vid = document.createElement("app-comment-block")
+                            vid.setAttribute("comment", this.comments[this.lastComment].id)
+                            div.appendChild(vid)
+                            card.appendChild(div)
+                            this.lastComment++
+                          }
+                        }
+                      }
+                    })
+                    this.observer.observe(document.querySelector(".footer"))
+
+                  });
               })
-              this.observer.observe(document.querySelector(".footer"))
-
             });
-        })
+
+
       }
 
 

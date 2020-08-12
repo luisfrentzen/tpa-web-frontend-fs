@@ -47,6 +47,12 @@ export class NavbarComponent implements OnInit {
     window.location.reload();
   }
 
+  showShareModal = false;
+
+  toggleShareModal = () => {
+      this.data.toggleShareModal(!this.showShareModal);
+  }
+
   switchAcc(){
     // this.removeUser();
     // this.authService.signOut();
@@ -417,6 +423,7 @@ export class NavbarComponent implements OnInit {
     this.data.currentRestriction.subscribe(onRestriction => this.onRestriction = onRestriction)
     this.data.currentKeyboardModal.subscribe(showKeyboard => this.showKeyboard = showKeyboard)
     this.data.currentPage.subscribe(currentPage => this.currentPage = currentPage)
+    this.data.currentShareModal.subscribe(showShareModal => this.showShareModal = showShareModal)
     // console.log(gapi);
   }
 

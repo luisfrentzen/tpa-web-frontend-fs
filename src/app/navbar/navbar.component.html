@@ -142,6 +142,23 @@
 </app-modal>
 
 <app-modal
+  [show]="showShareModal"
+  [closeCallback]="toggleShareModal"
+  [modalWidth]=500
+>
+  <div class="shareContainer">
+    <div class="shareIcons">
+      <a [href]="'https://www.facebook.com/sharer/sharer.php?u=http://localhost:4200' + router.url" target="_blank"><img src="../assets/fb.png" alt=""></a>
+      <a [href]="'http://twitter.com/share?text=Check this playlist! &url=http://localhost:4200' + router.url"><img src="../assets/twitterlogo.jpg" alt=""></a>
+    </div>
+    <div class="shareUrl">
+      <p id="link">http://localhost:4200{{router.url}}</p>
+      <button type="button" name="button" (click)="copyToClipboard()">COPY</button>
+    </div>
+  </div>
+</app-modal>
+
+<app-modal
   [show]="showKeyboard"
   [closeCallback]="toggleKeyboardModal"
   [modalWidth]=700
