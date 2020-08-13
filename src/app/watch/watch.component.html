@@ -23,11 +23,14 @@
                 <div class="" style="margin: 0; align-items:center; color: gray;" (click)="toggleShareModal()" *ngIf="targetVideo.visibility == 'public'">
                   <i class="fa fa-share" style="margin-bottom: 0;"></i>
                 </div>
-                <div class="" style="margin: 0; align-items:center; color: gray;" *ngIf="currentUserInfo.premium == 'yes'">
+                <div class="" style="margin: 0; align-items:center; color: gray;" *ngIf="premi == 'yes'">
                   <a [href]="targetVideo.url" download><i class="fa fa-file-download" style="margin-bottom: 0;"></i></a>
                 </div>
                 <div class="" style="margin: 0; align-items:center; color: gray;">
                   <i class="fa fa-outdent" style="margin-bottom: 0;"></i>
+                </div>
+                <div class="" style="margin: 0; align-items:center;" [style.color]="autoplay ? '#00a4e8' : 'gray'" (click)="autoplay = !autoplay">
+                  <i class="fa fa-play"></i>AUTOPLAY
                 </div>
               </div>
               <div class="bar">
@@ -48,6 +51,9 @@
             </div>
             <div class="subButton" *ngIf="curUserId != targetVideo.userid" (click)="toggleSubs()" [style.background-color]="isSubscribed ? 'lightgray' : '#d00000'" [style.color]="isSubscribed ? 'gray' : 'white'">
               {{ isSubscribed ? 'SUBSCRIBED' : 'SUBSCRIBE'}}
+            </div>
+            <div class="bellButton" *ngIf="curUserId != channel.id && isSubscribed" (click)="onNotification()" [style.color]="isBelled ? '#168ed9' : 'lightgray'">
+              <i class="fa fa-bell"></i>
             </div>
           </div>
           <p>{{targetVideo.desc}}</p>
@@ -77,9 +83,9 @@
     </div>
   </div>
   <div class="recContainer" *ngIf="targetVideo">
-    <div class="playlistContainer" *ngIf="plid != 0">
+    <div class="playlistContainer" *ngIf="plid">
       <div class="playlistVids" *ngFor="let video of videosInPl">
-        <app-video-block [typeview]=2 [video]="video" [width]=150 [height]=85 [fromPlaylist]=plid></app-video-block>
+        <app-video-block [typeView]=2 [video]="video" [width]=150 [height]=85 [fromPlaylist]=plid></app-video-block>
       </div>
     </div>
     <div class="" *ngFor="let video of videos; let i =index">

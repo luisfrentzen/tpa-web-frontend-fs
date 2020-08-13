@@ -19,6 +19,14 @@
   </div>
 
   <div>
+    <div class="dropDownSettings" style="height: 330px; overflow: auto;" [style.display]="notifVisible ? 'block' : 'none'" [style.right]="user ? '180px' : '305px'">
+      <ul style="width: 100%">
+        <div class="titleSettings">
+          Notifications
+        </div>
+        <app-notification-block style="margin: 0" [notif]="notif" *ngFor="let notif of notifs"></app-notification-block>
+      </ul>
+    </div>
     <div class="dropDownSettings" [style.display]="settingsVisible ? 'block' : 'none'" [style.right]="user ? '80px' : '205px'">
       <ul>
         <div class="titleSettings">
@@ -36,7 +44,7 @@
         <div (click)="toggleKeyboardModal()"><i class="fa fa-keyboard fa-3x"></i>Keyboard Shortcuts</div>
       </ul>
     </div>
-    <button *ngIf="user" (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-bell"></i></button>
+    <button *ngIf="user" (click)="showNotifs()" type="button" name="button" class="iconButton"><i class="fa fa-bell"></i></button>
     <button *ngIf="!user" (click)="showSettings()" type="button" name="button" class="iconButton"><i class="fa fa-cog"></i></button>
     <button *ngIf="user" (click)="changePage('upload')" type="button" name="button" class="iconButton"><i class="fa fa-caret-square-up"></i></button>
     <button (click)="toggleModal()" type="button" name="button" class="loginButton"  *ngIf="!user"><p><i class="fa fa-user-circle"></i>Login</p></button>

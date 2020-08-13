@@ -16,7 +16,6 @@ a {
   color: gray;
 }
 
-
 .container {
   * {
     margin: 5px;
@@ -37,6 +36,8 @@ a {
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
+
+
 
       .stats {
         align-items: flex-start;
@@ -92,10 +93,18 @@ a {
         justify-content: space-around;
         // align-items: flex-end;
 
+        .bellButton {
+          width: 80px;
+          margin-left: 10px;
+          color: lightgray;
+          font-size: 19pt;
+          margin-right: 0;
+        }
+
         .subButton {
           justify-content: center;
           align-items: center;
-          width: 130px;
+          width: 150px;
           height: 35px;
           // background-color: #d00000;
           // font-weight: bold;
@@ -136,6 +145,7 @@ a {
       background-color: #e8e8e8;
       height: 33vw;
       overflow-y: scroll;
+      overflow-x: hidden;
 
       .playlistVids{
         // align-items: center;

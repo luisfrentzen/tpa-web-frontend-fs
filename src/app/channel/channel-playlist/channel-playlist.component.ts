@@ -73,6 +73,7 @@ export class ChannelPlaylistComponent implements OnInit {
                 id,
                 videos,
                 visibility,
+                userid,
               }
             }
             `,

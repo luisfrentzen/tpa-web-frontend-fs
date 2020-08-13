@@ -1,7 +1,6 @@
 <div class="vidComp" [style.flex-direction]="typeView == 1 ? 'column' : 'row'" *ngIf="channelUserInfo">
   <video style="display: none;" *ngIf="video" width="320" height="240" controls [attr.src]="video.url" (loadedmetadata)="getDuration($event)">
   </video>
-
     <div class="thumbnailView">
       <a [href]="fromPlaylist != 0 ? 'watch/' + video.id + '/' + fromPlaylist :  'watch/' + video.id"><img [src]="video.thumbnail" [style.width]="width + 'px'" [style.height]="height + 'px'" alt=""></a>
       <div class="dura">
@@ -17,7 +16,7 @@
           <a [href]="fromPlaylist != 0 ? 'watch/' + video.id + '/' + fromPlaylist :  'watch/' + video.id"  style="margin: 0; display: flex; flex-direction: row;"><p><b>{{ video.title }}</b></p><p style="color: #288de4" *ngIf="video.premium == 'yes'"><i class="fa fa-star" style="font-size:10pt"></i>prem</p><p style="color: #888888" *ngIf="video.visibility == 'private'"><i class="fa fa-lock" style="font-size:10pt"></i></p></a>
           <div class="" *ngIf="user" style="display:flex; flex-direction: row;">
             <!-- <button style="border: none; background-color:transparent; margin: 0; margin-left: 2 px; color: gray; font-size: 10pt" type="button" name="button" *ngIf="premiumUser" (click)="downloadVideo()"><i class="fa fa-file-download"></i></button> -->
-            <button style="border: none; background-color:transparent; margin: 0; margin-left: 2 px; color: gray; font-size: 10pt" type="button" name="button" *ngIf="curUserId == video.userid && s.length > 3" (click)="deleteVideo()"><i class="fa fa-trash"></i></button>
+            <button style="border: none; background-color:transparent; margin: 0; margin-left: 2 px; color: gray; font-size: 10pt" type="button" name="button" *ngIf="curUserId == video.userid && s.length > 3 && typeView != 2" (click)="deleteVideo()"><i class="fa fa-trash"></i></button>
           </div>
         </div>
         <a href="channel/{{video.userid}}/home"><p style="color:gray;">{{ channelUserInfo.name }}</p></a>

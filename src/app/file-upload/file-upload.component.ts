@@ -309,7 +309,7 @@ export class FileUploadComponent implements OnInit {
                 year: $year
                 premium: $premium
                 duration: 0
-              }){ title, id }
+              }){ title, id, userid, thumbnail }
             }
             `,
             variables : {
@@ -330,7 +330,35 @@ export class FileUploadComponent implements OnInit {
               premium: prem,
             }
           }).subscribe(result => {
-        this.uploadedVideo = result.data.createVideo.id;
+        this.uploadedVideo = result.data.createVideo;
+        console.log(this.uploadedVideo.userid)
+        console.log(this.uploadedVideo.thumbnail)
+        console.log(this.uploadedVideo.title)
+        this.apollo
+          .mutate({
+            mutation : gql`
+              mutation createNotif($vidurl: String!, $ntitle: String!, $user: String!){
+                createNotif(input: {
+                  userid: $user
+                  vidthm: $vidurl
+                  title: $ntitle
+                }){
+                  title
+                }
+              }
+            `,
+            variables: {
+              vidurl: this.uploadedVideo.thumbnail,
+              ntitle: this.uploadedVideo.title,
+              user: this.uploadedVideo.userid,
+            }
+          }).subscribe(({ data }) => {
+          console.log('got data', data);
+        },(error) => {
+          // console.log(this.playlist)
+          // console.log(typeof this.uploadedVideo)
+          console.log('there was an error sending the query', error);
+        })
 
         if(this.playlist != "None")
         {
@@ -347,7 +375,7 @@ export class FileUploadComponent implements OnInit {
                 `,
                 variables: {
                   id: this.playlist,
-                  videos: this.uploadedVideo,
+                  videos: this.uploadedVideo.id,
                 }
               }).subscribe(({ data }) => {
             console.log('got data', data);

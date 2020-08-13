@@ -57,6 +57,65 @@ export class WatchComponent implements OnInit {
 
   newCommentDesc;
 
+  isBelled = false;
+  notifieds;
+
+  onNotification(){
+
+    this.apollo
+        .mutate({
+          mutation : gql`
+            mutation notify($id: String!, $chnid: String!){
+              bellnotif(id:$id, chnid:$chnid){
+                name
+              }
+            }
+          `,
+          variables : {
+            id: this.currentUserInfo.id,
+            chnid: this.channel.id,
+          },
+          refetchQueries: [{
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                  notified,
+                }
+              }
+            `,
+            variables: {
+              userid: this.currentUserInfo.id,
+            }
+          }]
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+
+      this.isBelled = !this.isBelled
+      console.log(this.isBelled)
+      this.notifieds = this.currentUserInfo.notified.split(",")
+      if(this.notifieds.includes(this.channel.id))
+      {
+        this.isBelled = true;
+      }
+      else
+      {
+        this.isBelled = false;
+      }
+
+    },(error) => {
+      console.log('there was an error sending the query', error);
+    });
+
+  }
 
   toggleLike(ignore){
     if(localStorage.getItem('users') == null){
@@ -115,6 +174,7 @@ export class WatchComponent implements OnInit {
                   disilikedvideos,
                   disilikedcomments,
                   profilepic,
+                  notified,
                 }
               }
             `,
@@ -230,6 +290,7 @@ export class WatchComponent implements OnInit {
                   disilikedvideos,
                   disilikedcomments,
                   profilepic,
+                  notified,
                 }
               }
             `,
@@ -400,6 +461,8 @@ export class WatchComponent implements OnInit {
 
   sortBy = ""
 
+  autoplay = false;
+
   toggleSort(){
     if(this.sortBy == "")
     {
@@ -558,6 +621,7 @@ export class WatchComponent implements OnInit {
                   disilikedvideos,
                   disilikedcomments,
                   profilepic,
+                  notified,
                 }
               }
             `,
@@ -578,6 +642,7 @@ export class WatchComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  notified,
                 }
               }
             `,
@@ -605,6 +670,13 @@ export class WatchComponent implements OnInit {
       else
       {
         this.isSubscribed = false;
+      }
+
+      if(this.currentUserInfo.notified.includes(this.channel.id)){
+        this.isBelled = true;
+      }
+      else {
+        this.isBelled = false;
       }
 
     },(error) => {
@@ -657,8 +729,10 @@ export class WatchComponent implements OnInit {
   }
 
   onKey = false;
-
+  plindex;
   ngOnInit(){
+
+
 
     document.onkeyup = (e) => {
       let vid = document.getElementById('matVid').querySelector('video') as HTMLVideoElement
@@ -686,24 +760,114 @@ export class WatchComponent implements OnInit {
     }
 
     this.data.currentShareModal.subscribe(showShareModal => this.showShareModal = showShareModal)
+    // this.data.currentautoPlay.subscribe(autoPlay => this.autoplay = autoPlay)
 
-    const passedId = +this.route.snapshot.paramMap.get('id');
+    this.route.paramMap.subscribe(params => {
+      const passedId = parseInt(params.get('id'));
 
-    this.plid = +this.route.snapshot.paramMap.get('playlistid');
 
-    if(this.plid != 0)
-    {
+      this.plid = params.get('playlistid');
+      console.log(this.plid)
+
+      if(this.plid)
+      {
+        this.apollo
+          .mutate({
+            mutation: gql`
+              mutation viewPl($id: ID!){
+                viewPlaylist(id: $id){
+                  title
+                }
+              }
+            `,
+            variables: {
+              id: this.plid,
+            },
+          })
+          .subscribe(({ data }) => {
+            console.log('got data', data);
+            // this.isLiked = !this.isLiked;
+            // console.log(this.isLiked);
+            // this.addModeLink = false;
+          },(error) => {
+            console.log('there was an error sending the query', error);
+          })
+
+        this.apollo
+          .watchQuery({
+            query: gql`
+              query playlistById($id: Int!){
+                playlistById(id: $id){
+                  id,
+                  title,
+                  userid,
+                  view,
+                  day,
+                  month,
+                  year,
+                  desc,
+                  videos,
+                  visibility,
+                }
+              }
+            `,
+            variables: {
+              id: this.plid,
+            }
+          })
+          .valueChanges.subscribe(result => {
+            this.currentPlaylist = result.data.playlistById
+            this.currentPlaylist = this.currentPlaylist[0]
+            console.log(this.currentPlaylist)
+
+
+            this.apollo.watchQuery({
+              query: gql`
+                query videosByIds($id: String!){
+                  videosByIds(id: $id){
+                    id,
+                    title,
+                    thumbnail,
+                    channelname,
+                    userid,
+                    view,
+                    url,
+                  }
+                }
+              `,
+              variables: {
+                id: this.currentPlaylist.videos,
+              }
+            })
+            .valueChanges.subscribe(result => {
+              let v = result.data.videosByIds
+
+              let vinDb = this.currentPlaylist.videos.split(",")
+              this.videosInPl = new Array(v.length)
+              for (let i = 0; i < v.length; i++) {
+                this.videosInPl[vinDb.indexOf(v[i].id)] = v[i]
+              }
+            })
+          })
+      }
+
+      //
+      // if(document.referrer.includes("playlist"))
+      // {
+      //   console.log("fromplaylist")
+      // }
+
       this.apollo
         .mutate({
           mutation: gql`
-            mutation viewPl($id: ID!){
-              viewPlaylist(id: $id){
+            mutation viewVid($id: ID!){
+              viewVideo(id: $id){
                 title
               }
             }
           `,
           variables: {
-            id: parseInt(this.plid),
+            id: parseInt(passedId),
           },
         })
         .subscribe(({ data }) => {
@@ -715,509 +879,499 @@ export class WatchComponent implements OnInit {
           console.log('there was an error sending the query', error);
         })
 
-      this.apollo
-        .watchQuery({
-          query: gql`
-            query playlistById($id: Int!){
-              playlistById(id: $id){
-                id,
-                title,
-                userid,
-                view,
-                day,
-                month,
-                year,
-                desc,
-                videos,
-                visibility,
-              }
-            }
-          `,
-          variables: {
-            id: this.plid,
-          }
-        })
-        .valueChanges.subscribe(result => {
-          this.currentPlaylist = result.data.playlistById
-          this.currentPlaylist = this.currentPlaylist[0]
-          console.log(this.currentPlaylist)
+      if(localStorage.getItem('users') == null){
+        this.users = [];
+        this.curUserId = "";
 
-          this.apollo.watchQuery({
+        this.apollo
+          .watchQuery({
             query: gql`
-              query videosByIds($id: String!){
-                videosByIds(id: $id){
+              query videoById($id: Int!){
+                videoById(id: $id){
                   id,
                   title,
-                  thumbnail,
-                  channelname,
-                  userid,
-                  view,
                   url,
+                  thumbnail,
+                  userid,
+                  channelpic,
+                  channelname,
+                  view,
+                  day,
+                  month,
+                  year,
+                  desc,
+                  like,
+                  disilike,
+                  premium,
+                  category,
                 }
               }
             `,
             variables: {
-              id: this.currentPlaylist.videos,
+              id: passedId,
             }
           })
           .valueChanges.subscribe(result => {
-            this.videosInPl = result.data.videosByIds
-            // console.log(this.videosInPl)
+            this.targetVideo = result.data.videoById
+            this.targetVideo = this.targetVideo[0]
+            console.log(this.targetVideo)
 
 
-          })
-        })
-    }
-
-    //
-    // if(document.referrer.includes("playlist"))
-    // {
-    //   console.log("fromplaylist")
-    // }
-
-    this.apollo
-      .mutate({
-        mutation: gql`
-          mutation viewVid($id: ID!){
-            viewVideo(id: $id){
-              title
+            if(this.targetVideo.premium == 'yes'){
+              this.router.navigateByUrl('')
             }
-          }
-        `,
-        variables: {
-          id: parseInt(passedId),
-        },
-      })
-      .subscribe(({ data }) => {
-        console.log('got data', data);
-        // this.isLiked = !this.isLiked;
-        // console.log(this.isLiked);
-        // this.addModeLink = false;
-      },(error) => {
-        console.log('there was an error sending the query', error);
-      })
 
-    if(localStorage.getItem('users') == null){
-      this.users = [];
-      this.curUserId = "";
-
-      this.apollo
-        .watchQuery({
-          query: gql`
-            query videoById($id: Int!){
-              videoById(id: $id){
-                id,
-                title,
-                url,
-                thumbnail,
-                userid,
-                channelpic,
-                channelname,
-                view,
-                day,
-                month,
-                year,
-                desc,
-                like,
-                disilike,
-                premium,
-                category,
-              }
-            }
-          `,
-          variables: {
-            id: passedId,
-          }
-        })
-        .valueChanges.subscribe(result => {
-          this.targetVideo = result.data.videoById
-          this.targetVideo = this.targetVideo[0]
-          console.log(this.targetVideo)
+            this.apollo
+              .watchQuery({
+                query: gql`
+                  query userById($userid: String!){
+                    userById(userid: $userid){
+                      id,
+                      name,
+                      profilepic,
+                      subscribers,
+                      subscribed,
+                      likedvideos,
+                      likedcomments,
+                      disilikedvideos,
+                      disilikedcomments,
+                      premium,
+                      notified,
+                    }
+                  }
+                `,
+                variables: {
+                  userid: this.targetVideo.userid,
+                }
+              })
+              .valueChanges.subscribe(result => {
+                this.channel = result.data.userById
+                this.channel = this.channel[0]
 
 
-          if(this.targetVideo.premium == 'yes'){
-            this.router.navigateByUrl('')
-          }
+                var tag = document.getElementById('matVid').querySelector('video') as HTMLVideoElement
+                console.log(tag)
+                tag.onended = () => {
+                  if(this.autoplay){
+                    if(this.plid){
+                      this.videosInPl.forEach((element, index) => {
+                        if(element.id == this.targetVideo.id)
+                        {
+                          this.plindex = index;
+                          // break;
+                        }
+                      });
+                      console.log(this.plindex)
+                      console.log(this.videosInPl)
 
-          this.apollo
-            .watchQuery({
-              query: gql`
-                query userById($userid: String!){
-                  userById(userid: $userid){
-                    id,
-                    name,
-                    profilepic,
-                    subscribers,
-                    subscribed,
-                    likedvideos,
-                    likedcomments,
-                    disilikedvideos,
-                    disilikedcomments,
-                    premium,
+                      var url = './watch/' + this.videosInPl[this.plindex+1].id + '/' + this.plid
+                      this.router.navigate([url]);
+                    }
+                    else {
+                      var url = './watch/' + this.videos[0].id
+                      this.router.navigate([url]);
+                    }
                   }
                 }
-              `,
-              variables: {
-                userid: this.targetVideo.userid,
-              }
-            })
-            .valueChanges.subscribe(result => {
-              this.channel = result.data.userById
-              this.channel = this.channel[0]
+
+                if ( this.subs.includes(this.channel.id) )
+                {
+                  this.isSubscribed = true;
+                }
+                else
+                {
+                  this.isSubscribed = false;
+                }
 
 
-              if ( this.subs.includes(this.channel.id) )
+              });
+
+            this.apollo
+              .watchQuery({
+                query: gql`
+                  query commentByVid($videoid: Int!){
+                    commentsByVideo(videoid: $videoid, sort:""){
+                      id,
+                      day,
+                      month,
+                      year,
+                      userid,
+                      replycount,
+                      desc,
+                      disilike,
+                      like,
+                      replyto,
+                    }
+                  }
+                `,
+                variables: {
+                  videoid: passedId
+                }
+              })
+              .valueChanges.subscribe(result => {
+                this.comments = result.data.commentsByVideo
+                console.log(this.comments)
+              });
+          });
+
+
+        this.apollo
+          .watchQuery({
+            query: gql`
               {
-                this.isSubscribed = true;
+                videos(sort: "", filter: "", premium: "yes"){
+                  id,
+                  title,
+                  url,
+                  thumbnail,
+                  userid,
+                  channelpic,
+                  channelname,
+                  view,
+                  day,
+                  month,
+                  year,
+                }
               }
-              else
-              {
-                this.isSubscribed = false;
-              }
+            `,
+          })
+          .valueChanges.subscribe(result => {
+            this.videos = result.data.videos
 
-
-            });
-
-          this.apollo
-            .watchQuery({
-              query: gql`
-                query commentByVid($videoid: Int!){
-                  commentsByVideo(videoid: $videoid, sort:""){
-                    id,
-                    day,
-                    month,
-                    year,
-                    userid,
-                    replycount,
-                    desc,
-                    disilike,
-                    like,
-                    replyto,
+            this.lastKey = 6;
+            this.lastComment = 4;
+            this.observer = new IntersectionObserver((entry) => {
+              if(entry[0].isIntersecting){
+                let card = document.querySelector(".recContainer")
+                for(let i = 0; i < 3; i ++){
+                  if(this.lastKey < this.videos.length){
+                    let div = document.createElement("div")
+                    let vid = document.createElement("app-video-block")
+                    vid.setAttribute("video", this.videos[this.lastKey])
+                    div.appendChild(vid)
+                    card.appendChild(div)
+                    this.lastKey++
                   }
                 }
-              `,
-              variables: {
-                videoid: passedId
+
+                let cont = document.querySelector(".commentContainer")
+                for(let i = 0; i < 6; i ++){
+                  if(this.lastComment < this.comments.length){
+                    let div = document.createElement("div")
+                    let vid = document.createElement("app-comment-block")
+                    vid.setAttribute("comment", this.comments[this.lastComment].id)
+                    div.appendChild(vid)
+                    card.appendChild(div)
+                    this.lastComment++
+                  }
+                }
               }
             })
-            .valueChanges.subscribe(result => {
-              this.comments = result.data.commentsByVideo
-              console.log(this.comments)
-            });
-        });
+            this.observer.observe(document.querySelector(".footer"))
 
-
-      this.apollo
-        .watchQuery({
-          query: gql`
-            {
-              videos(sort: "", filter: "", premium: "yes"){
-                id,
-                title,
-                url,
-                thumbnail,
-                userid,
-                channelpic,
-                channelname,
-                view,
-                day,
-                month,
-                year,
-              }
-            }
-          `,
-        })
-        .valueChanges.subscribe(result => {
-          this.videos = result.data.videos
-
-          this.lastKey = 6;
-          this.lastComment = 4;
-          this.observer = new IntersectionObserver((entry) => {
-            if(entry[0].isIntersecting){
-              let card = document.querySelector(".recContainer")
-              for(let i = 0; i < 3; i ++){
-                if(this.lastKey < this.videos.length){
-                  let div = document.createElement("div")
-                  let vid = document.createElement("app-video-block")
-                  vid.setAttribute("video", this.videos[this.lastKey])
-                  div.appendChild(vid)
-                  card.appendChild(div)
-                  this.lastKey++
-                }
-              }
-
-              let cont = document.querySelector(".commentContainer")
-              for(let i = 0; i < 6; i ++){
-                if(this.lastComment < this.comments.length){
-                  let div = document.createElement("div")
-                  let vid = document.createElement("app-comment-block")
-                  vid.setAttribute("comment", this.comments[this.lastComment].id)
-                  div.appendChild(vid)
-                  card.appendChild(div)
-                  this.lastComment++
-                }
-              }
-            }
-          })
-          this.observer.observe(document.querySelector(".footer"))
-
-        });
-    }
-    else{
-      this.users = JSON.parse(localStorage.getItem('users'));
-      this.user = this.users[0];
-
-      if(this.user.premium == "yes"){
-        this.premi = "yes"
+          });
       }
+      else{
+        this.users = JSON.parse(localStorage.getItem('users'));
+        this.user = this.users[0];
 
-      this.apollo
-        .watchQuery({
-          query: gql`
-            query userById($userid: String!){
-              userById(userid: $userid){
-                id,
-                name,
-                subscribers,
-                subscribed,
-                likedvideos,
-                likedcomments,
-                disilikedvideos,
-                disilikedcomments,
-                profilepic,
-                premium,
-              }
-            }
-          `,
-          variables: {
-            userid: this.user.id,
-          }
-        })
-        .valueChanges.subscribe(result => {
-          this.currentUserInfo = result.data.userById
-          this.currentUserInfo = this.currentUserInfo[0]
-          this.curUserId = this.currentUserInfo.id;
+        if(this.user.premium == "yes"){
+          this.premi = "yes"
+        }
 
-          this.apollo
-            .watchQuery({
-              query: gql`
-                query videoById($id: Int!){
-                  videoById(id: $id){
-                    id,
-                    title,
-                    url,
-                    thumbnail,
-                    userid,
-                    channelpic,
-                    channelname,
-                    view,
-                    day,
-                    month,
-                    year,
-                    desc,
-                    like,
-                    disilike,
-                    premium,
-                    visibility,
-                    category,
-                  }
+        this.apollo
+          .watchQuery({
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                  profilepic,
+                  premium,
+                  notified,
                 }
-              `,
-              variables: {
-                id: passedId,
               }
-            })
-            .valueChanges.subscribe(result => {
-              this.targetVideo = result.data.videoById
-              this.targetVideo = this.targetVideo[0]
-              console.log(this.targetVideo)
-              if(this.targetVideo.premium == 'yes' && this.currentUserInfo.premium != 'yes'){
-                this.router.navigateByUrl('')
-              }
+            `,
+            variables: {
+              userid: this.user.id,
+            }
+          })
+          .valueChanges.subscribe(result => {
+            this.currentUserInfo = result.data.userById
+            this.currentUserInfo = this.currentUserInfo[0]
+            this.curUserId = this.currentUserInfo.id;
 
-
-              if ( this.currentUserInfo.subscribed != "")
-              {
-                this.subs = this.currentUserInfo.subscribed.split(",")
-                console.log(this.subs)
-              }
-              else
-              {
-                this.subs = []
-              }
-
-              if( this.currentUserInfo.likedvideos != "")
-              {
-                this.likes = this.currentUserInfo.likedvideos.split(",")
-              }
-              else {
-                this.likes = []
-              }
-
-              if( this.currentUserInfo.disilikedvideos != "")
-              {
-                this.disilikes = this.currentUserInfo.disilikedvideos.split(",")
-              }
-              else {
-                this.disilikes = []
-              }
-
-              if ( this.likes.includes(this.targetVideo.id) )
-              {
-                this.isLiked = true;
-              }
-              else
-              {
-                this.isLiked = false;
-              }
-
-              if ( this.disilikes.includes(this.targetVideo.id) )
-              {
-                this.isDisiliked = true;
-              }
-              else
-              {
-                this.isDisiliked = false;
-              }
-
-
-              console.log("Likes Disilikes")
-              console.log(this.isLiked)
-              console.log(this.isDisiliked)
-
-
-
-              this.apollo
-                .watchQuery({
-                  query: gql`
-                    query userById($userid: String!){
-                      userById(userid: $userid){
-                        id,
-                        name,
-                        profilepic,
-                        subscribers,
-                        subscribed,
-                        likedvideos,
-                        likedcomments,
-                        disilikedvideos,
-                        disilikedcomments,
-                      }
+            this.apollo
+              .watchQuery({
+                query: gql`
+                  query videoById($id: Int!){
+                    videoById(id: $id){
+                      id,
+                      title,
+                      url,
+                      thumbnail,
+                      userid,
+                      channelpic,
+                      channelname,
+                      view,
+                      day,
+                      month,
+                      year,
+                      desc,
+                      like,
+                      disilike,
+                      premium,
+                      visibility,
+                      category,
                     }
-                  `,
-                  variables: {
-                    userid: this.targetVideo.userid,
                   }
-                })
-                .valueChanges.subscribe(result => {
-                  this.channel = result.data.userById
-                  this.channel = this.channel[0]
-
-                  if ( this.subs.includes(this.channel.id) )
-                  {
-                    this.isSubscribed = true;
-                  }
-                  else
-                  {
-                    this.isSubscribed = false;
-                  }
+                `,
+                variables: {
+                  id: passedId,
+                }
+              })
+              .valueChanges.subscribe(result => {
+                this.targetVideo = result.data.videoById
+                this.targetVideo = this.targetVideo[0]
+                console.log(this.targetVideo)
 
 
-                });
 
-              this.apollo
-                .watchQuery({
-                  query: gql`
-                    query commentByVid($videoid: Int!){
-                      commentsByVideo(videoid: $videoid, sort: ""){
-                        id,
-                        day,
-                        month,
-                        year,
-                        userid,
-                        replycount,
-                        desc,
-                        disilike,
-                        like,
-                        replyto,
-                      }
-                    }
-                  `,
-                  variables: {
-                    videoid: passedId
-                  }
-                })
-                .valueChanges.subscribe(result => {
-                  this.comments = result.data.commentsByVideo
-                  console.log(this.comments)
-                  console.log(this.targetVideo)
-                });
+                if(this.targetVideo.premium == 'yes' && this.currentUserInfo.premium != 'yes'){
+                  this.router.navigateByUrl('')
+                }
+
+
+
+
+                if ( this.currentUserInfo.subscribed != "")
+                {
+                  this.subs = this.currentUserInfo.subscribed.split(",")
+                  console.log(this.subs)
+                }
+                else
+                {
+                  this.subs = []
+                }
+
+                if( this.currentUserInfo.likedvideos != "")
+                {
+                  this.likes = this.currentUserInfo.likedvideos.split(",")
+                }
+                else {
+                  this.likes = []
+                }
+
+                if( this.currentUserInfo.disilikedvideos != "")
+                {
+                  this.disilikes = this.currentUserInfo.disilikedvideos.split(",")
+                }
+                else {
+                  this.disilikes = []
+                }
+
+                if ( this.likes.includes(this.targetVideo.id) )
+                {
+                  this.isLiked = true;
+                }
+                else
+                {
+                  this.isLiked = false;
+                }
+
+                if ( this.disilikes.includes(this.targetVideo.id) )
+                {
+                  this.isDisiliked = true;
+                }
+                else
+                {
+                  this.isDisiliked = false;
+                }
+
+
+                console.log("Likes Disilikes")
+                console.log(this.isLiked)
+                console.log(this.isDisiliked)
+
+
 
                 this.apollo
                   .watchQuery({
                     query: gql`
-                      query videosByCategory($category: String!, $premi: String!){
-                        videosByCategory(category: $category, sortBy: "date", premi: $premi){
+                      query userById($userid: String!){
+                        userById(userid: $userid){
                           id,
-                          title,
-                          url,
-                          thumbnail,
-                          userid,
-                          channelpic,
-                          channelname,
-                          view,
-                          day,
-                          month,
-                          year,
-                          desc,
-                          premium,
+                          name,
+                          profilepic,
+                          subscribers,
+                          subscribed,
+                          likedvideos,
+                          likedcomments,
+                          disilikedvideos,
+                          disilikedcomments,
+                          notified,
                         }
                       }
                     `,
                     variables: {
-                      category: this.targetVideo.category,
-                      premi: this.premi == 'yes' ? '' : 'yes',
+                      userid: this.targetVideo.userid,
                     }
                   })
                   .valueChanges.subscribe(result => {
-                    this.videos = result.data.videosByCategory
+                    this.channel = result.data.userById
+                    this.channel = this.channel[0]
 
-                    this.lastKey = 6;
-                    this.lastComment = 4;
-                    this.observer = new IntersectionObserver((entry) => {
-                      if(entry[0].isIntersecting){
-                        let card = document.querySelector(".recContainer")
-                        for(let i = 0; i < 3; i ++){
-                          if(this.lastKey < this.videos.length){
-                            let div = document.createElement("div")
-                            let vid = document.createElement("app-video-block")
-                            vid.setAttribute("video", this.videos[this.lastKey])
-                            div.appendChild(vid)
-                            card.appendChild(div)
-                            this.lastKey++
-                          }
+                    var tag = document.getElementById('matVid').querySelector('video') as HTMLVideoElement
+                    console.log(tag)
+                    tag.onended = () => {
+                      if(this.autoplay){
+                        if(this.plid){
+                          this.videosInPl.forEach((element, index) => {
+                            if(element.id == this.targetVideo.id)
+                            {
+                              this.plindex = index;
+                              // break;
+                            }
+                          });
+                          console.log(this.plindex)
+                          console.log(this.videosInPl)
+
+                          var url = './watch/' + this.videosInPl[this.plindex+1].id + '/' + this.plid
+                          this.router.navigate([url]);
                         }
-
-                        let cont = document.querySelector(".commentContainer")
-                        for(let i = 0; i < 6; i ++){
-                          if(this.lastComment < this.comments.length){
-                            let div = document.createElement("div")
-                            let vid = document.createElement("app-comment-block")
-                            vid.setAttribute("comment", this.comments[this.lastComment].id)
-                            div.appendChild(vid)
-                            card.appendChild(div)
-                            this.lastComment++
-                          }
+                        else {
+                          var url = './watch/' + this.videos[0].id
+                          this.router.navigate([url]);
                         }
                       }
-                    })
-                    this.observer.observe(document.querySelector(".footer"))
+                    }
+
+                    if ( this.subs.includes(this.channel.id) )
+                    {
+                      this.isSubscribed = true;
+                    }
+                    else
+                    {
+                      this.isSubscribed = false;
+                    }
+
+                    if(this.currentUserInfo.notified.includes(this.channel.id)){
+                      this.isBelled = true;
+                    }
+                    else{
+                      this.isBelled = false;
+                    }
+
 
                   });
-              })
-            });
+
+                this.apollo
+                  .watchQuery({
+                    query: gql`
+                      query commentByVid($videoid: Int!){
+                        commentsByVideo(videoid: $videoid, sort: ""){
+                          id,
+                          day,
+                          month,
+                          year,
+                          userid,
+                          replycount,
+                          desc,
+                          disilike,
+                          like,
+                          replyto,
+                        }
+                      }
+                    `,
+                    variables: {
+                      videoid: passedId
+                    }
+                  })
+                  .valueChanges.subscribe(result => {
+                    this.comments = result.data.commentsByVideo
+                    console.log(this.comments)
+                    console.log(this.targetVideo)
+                  });
+
+                  this.apollo
+                    .watchQuery({
+                      query: gql`
+                        query videosByCategory($category: String!, $premi: String!){
+                          videosByCategory(category: $category, sortBy: "date", premi: $premi){
+                            id,
+                            title,
+                            url,
+                            thumbnail,
+                            userid,
+                            channelpic,
+                            channelname,
+                            view,
+                            day,
+                            month,
+                            year,
+                            desc,
+                            premium,
+                          }
+                        }
+                      `,
+                      variables: {
+                        category: this.targetVideo.category,
+                        premi: this.premi == 'yes' ? '' : 'yes',
+                      }
+                    })
+                    .valueChanges.subscribe(result => {
+                      this.videos = result.data.videosByCategory
+
+                      this.videos.forEach((element,idx) => {
+                        if(element.id == this.targetVideo.id){
+                          this.videos.splice(idx,1)
+                        }
+                      });
+
+                      this.lastKey = 6;
+                      this.lastComment = 4;
+                      this.observer = new IntersectionObserver((entry) => {
+                        if(entry[0].isIntersecting){
+                          let card = document.querySelector(".recContainer")
+                          for(let i = 0; i < 3; i ++){
+                            if(this.lastKey < this.videos.length){
+                              let div = document.createElement("div")
+                              let vid = document.createElement("app-video-block")
+                              vid.setAttribute("video", this.videos[this.lastKey])
+                              div.appendChild(vid)
+                              card.appendChild(div)
+                              this.lastKey++
+                            }
+                          }
+
+                          let cont = document.querySelector(".commentContainer")
+                          for(let i = 0; i < 6; i ++){
+                            if(this.lastComment < this.comments.length){
+                              let div = document.createElement("div")
+                              let vid = document.createElement("app-comment-block")
+                              vid.setAttribute("comment", this.comments[this.lastComment].id)
+                              div.appendChild(vid)
+                              card.appendChild(div)
+                              this.lastComment++
+                            }
+                          }
+                        }
+                      })
+                      this.observer.observe(document.querySelector(".footer"))
+
+                    });
+                })
+              });
 
 
-      }
+        }
+    })
 
 
 

@@ -231,6 +231,31 @@ export class ChannelCommunityComponent implements OnInit {
               // this.isLiked = !this.isLiked;
               // console.log(this.isLiked);
               // this.addModeLink = false;
+              this.apollo
+                .mutate({
+                  mutation : gql`
+                    mutation createNotif($ntitle: String!, $user: String!){
+                      createNotif(input: {
+                        userid: $user
+                        vidthm: ""
+                        title: $ntitle
+                      }){
+                        title
+                      }
+                    }
+                  `,
+                  variables: {
+                    ntitle: this.dsc,
+                    user: this.channelUserInfo.id,
+                  }
+                }).subscribe(({ data }) => {
+                console.log('got data', data);
+              },(error) => {
+                // console.log(this.playlist)
+                // console.log(typeof this.uploadedVideo)
+                console.log('there was an error sending the query', error);
+              })
+
             },(error) => {
               console.log('there was an error sending the query', error);
             });
@@ -289,6 +314,30 @@ export class ChannelCommunityComponent implements OnInit {
           // this.isLiked = !this.isLiked;
           // console.log(this.isLiked);
           // this.addModeLink = false;
+          this.apollo
+            .mutate({
+              mutation : gql`
+                mutation createNotif($ntitle: String!, $user: String!){
+                  createNotif(input: {
+                    userid: $user
+                    vidthm: ""
+                    title: $ntitle
+                  }){
+                    title
+                  }
+                }
+              `,
+              variables: {
+                ntitle: this.dsc,
+                user: this.channelUserInfo.id,
+              }
+            }).subscribe(({ data }) => {
+            console.log('got data', data);
+          },(error) => {
+            // console.log(this.playlist)
+            // console.log(typeof this.uploadedVideo)
+            console.log('there was an error sending the query', error);
+          })
         },(error) => {
           console.log('there was an error sending the query', error);
         });

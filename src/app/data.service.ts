@@ -13,6 +13,9 @@ export class DataService {
   private useLocation = new BehaviorSubject(false);
   currentLocation = this.useLocation.asObservable();
 
+  private autoPlay = new BehaviorSubject(false);
+  currentautoPlay = this.autoPlay.asObservable();
+
   private logout = new BehaviorSubject(false);
   currentLogout = this.logout.asObservable();
 
@@ -29,6 +32,10 @@ export class DataService {
   currentShareModal = this.openShareModal.asObservable();
 
   constructor() { }
+
+  toggleAutoPlay(next: boolean) {
+    this.autoPlay.next(next)
+  }
 
   toggleEditProfile(next: boolean) {
     this.isEditProfile.next(next)

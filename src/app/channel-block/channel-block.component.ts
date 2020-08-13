@@ -42,6 +42,63 @@ export class ChannelBlockComponent implements OnInit {
 
   subs = [];
 
+  isBelled = false;
+  notifieds;
+
+  onNotification(){
+
+    this.apollo
+        .mutate({
+          mutation : gql`
+            mutation notify($id: String!, $chnid: String!){
+              bellnotif(id:$id, chnid:$chnid){
+                name
+              }
+            }
+          `,
+          variables : {
+            id: this.curUserId,
+            chnid: this.channel.id,
+          },
+          refetchQueries: [{
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                  notified,
+                }
+              }
+            `,
+            variables: {
+              userid: this.curUserId,
+            }
+          }]
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+
+      // this.isBelled = !this.isBelled
+      console.log(this.isBelled)
+      if(this.user.notified.includes(this.channel.id)){
+        this.isBelled = true;
+      }
+      else {
+        this.isBelled = false;
+      }
+
+    },(error) => {
+      console.log('there was an error sending the query', error);
+    });
+
+  }
+
   toggleSubs(){
     if(localStorage.getItem('users') == null){
       return
@@ -145,6 +202,7 @@ export class ChannelBlockComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  notified,
                 }
               }
             `,
@@ -157,6 +215,16 @@ export class ChannelBlockComponent implements OnInit {
             this.user = this.user[0]
             if(this.user.subscribed.includes(this.channel.id)){
               this.isSubscribed = true;
+            }
+            else{
+              this.isSubscribed = false;
+            }
+
+            if(this.user.notified.includes(this.channel.id)){
+              this.isBelled = true;
+            }
+            else{
+              this.isBelled = false;
             }
           })
         // console.log(this.user.subscribed)

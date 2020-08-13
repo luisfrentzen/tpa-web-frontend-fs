@@ -15,6 +15,9 @@
       <div class="subButton" *ngIf="curUserId != channelUserInfo.id" [style.background-color]="isSubscribed ? 'lightgray' : '#d70000'" [style.color]="isSubscribed? 'gray' : 'white'" (click)="toggleSubs()">
         {{isSubscribed ? 'SUBSCRIBED' : 'SUBSCRIBE'}}
       </div>
+      <div class="bellButton" *ngIf="curUserId != channelUserInfo.id && isSubscribed" (click)="onNotification()" [style.color]="isBelled ? '#168ed9' : 'lightgray'">
+        <i class="fa fa-bell"></i>
+      </div>
       <div class="subButton" (click)="toggleModal()" *ngIf="channelUserInfo.id == curUserId" style="background-color: #0080d9; width: 130px">
         EDIT PROFILE
       </div>

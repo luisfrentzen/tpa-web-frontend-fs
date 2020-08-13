@@ -30,8 +30,13 @@
           <a href="channel/{{playlistOwner.id}}/home"><img [src]="playlistOwner.profilepic" class="channelPic" alt="">
           <p>{{playlistOwner.name}}</p></a>
         </div>
-        <div class="subButton" *ngIf="curUserId != playlistOwner.id" [style.background-color]="isSubscribed ? 'lightgray' : '#d70000'" [style.color]="isSubscribed? 'gray' : 'white'" (click)="toggleSubs()">
-          {{isSubscribed ? 'SUBSCRIBED' : 'SUBSCRIBE'}}
+        <div class="">
+          <div class="subButton" *ngIf="curUserId != playlistOwner.id" [style.background-color]="isSubscribed ? 'lightgray' : '#d70000'" [style.color]="isSubscribed? 'gray' : 'white'" (click)="toggleSubs()">
+            {{isSubscribed ? 'SUBSCRIBED' : 'SUBSCRIBE'}}
+          </div>
+          <div class="bellButton" *ngIf="curUserId != playlistOwner.id && isSubscribed" (click)="onNotification()" [style.color]="isBelled ? '#168ed9' : 'lightgray'">
+            <i class="fa fa-bell"></i>
+          </div>
         </div>
       </div>
       <div class="toolbar">

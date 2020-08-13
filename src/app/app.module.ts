@@ -56,6 +56,7 @@ import { PostComponent } from './post/post.component';
 import { SubscriptionBlockComponent } from './subscription-block/subscription-block.component';
 import { SearchComponent } from './search/search.component';
 import { ChannelBlockComponent } from './channel-block/channel-block.component';
+import { NotificationBlockComponent } from './notification-block/notification-block.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,8 @@ import { ChannelBlockComponent } from './channel-block/channel-block.component';
     PostComponent,
     SubscriptionBlockComponent,
     SearchComponent,
-    ChannelBlockComponent
+    ChannelBlockComponent,
+    NotificationBlockComponent
   ],
   imports: [
     BrowserModule,

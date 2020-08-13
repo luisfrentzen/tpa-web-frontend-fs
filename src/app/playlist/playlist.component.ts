@@ -114,6 +114,66 @@ export class PlaylistComponent implements OnInit, AfterViewInit, AfterContentIni
 
   subs = [];
 
+  isBelled = false;
+  notifieds;
+
+  onNotification(){
+
+    this.apollo
+        .mutate({
+          mutation : gql`
+            mutation notify($id: String!, $chnid: String!){
+              bellnotif(id:$id, chnid:$chnid){
+                name
+              }
+            }
+          `,
+          variables : {
+            id: this.currentUserInfo.id,
+            chnid: this.currentPlaylist.userid,
+          },
+          refetchQueries: [{
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                  notified,
+                }
+              }
+            `,
+            variables: {
+              userid: this.currentUserInfo.id,
+            }
+          }]
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+
+      this.isBelled = !this.isBelled
+      console.log(this.isBelled)
+      this.notifieds = this.currentUserInfo.notified.split(",")
+      if(this.notifieds.includes(this.currentPlaylist.userid))
+      {
+        this.isBelled = true;
+      }
+      else
+      {
+        this.isBelled = false;
+      }
+
+    },(error) => {
+      console.log('there was an error sending the query', error);
+    });
+
+  }
+
   toggleSubs(){
     if(localStorage.getItem('users') == null){
       return
@@ -166,6 +226,7 @@ export class PlaylistComponent implements OnInit, AfterViewInit, AfterContentIni
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  notified
                 }
               }
             `,
@@ -753,6 +814,7 @@ export class PlaylistComponent implements OnInit, AfterViewInit, AfterContentIni
                   disilikedcomments,
                   archivedplaylists,
                   premium,
+                  notified,
                 }
               }
             `,
@@ -774,6 +836,16 @@ export class PlaylistComponent implements OnInit, AfterViewInit, AfterContentIni
             else
             {
               this.isSubscribed = false;
+            }
+
+            this.notifieds = this.currentUserInfo.notified.split(",")
+            if(this.notifieds.includes(this.currentPlaylist.userid))
+            {
+              this.isBelled = true;
+            }
+            else
+            {
+              this.isBelled = false;
             }
             // console.log(this.playlistOwner)
             this.isUserPrem = this.currentUserInfo.premium

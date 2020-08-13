@@ -26,6 +26,66 @@ export class ChannelComponent implements OnInit {
 
   subs = [];
 
+  isBelled = false;
+  notifieds;
+
+  onNotification(){
+
+    this.apollo
+        .mutate({
+          mutation : gql`
+            mutation notify($id: String!, $chnid: String!){
+              bellnotif(id:$id, chnid:$chnid){
+                name
+              }
+            }
+          `,
+          variables : {
+            id: this.currentUserInfo.id,
+            chnid: this.channelUserInfo.id,
+          },
+          refetchQueries: [{
+            query: gql`
+              query userById($userid: String!){
+                userById(userid: $userid){
+                  id,
+                  name,
+                  profilepic,
+                  subscribers,
+                  subscribed,
+                  likedvideos,
+                  likedcomments,
+                  disilikedvideos,
+                  disilikedcomments,
+                  notified,
+                }
+              }
+            `,
+            variables: {
+              userid: this.currentUserInfo.id,
+            }
+          }]
+        }).subscribe(({ data }) => {
+      console.log('got data', data);
+
+      this.isBelled = !this.isBelled
+      console.log(this.isBelled)
+      this.notifieds = this.currentUserInfo.notified.split(",")
+      if(this.notifieds.includes(this.channelUserInfo.id))
+      {
+        this.isBelled = true;
+      }
+      else
+      {
+        this.isBelled = false;
+      }
+
+    },(error) => {
+      console.log('there was an error sending the query', error);
+    });
+
+  }
+
   toggleSubs(){
     if(localStorage.getItem('users') == null){
       return
@@ -77,6 +137,7 @@ export class ChannelComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  notified,
                 }
               }
             `,
@@ -310,6 +371,7 @@ export class ChannelComponent implements OnInit {
             }
           }
 
+
   ngOnInit(): void {
     this.data.currentEditProfile.subscribe(showEdit => this.editProfile = showEdit)
     const passedId = +this.route.snapshot.paramMap.get('id');
@@ -376,6 +438,7 @@ export class ChannelComponent implements OnInit {
                   likedcomments,
                   disilikedvideos,
                   disilikedcomments,
+                  notified,
                 }
               }
             `,
@@ -388,6 +451,7 @@ export class ChannelComponent implements OnInit {
             this.currentUserInfo = this.currentUserInfo[0]
 
             this.subs = this.currentUserInfo.subscribed.split(",")
+
             console.log(this.subs)
             if(this.subs.includes(this.channelUserInfo.id))
             {
@@ -396,6 +460,16 @@ export class ChannelComponent implements OnInit {
             else
             {
               this.isSubscribed = false;
+            }
+
+            this.notifieds = this.currentUserInfo.notified.split(",")
+            if(this.notifieds.includes(this.channelUserInfo.id))
+            {
+              this.isBelled = true;
+            }
+            else
+            {
+              this.isBelled = false;
             }
             // console.log(this.playlistOwner)
           })

@@ -8,4 +8,7 @@
   <div class="subButton" *ngIf="curUserId != channel.id" [style.background-color]="isSubscribed ? 'lightgray' : '#d70000'" [style.color]="isSubscribed? 'gray' : 'white'" (click)="toggleSubs()">
     {{isSubscribed ? 'SUBSCRIBED' : 'SUBSCRIBE'}}
   </div>
+  <div class="bellButton" *ngIf="curUserId != channel.id && isSubscribed" (click)="onNotification()" [style.color]="isBelled ? '#168ed9' : 'lightgray'">
+    <i class="fa fa-bell"></i>
+  </div>
 </div>

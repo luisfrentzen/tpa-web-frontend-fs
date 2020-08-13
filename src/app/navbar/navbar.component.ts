@@ -32,6 +32,7 @@ export class NavbarComponent implements OnInit {
 
   currentPage = 'home';
 
+  notifVisible = false;
   users = []
 
   signOut() {
@@ -178,6 +179,7 @@ export class NavbarComponent implements OnInit {
                   year,
                   archivedplaylists,
                   premium,
+                  notified,
                 }
               }
             `,
@@ -262,12 +264,15 @@ export class NavbarComponent implements OnInit {
 
   openSubs = false;
 
+  notifs;
+
   toggleRestSubs(){
     this.openSubs = !this.openSubs
     // console.log(this.openPlaylist)
     // console.log(this.restPlaylist)
     // console.log(this.restPlaylist && this.openPlaylist)
   }
+
 
   ngOnInit(){
     // this.authService.renewTokens();
@@ -307,6 +312,7 @@ export class NavbarComponent implements OnInit {
                 year,
                 archivedplaylists,
                 premium,
+                notified,
               }
             }
           `,
@@ -319,6 +325,24 @@ export class NavbarComponent implements OnInit {
           // console.log(this.channelUserInfo)
           this.channelUserInfo = this.channelUserInfo[0]
           // console.log(s[2])
+          this.apollo
+            .watchQuery({
+              query: gql`
+                query notif($ids: String!){
+                  notifications(ids: $ids){
+                    title,
+                    vidthm,
+                    userid
+                  }
+                }
+              `,
+              variables: {
+                ids: this.channelUserInfo.notified
+              }
+            })
+            .valueChanges.subscribe(result => {
+              this.notifs = result.data.notifications
+            });
 
           this.apollo
             .watchQuery({
@@ -430,6 +454,10 @@ export class NavbarComponent implements OnInit {
   showSettings() {
     // console.log(this.users[0].photoUrl);
     this.settingsVisible = !this.settingsVisible
+  }
+
+  showNotifs(){
+    this.notifVisible = !this.notifVisible
   }
 
   changePage(nextPage:string) {

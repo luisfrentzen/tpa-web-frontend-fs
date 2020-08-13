@@ -1,0 +1,8 @@
+<div class="content" *ngIf="user">
+  <img class="channelpic" [src]="user.profilepic" alt="">
+  <div class="">
+    <p>{{notif.vidthm ? 'uploaded ' : 'posted ' }} {{notif.title}}</p>
+
+  </div>
+  <img *ngIf="notif.vidthm" [src]="notif.vidthm" class="vid" alt="">
+</div>

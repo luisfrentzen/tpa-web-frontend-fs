@@ -162,6 +162,7 @@ export class ChannelHomeComponent implements OnInit {
                 id,
                 videos,
                 visibility,
+                userid,
               }
             }
             `,

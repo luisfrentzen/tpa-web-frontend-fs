@@ -70,7 +70,24 @@ export class TrendingComponent implements OnInit {
   user;
   premi = '';
 
+  type = 3;
+
+  myFunction(x) {
+    let vids;
+    vids = document.querySelector("app-video-block")
+    if (x.matches) {
+      this.type = 1
+    } else {
+      this.type = 3
+    }
+  }
+
   ngOnInit(): void {
+
+    var x = window.matchMedia("(max-width: 700px)")
+    this.myFunction(x)
+    x.addListener(this.myFunction)
+
     if(localStorage.getItem('users') != null){
       this.users = JSON.parse(localStorage.getItem('users'));
       this.user = this.users[0]
